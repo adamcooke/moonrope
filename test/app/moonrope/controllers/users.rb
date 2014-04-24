@@ -54,7 +54,7 @@ controller :users do
       
       
       # Return a new structure for the user which we created earlier
-      structure :user, user
+      structure :user, user, :full => true
     end
   end
   

@@ -60,5 +60,21 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal 418, result.status
     assert_equal "World", result.headers["X-Hello"]
   end
+  
+  def test_auth_is_passed_to_structures
+    admin_user = User.new
+    admin_user.admin = true
+    action = @controller.actions[:info]
 
+    Moonrope.globals(:auth => admin_user) do
+      assert result = action.execute
+      assert_equal 12345, result.body[:private_code]
+    end
+
+    Moonrope.globals(:auth => nil) do
+      assert result = action.execute
+      assert_equal nil, result.body[:private_code]
+    end
+  end
+  
 end
