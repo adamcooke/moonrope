@@ -28,11 +28,10 @@ class ActionsTest < Test::Unit::TestCase
     params = {'page' => 3}
     assert result = @action.execute(params)
     assert result.is_a?(Moonrope::Controllers::ActionResult), "result is not a ActionResult"
-    
     assert result.body[:pagination], "result[:pagination] is not present"
     assert result.body[:records].is_a?(Array), "result[:records] is not an array"
     assert_equal 3, result.body[:pagination][:page], "result[:pagination][:page] is not the same as we passed in"
-    
+    # check defaults
     assert_equal 200, result.status
     assert result.headers.is_a?(Hash)
   end
