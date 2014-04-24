@@ -19,7 +19,11 @@ module Moonrope
       
       def check_access
         eval_environment = EvalEnvironment.new(@controller.core_dsl)
-        !!eval_environment.instance_eval(&access)
+        if eval_environment.auth
+          !!eval_environment.instance_eval(&access)
+        else
+          false
+        end
       end
       
     end
