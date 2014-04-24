@@ -2,14 +2,35 @@
 
 Moonrope is an API endpoint library to create RPC-like HTTP JSON APIs in Ruby/Rack applications. 
 The primarily goal with this library is provide a simple DSL for defining API controllers, 
-methods & structures.
+actions & structures.
 
-This is still under construction. Doc will follow at some point soon.
+## Defining Objects
+
+To get started, you'll need to create some structures and controllers to use with your API. 
+Create a directory and make two folders, one called `structures` and the other called `controllers`.
+
+### Defining a structure
+
+A structure sets out how to turn an object into a hash. Structures are aware of some API environment
+information like the version and the authenticated user allowing you to easily tailor the output
+based on the visitor.
+
+The best place to look for an example structure is within this repository in the
+[test/app/moonrope/structures/user.rb file](https://github.com/viaduct/moonrope/blob/master/test/app/moonrope/structures/user.rb).
+
+### Defining a controller & action
+
+A controller consists of a number of actions which carry out various tasks or return information. 
+These actions can then be called whenever needed after verifying access or parameter requirements.
+
+Check the [test/app/moonrope/controllers/users.rb file](https://github.com/viaduct/moonrope/blob/master/test/app/moonrope/controllers/users.rb) for an
+exanple of creating a controller.
+
 
 ## Usage
 
 In order to use Moonrope, you'll need to create a directory which contains your controllers
-and your structures. To beign, you'll need to create an instance of Moonrope by passing
+and your structures. To begin, you'll need to create an instance of Moonrope by passing
 this directory. You'll probably want to run this when your application starts to that you don't
 need to parse files on every request.
 
