@@ -2,12 +2,32 @@ module Moonrope
   module Structures
     class EvalEnvironment
       
-      attr_reader :o, :options, :core_dsl
+      attr_reader :o, :core_dsl
       
-      def initialize(core_dsl, object, options = {})
+      def initialize(core_dsl, object)
         @core_dsl = core_dsl
         @o = object
-        @options = options
+      end
+      
+      #
+      # Return the version of the API which has been requested
+      #
+      def version
+        Moonrope.globals[:version] || 1
+      end
+      
+      #
+      # Return the authenticated user
+      #
+      def auth
+        Moonrope.globals[:auth]
+      end
+      
+      #
+      # Return the globals
+      #
+      def globals
+        Moonrope.globals
       end
       
       #

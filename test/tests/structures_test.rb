@@ -85,4 +85,40 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal Array, hash[:animals].class, "hash[:animals] is present"
   end
   
+  def test_passing_the_version
+    user = User.new
+    user.id = 1
+    user.username = 'dave'
+    Moonrope.globals(:version => 2) do 
+      user_structure = $mr.structure(:user)
+      hash = user_structure.hash(user)
+      assert_equal "@#{user.username}", hash[:username]
+    end
+  end
+  
+  def test_restrictions
+    user = User.new
+    user.id = 1
+    user.username = 'dave'
+    user.private_code = 1234
+    
+    accessing_user = User.new
+    accessing_user.id = 2
+    accessing_user.username = 'admin-user'
+    accessing_user.admin = true
+    
+    user_structure = $mr.structure(:user)
+    
+    Moonrope.globals(:auth => accessing_user) do
+      hash = user_structure.hash(user)
+      assert_equal user.private_code, hash[:private_code]
+    end
+    
+    Moonrope.globals(:auth => nil) do
+      hash = user_structure.hash(user)
+      assert_equal nil, hash[:private_code]
+    end
+    
+  end
+  
 end

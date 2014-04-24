@@ -29,6 +29,28 @@ module Moonrope
         structure.expansions[name] = block
       end
       
+      #
+      # Set up a new restricted data set
+      #
+      def restricted(&block)
+        dsl = RestrictionDSL.new
+        dsl.instance_eval(&block)
+        structure.restrictions << dsl
+      end
+      
+      #
+      # The DSL used for reading the 
+      #
+      class RestrictionDSL
+        def data(&block)
+          block_given? ? @data = block : @data
+        end
+        
+        def condition(&block)
+          block_given? ? @condition = block : @condition
+        end
+      end
+      
     end
   end
 end

@@ -3,12 +3,13 @@ module Moonrope
     class Structure
       
       attr_accessor :name, :basic, :full
-      attr_reader :dsl, :expansions, :core_dsl
+      attr_reader :dsl, :expansions, :restrictions, :core_dsl
       
       def initialize(core_dsl, name)
         @core_dsl = core_dsl
         @name = name
         @expansions = {}
+        @restrictions = []
         @dsl = Moonrope::Structures::StructureDSL.new(self)
       end
       
@@ -33,6 +34,14 @@ module Moonrope
           expansions.each do |name, expansion|
             next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
             hash.merge!(name => environment.instance_eval(&expansion))
+          end
+        end
+        
+        # Add restrictions
+        if environment.auth
+          @restrictions.each do |restriction|
+            next unless environment.instance_eval(&restriction.condition) == true
+            hash.merge!(environment.instance_eval(&restriction.data))
           end
         end
         
