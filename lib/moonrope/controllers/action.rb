@@ -12,7 +12,7 @@ module Moonrope
         @params = {}
       end
       
-      def execute(params)
+      def execute(params = {})
         eval_environment = EvalEnvironment.new(@controller.core_dsl, :params => params)
         eval_environment.instance_eval(&action)
       end

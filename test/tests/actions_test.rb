@@ -42,5 +42,13 @@ class ActionsTest < Test::Unit::TestCase
       assert_equal true, @action.check_access
     end
   end
+  
+  def test_check_structures
+    @action = @controller.actions[:info]
+    assert result = @action.execute
+    assert result.is_a?(Hash)
+    assert_equal 1, result[:id]
+    assert_equal 'adamcooke', result[:username]
+  end
 
 end

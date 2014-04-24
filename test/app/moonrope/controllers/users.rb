@@ -35,7 +35,16 @@ controller :users do
     description "Return all information about a given user"
     param :user, "The ID of the user you wish to view"
     access { auth.is_a?(User) }
-    action { {:id => 1, :username => 'awesomeuser'} }
+    action do
+      user = User.new
+      user.id = 1
+      user.username = 'adamcooke'
+      user.name = 'Adam Cooke'
+      user.date_of_birth = Time.at(515286000)
+      user.private_code = 12345
+      user.admin = false
+      structure :user, user
+    end
   end
   
 end
