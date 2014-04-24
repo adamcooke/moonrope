@@ -27,6 +27,14 @@ module Moonrope
         if options[:full]
           full_hash = environment.instance_eval(&self.full)
           hash.merge!(full_hash)
+          
+          # Add restrictions
+          if environment.auth
+            @restrictions.each do |restriction|
+              next unless environment.instance_eval(&restriction.condition) == true
+              hash.merge!(environment.instance_eval(&restriction.data))
+            end
+          end
         end
         
         # Add expansions
@@ -34,14 +42,6 @@ module Moonrope
           expansions.each do |name, expansion|
             next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
             hash.merge!(name => environment.instance_eval(&expansion))
-          end
-        end
-        
-        # Add restrictions
-        if environment.auth
-          @restrictions.each do |restriction|
-            next unless environment.instance_eval(&restriction.condition) == true
-            hash.merge!(environment.instance_eval(&restriction.data))
           end
         end
         

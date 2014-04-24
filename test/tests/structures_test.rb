@@ -97,6 +97,7 @@ class StructuresTest < Test::Unit::TestCase
     user.id = 1
     user.username = 'dave'
     user.private_code = 1234
+    user.date_of_birth = Time.now - 2000000000
     
     accessing_user = User.new
     accessing_user.id = 2
@@ -106,12 +107,12 @@ class StructuresTest < Test::Unit::TestCase
     user_structure = $mr.structure(:user)
     
     Moonrope.globals(:auth => accessing_user) do
-      hash = user_structure.hash(user)
+      hash = user_structure.hash(user, :full => true)
       assert_equal user.private_code, hash[:private_code]
     end
     
     Moonrope.globals(:auth => nil) do
-      hash = user_structure.hash(user)
+      hash = user_structure.hash(user, :full => true)
       assert_equal nil, hash[:private_code]
     end
     
