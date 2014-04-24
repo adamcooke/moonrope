@@ -1,11 +1,12 @@
 module Moonrope
   class EvalEnvironment
     
-    attr_reader :core_dsl
+    attr_reader :core_dsl, :variables
     
     def initialize(core_dsl, params = {})
       @core_dsl = core_dsl
       @params = params
+      reset
     end
     
     #
@@ -27,6 +28,20 @@ module Moonrope
     #
     def globals
       Moonrope.globals
+    end
+    
+    #
+    # Set a variable
+    #
+    def set(name, value = nil)
+      @variables[name] = value
+    end
+    
+    # 
+    # Reset the variables for this eval environment
+    #
+    def reset
+      @variables = {}
     end
     
     #

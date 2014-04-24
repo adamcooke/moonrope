@@ -36,6 +36,14 @@ controller :users do
     param :user, "The ID of the user you wish to view"
     access { auth.is_a?(User) }
     action do
+      # If the user is 'teapot' set the HTTP status to 418 and add some 
+      # headers to say hello
+      if params['user'] == 'teapot'
+        set :status, 418
+        set :headers, {'X-Hello' => 'World'}
+      end
+      
+      # Create a new user object to return
       user = User.new
       user.id = 1
       user.username = 'adamcooke'
@@ -43,6 +51,9 @@ controller :users do
       user.date_of_birth = Time.at(515286000)
       user.private_code = 12345
       user.admin = false
+      
+      
+      # Return a new structure for the user which we created earlier
       structure :user, user
     end
   end

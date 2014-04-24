@@ -14,7 +14,11 @@ module Moonrope
       
       def execute(params = {})
         eval_environment = EvalEnvironment.new(@controller.core_dsl, :params => params)
-        eval_environment.instance_eval(&action)
+        result = ActionResult.new(self)
+        result.body = eval_environment.instance_eval(&action)
+        result.status = eval_environment.variables[:status] || 200
+        result.headers = eval_environment.variables[:headers] || {}
+        result
       end
       
       def check_access

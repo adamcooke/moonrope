@@ -2,6 +2,7 @@ require 'moonrope/version'
 
 require 'moonrope/core_dsl'
 require 'moonrope/eval_environment'
+
 require 'moonrope/structures/structure'
 require 'moonrope/structures/structure_dsl'
 
@@ -9,6 +10,7 @@ require 'moonrope/controllers/controller'
 require 'moonrope/controllers/controller_dsl'
 require 'moonrope/controllers/action'
 require 'moonrope/controllers/action_dsl'
+require 'moonrope/controllers/action_result'
 
 module Moonrope
   

@@ -107,3 +107,10 @@ Moonrope.globals(:auth => my_auth_user) do
   end  
 end
 ```
+
+The result from any of the `execute` method will be an instance of our `ActionResult` class.
+It will respond to the following methods:
+
+* `body` - the return value of the `action`
+* `status` - the HTTP status (defaults to 200 if none is set)
+* `headers` - a hash containing HTTP headers which should be returned (defaults to an empty hash)
