@@ -1,9 +1,5 @@
 class StructuresTest < Test::Unit::TestCase
   
-  def setup
-    puts "setup"
-  end
-  
   def test_structures_are_defined
     assert_equal 2, $mr.structures.size
     assert_equal true, $mr.structures.all? { |s| s.is_a?(Moonrope::Structures::Structure)}

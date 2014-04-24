@@ -18,7 +18,7 @@ module Moonrope
       #
       def hash(object, options = {})
         # Set up an environment for 
-        environment = EvalEnvironment.new(core_dsl, object)
+        environment = EvalEnvironment.new(core_dsl, :o => object)
 
         # Always get a basic hash to work from
         hash = environment.instance_eval(&self.basic)
