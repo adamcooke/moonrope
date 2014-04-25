@@ -11,6 +11,7 @@ require 'moonrope/controllers/controller_dsl'
 require 'moonrope/controllers/action'
 require 'moonrope/controllers/action_dsl'
 require 'moonrope/controllers/action_result'
+require 'moonrope/controllers/before_action'
 
 module Moonrope
   

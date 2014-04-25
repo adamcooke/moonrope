@@ -14,6 +14,13 @@ module Moonrope
         @controller.actions[name] = action
       end
       
+      def before(*actions, &block)
+        before_action = Controllers::BeforeAction.new(@controller)
+        before_action.block = block
+        before_action.actions = actions
+        @controller.befores << before_action
+      end
+      
     end
   end
 end

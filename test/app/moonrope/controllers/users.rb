@@ -1,5 +1,12 @@
 controller :users do
 
+  #
+  # Specify an action to execute before all methods in this controller.
+  #
+  before do
+    @before_var = 'before-var'
+  end
+  
   action :list do
     
     #
@@ -54,7 +61,12 @@ controller :users do
       
       
       # Return a new structure for the user which we created earlier
-      structure :user, user, :full => true
+      hash = structure :user, user, :full => true
+      
+      {
+        :user => hash,
+        :before_var => @before_var
+      }
     end
   end
   

@@ -14,6 +14,12 @@ module Moonrope
       
       def execute(params = {})
         eval_environment = EvalEnvironment.new(@controller.core_dsl, :params => params)
+        
+        # Run before filters
+        controller.before_actions_for(name).each do |action|
+          eval_environment.instance_eval(&action.block)
+        end
+        
         result = ActionResult.new(self)
         result.body = eval_environment.instance_eval(&action)
         result.status = eval_environment.variables[:status] || 200

@@ -50,8 +50,8 @@ class ActionsTest < Test::Unit::TestCase
     @action = @controller.actions[:info]
     assert result = @action.execute
     assert result.is_a?(Moonrope::Controllers::ActionResult), "result is not a ActionResult"
-    assert_equal 1, result.body[:id]
-    assert_equal 'adamcooke', result.body[:username]
+    assert_equal 1, result.body[:user][:id]
+    assert_equal 'adamcooke', result.body[:user][:username]
   end
 
   def test_setting_statuses_and_headers
@@ -68,13 +68,19 @@ class ActionsTest < Test::Unit::TestCase
 
     Moonrope.globals(:auth => admin_user) do
       assert result = action.execute
-      assert_equal 12345, result.body[:private_code]
+      assert_equal 12345, result.body[:user][:private_code]
     end
 
     Moonrope.globals(:auth => nil) do
       assert result = action.execute
-      assert_equal nil, result.body[:private_code]
+      assert_equal nil, result.body[:user][:private_code]
     end
+  end
+  
+  def test_before_filters
+    @action = @controller.actions[:info]
+    assert result = @action.execute
+    assert_equal 'before-var', result.body[:before_var]
   end
   
 end
