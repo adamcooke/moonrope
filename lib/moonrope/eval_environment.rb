@@ -1,10 +1,10 @@
 module Moonrope
   class EvalEnvironment
     
-    attr_reader :core_dsl, :variables
+    attr_reader :base, :variables
     
-    def initialize(core_dsl, params = {})
-      @core_dsl = core_dsl
+    def initialize(base, params = {})
+      @base = base
       @params = params
       reset
     end
@@ -75,7 +75,7 @@ module Moonrope
     # exist.
     #
     def structure(structure, object, options = {})
-      if object && structure = @core_dsl.structure(structure)
+      if object && structure = @base.structure(structure)
         structure.hash(object, options)
       else
         nil

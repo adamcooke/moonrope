@@ -3,10 +3,10 @@ module Moonrope
     class Structure
       
       attr_accessor :name, :basic, :full
-      attr_reader :dsl, :expansions, :restrictions, :core_dsl
+      attr_reader :dsl, :expansions, :restrictions, :base
       
-      def initialize(core_dsl, name)
-        @core_dsl = core_dsl
+      def initialize(base, name)
+        @base = base
         @name = name
         @expansions = {}
         @restrictions = []
@@ -18,7 +18,7 @@ module Moonrope
       #
       def hash(object, options = {})
         # Set up an environment for 
-        environment = EvalEnvironment.new(core_dsl, :o => object)
+        environment = EvalEnvironment.new(base, :o => object)
 
         # Always get a basic hash to work from
         hash = environment.instance_eval(&self.basic)

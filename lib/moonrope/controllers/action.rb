@@ -13,7 +13,7 @@ module Moonrope
       end
       
       def execute(params = {})
-        eval_environment = EvalEnvironment.new(@controller.core_dsl, :params => params)
+        eval_environment = EvalEnvironment.new(@controller.base, :params => params)
         begin
           
           start_time = Time.now
@@ -49,7 +49,7 @@ module Moonrope
       end
       
       def check_access
-        eval_environment = EvalEnvironment.new(@controller.core_dsl)
+        eval_environment = EvalEnvironment.new(@controller.base)
         if eval_environment.auth
           !!eval_environment.instance_eval(&access)
         else

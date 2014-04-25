@@ -1,6 +1,7 @@
 require 'json'
 require 'moonrope/version'
-require 'moonrope/core_dsl'
+require 'moonrope/base'
+require 'moonrope/dsl'
 require 'moonrope/eval_environment'
 require 'moonrope/errors'
 require 'moonrope/structures/structure'
@@ -11,8 +12,22 @@ require 'moonrope/controllers/action'
 require 'moonrope/controllers/action_dsl'
 require 'moonrope/controllers/action_result'
 require 'moonrope/controllers/before_action'
+require 'moonrope/rack/middleware'
+require 'moonrope/rack/request'
 
 module Moonrope
+  
+  class << self
+    
+    def rack_path_prefix
+      @path_prefix ||= 'api'
+    end
+    
+    def rack_authenticator
+      @rack_authenticator || nil
+    end
+    
+  end
   
   #
   # Set a set of global variables for the duration of the 

@@ -1,10 +1,11 @@
 require 'test/unit'
+require 'rack/test'
 require 'moonrope'
 
 #
 # Load the example moonrope DSL
 #
-$mr = Moonrope::CoreDSL.load(File.expand_path('../app/moonrope', __FILE__))
+$mr = Moonrope::Base.load(File.expand_path('../app/moonrope', __FILE__))
 
 # 
 # Require models
@@ -19,3 +20,4 @@ end
 Dir[File.expand_path("../tests/**/*.rb", __FILE__)].each do |filename|
   require filename
 end
+

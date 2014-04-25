@@ -3,10 +3,10 @@ module Moonrope
     class Controller
       
       attr_accessor :name, :actions, :befores
-      attr_reader :core_dsl, :dsl
+      attr_reader :base, :dsl
       
-      def initialize(core_dsl, name)
-        @core_dsl = core_dsl
+      def initialize(base, name)
+        @base = base
         @name = name
         @actions = {}
         @befores = []
