@@ -25,7 +25,7 @@ class ActionsTest < Test::Unit::TestCase
   end
   
   def test_calling_actions
-    params = {'page' => 3}
+    params = Moonrope::ParamSet.new('page' => 3)
     assert result = @action.execute(params)
     assert result.is_a?(Moonrope::Controllers::ActionResult), "result is not a ActionResult"
     assert result.data.is_a?(Array), "result.data is not an array"
@@ -56,7 +56,7 @@ class ActionsTest < Test::Unit::TestCase
 
   def test_setting_statuses_and_headers
     @action = @controller.actions[:info]
-    assert result = @action.execute('user' => 'teapot')
+    assert result = @action.execute(Moonrope::ParamSet.new('user' => 'teapot'))
     assert_equal 'validation-error', result.status
   end
   
@@ -84,7 +84,7 @@ class ActionsTest < Test::Unit::TestCase
   
   def test_errors
     @action = @controller.actions[:info]
-    assert result = @action.execute('user' => 'notfound')
+    assert result = @action.execute(Moonrope::ParamSet.new('user' => 'notfound'))
     assert_equal 'not-found', result.status
     assert result.data[:message]
   end

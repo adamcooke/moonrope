@@ -27,7 +27,7 @@ module Moonrope
       end
       
       def params
-        @params ||= ParamSet.new(rack_request.params['params'])
+        @params ||= Moonrope::ParamSet.new(rack_request.params['params'])
       end
       
       private

@@ -15,7 +15,6 @@ module Moonrope
       def execute(params = {})
         eval_environment = EvalEnvironment.new(@controller.base, :params => params)
         begin
-          
           start_time = Time.now
           
           # Run before filters
