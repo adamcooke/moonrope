@@ -26,6 +26,17 @@ These actions can then be called whenever needed after verifying access or param
 Check the [test/app/moonrope/controllers/users.rb file](https://github.com/viaduct/moonrope/blob/master/test/app/moonrope/controllers/users.rb) for an
 exanple of creating a controller.
 
+### Helpers
+
+When you are defining blocks for in your definitions, you can use a number of helper methods as listed 
+below.
+
+* `version` - returns the version of the API which has been requested
+* `auth` - returns the object which has authenticated this API request
+* `globals` - returns a hash of all Moonrope globals
+* `error(:not_found, 'Something wasn't found)` - raise a not found error with the provided error
+* `set(:variable, 'value')` - sets a variable which can be accessed after the method has been executed. 
+  This is used to set `headers` and `flags`.
 
 ## Usage
 
