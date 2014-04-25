@@ -7,7 +7,7 @@ module Moonrope
       def initialize(base, env, path)
         @base = base
         @env = env
-        @version, @controller_name, @action_name = path.split("/")
+        @version, @controller_name, @action_name = path ? path.split("/") : [nil, nil, nil]
       end
       
       def version
@@ -24,6 +24,16 @@ module Moonrope
       
       def action
         @action ||= controller.actions[action_name.to_sym]
+      end
+      
+      def params
+        @params ||= ParamSet.new(rack_request.params['params'])
+      end
+      
+      private
+      
+      def rack_request
+        @rack_request ||= ::Rack::Request.new(@env)
       end
       
     end

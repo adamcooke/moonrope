@@ -24,5 +24,7 @@ class RackRequestTest < Test::Unit::TestCase
     assert request.action.is_a?(Moonrope::Controllers::Action)
     assert_equal :list, request.action.name
   end
-
+  
+  
+  
 end

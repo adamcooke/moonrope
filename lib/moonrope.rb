@@ -14,6 +14,7 @@ require 'moonrope/controllers/action_result'
 require 'moonrope/controllers/before_action'
 require 'moonrope/rack/middleware'
 require 'moonrope/rack/request'
+require 'moonrope/rack/param_set'
 
 module Moonrope
   
