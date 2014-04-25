@@ -12,7 +12,12 @@ module Moonrope
         @params = {}
       end
       
-      def execute(params = {})
+      def execute(params = ParamSet.new)
+        
+        unless params.is_a?(ParamSet)
+          raise Moonrope::Errors::Error, "Passed params must be an instance of ParamSet"
+        end
+        
         eval_environment = EvalEnvironment.new(@controller.base, :params => params)
         begin
           start_time = Time.now
@@ -39,7 +44,7 @@ module Moonrope
           # Return the result object
           result
           
-        rescue Moonrope::Errors::Error => e
+        rescue Moonrope::Errors::RequestError => e
           result = ActionResult.new(self)
           result.status = e.status
           result.data = e.data

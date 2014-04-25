@@ -1,7 +1,7 @@
 module Moonrope
   class ParamSet
     
-    def initialize(params)
+    def initialize(params = {})
       @params = (params.is_a?(String) ? JSON.parse(params) : params)
     end
     

@@ -2,6 +2,9 @@ module Moonrope
   module Errors
     
     class Error < StandardError
+    end
+    
+    class RequestError < Error
       attr_reader :options
       
       def initialize(options)
@@ -13,19 +16,19 @@ module Moonrope
       end
     end
     
-    class AccessDenied < Error
+    class AccessDenied < RequestError
       def status
         'access-denied'
       end
     end
     
-    class NotFound < Error
+    class NotFound < RequestError
       def status
         'not-found'
       end
     end
     
-    class ValidationError < Error
+    class ValidationError < RequestError
       def status
         'validation-error'
       end
@@ -35,7 +38,7 @@ module Moonrope
       end
     end
     
-    class ParameterError < Error
+    class ParameterError < RequestError
       def http_status_code
         'parameter-error'
       end
