@@ -111,6 +111,8 @@ end
 The result from any of the `execute` method will be an instance of our `ActionResult` class.
 It will respond to the following methods:
 
-* `body` - the return value of the `action`
-* `status` - the HTTP status (defaults to 200 if none is set)
+* `data` - the return value of the `action`
+* `status` - the status of the request (success, not-found etc...)
 * `headers` - a hash containing HTTP headers which should be returned (defaults to an empty hash)
+* `flags` - a set of flags which should be returned
+* `time` - the length of time it took to execute the action
