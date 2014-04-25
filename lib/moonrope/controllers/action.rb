@@ -14,17 +14,38 @@ module Moonrope
       
       def execute(params = {})
         eval_environment = EvalEnvironment.new(@controller.core_dsl, :params => params)
-        
-        # Run before filters
-        controller.before_actions_for(name).each do |action|
-          eval_environment.instance_eval(&action.block)
+        begin
+          
+          start_time = Time.now
+          
+          # Run before filters
+          controller.before_actions_for(name).each do |action|
+            eval_environment.instance_eval(&action.block)
+          end
+          
+          # Run the actual action
+          response = eval_environment.instance_eval(&action)
+          
+          # Calculate the length of time this request takes
+          time_to_run = Time.now - start_time
+          
+          # Prepare a action result
+          result = ActionResult.new(self)
+          result.data     = response
+          result.status   = 'success'
+          result.time     = time_to_run.round(2)
+          result.flags    = eval_environment.variables[:flags]    || {}
+          result.headers  = eval_environment.variables[:headers]  || {}
+          
+          # Return the result object
+          result
+          
+        rescue Moonrope::Errors::Error => e
+          result = ActionResult.new(self)
+          result.status = e.status
+          result.data = e.data
+          result
         end
-        
-        result = ActionResult.new(self)
-        result.body = eval_environment.instance_eval(&action)
-        result.status = eval_environment.variables[:status] || 200
-        result.headers = eval_environment.variables[:headers] || {}
-        result
       end
       
       def check_access

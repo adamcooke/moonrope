@@ -4,7 +4,7 @@ controller :users do
   # Specify an action to execute before all methods in this controller.
   #
   before do
-    @before_var = 'before-var'
+    set :headers, {'X-Hello' => 'World'}
   end
   
   action :list do
@@ -30,10 +30,8 @@ controller :users do
     # return a JSON-able object - a string, array or hash.
     #
     action do
-      {
-        :records => [],
-        :pagination => {:page => params['page'], :total => 0}
-      }
+      set :flags, {:pagination => {:page => params['page'], :offset => 0, :total_records => 100, :total_pages => 4}}
+      []
     end
     
   end
@@ -46,9 +44,14 @@ controller :users do
       # If the user is 'teapot' set the HTTP status to 418 and add some 
       # headers to say hello
       if params['user'] == 'teapot'
-        set :status, 418
-        set :headers, {'X-Hello' => 'World'}
+        error :validation_error, [{:field => 'name', :message => 'must be present'}]
       end
+      
+      if params['user'] == 'notfound'
+        error :not_found, "No user found matching 'not_found'"
+      end
+      
+      
       
       # Create a new user object to return
       user = User.new
@@ -59,14 +62,8 @@ controller :users do
       user.private_code = 12345
       user.admin = false
       
-      
       # Return a new structure for the user which we created earlier
-      hash = structure :user, user, :full => true
-      
-      {
-        :user => hash,
-        :before_var => @before_var
-      }
+      structure :user, user, :full => true
     end
   end
   

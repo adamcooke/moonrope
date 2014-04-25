@@ -1,11 +1,10 @@
+require 'json'
 require 'moonrope/version'
-
 require 'moonrope/core_dsl'
 require 'moonrope/eval_environment'
-
+require 'moonrope/errors'
 require 'moonrope/structures/structure'
 require 'moonrope/structures/structure_dsl'
-
 require 'moonrope/controllers/controller'
 require 'moonrope/controllers/controller_dsl'
 require 'moonrope/controllers/action'

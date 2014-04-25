@@ -45,6 +45,20 @@ module Moonrope
     end
     
     #
+    # Raise an error
+    #
+    def error(type, message)
+      case type
+      when :not_found           then raise(Moonrope::Errors::NotFound, message)
+      when :access_denied       then raise(Moonrope::Errors::AccessDenied, message)
+      when :validation_error    then raise(Moonrope::Errors::ValidationError, message)
+      when :parameter_error     then raise(Moonrope::Errors::ParameterError, message)
+      else
+        raise Moonrope::Errors::Error, message
+      end
+    end
+    
+    #
     # Method missing
     #
     def method_missing(key, value = nil)
