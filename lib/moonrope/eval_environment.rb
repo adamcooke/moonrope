@@ -1,11 +1,13 @@
 module Moonrope
   class EvalEnvironment
     
-    attr_reader :base, :variables
+    attr_reader :base, :variables, :request
     
-    def initialize(base, params = {})
+    def initialize(base, request, accessors = {})
       @base = base
-      @params = params
+      @request = request
+      @accessors = accessors
+      @variables = {}
       reset
     end
     
@@ -13,21 +15,21 @@ module Moonrope
     # Return the version of the API which has been requested
     #
     def version
-      Moonrope.globals[:version] || 1
+      request ? request.version : 1
     end
     
     #
-    # Return the authenticated user
+    # Return the auth'd object
     #
     def auth
-      Moonrope.globals[:auth]
+      request ? request.authenticated_user : nil
     end
     
     #
-    # Return the globals
+    # Return the parameters for the request
     #
-    def globals
-      Moonrope.globals
+    def params
+      @params ||= (request ? request.params : ParamSet.new)
     end
     
     #
@@ -59,11 +61,11 @@ module Moonrope
     end
     
     #
-    # Method missing
+    # Return an accessor if that's possible
     #
-    def method_missing(key, value = nil)
-      if @params.keys.include?(key)
-        @params[key]
+    def method_missing(name, value = nil)
+      if @accessors.keys.include?(name.to_sym)
+        @accessors[name.to_sym]
       else
         super
       end
@@ -76,7 +78,7 @@ module Moonrope
     #
     def structure(structure, object, options = {})
       if object && structure = @base.structure(structure)
-        structure.hash(object, options)
+        structure.hash(object, options.merge(:request => @request))
       else
         nil
       end

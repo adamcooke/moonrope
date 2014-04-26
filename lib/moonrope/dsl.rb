@@ -28,5 +28,12 @@ module Moonrope
       @base.controllers << controller
     end
     
+    #
+    # Set the authenticator
+    #
+    def authenticator(&block)
+      @base.authenticator = block
+    end
+    
   end
 end

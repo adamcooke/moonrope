@@ -18,7 +18,7 @@ module Moonrope
       #
       def hash(object, options = {})
         # Set up an environment for 
-        environment = EvalEnvironment.new(base, :o => object)
+        environment = EvalEnvironment.new(base, options[:request], :o => object)
 
         # Always get a basic hash to work from
         hash = environment.instance_eval(&self.basic)

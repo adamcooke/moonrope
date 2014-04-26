@@ -32,6 +32,22 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal user.name, hash[:name]
   end
   
+  def test_passing_the_version
+    user = User.new
+    user.id = 1
+    user.username = 'dave'
+    # get the structure
+    user_structure = $mr.structure(:user)
+    # check version 2
+    request = FakeRequest.new(:version => 2)
+    hash = user_structure.hash(user, :request => request)
+    assert_equal "@#{user.username}", hash[:username]
+    # check version 1
+    request = FakeRequest.new(:version => 1)
+    hash = user_structure.hash(user, :request => request)
+    assert_equal user.username, hash[:username]
+  end
+  
   def test_structure_hash_with_expansions
     user = User.new
     user.id = 1
@@ -81,17 +97,6 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal Array, hash[:animals].class, "hash[:animals] is present"
   end
   
-  def test_passing_the_version
-    user = User.new
-    user.id = 1
-    user.username = 'dave'
-    Moonrope.globals(:version => 2) do 
-      user_structure = $mr.structure(:user)
-      hash = user_structure.hash(user)
-      assert_equal "@#{user.username}", hash[:username]
-    end
-  end
-  
   def test_restrictions
     user = User.new
     user.id = 1
@@ -106,16 +111,14 @@ class StructuresTest < Test::Unit::TestCase
     
     user_structure = $mr.structure(:user)
     
-    Moonrope.globals(:auth => accessing_user) do
-      hash = user_structure.hash(user, :full => true)
-      assert_equal user.private_code, hash[:private_code]
-    end
+    # with auth
+    authenticated_request = FakeRequest.new(:authenticated_user => accessing_user)
+    hash = user_structure.hash(user, :full => true, :request => authenticated_request)
+    assert_equal user.private_code, hash[:private_code]
     
-    Moonrope.globals(:auth => nil) do
-      hash = user_structure.hash(user, :full => true)
-      assert_equal nil, hash[:private_code]
-    end
-    
+    # no auth
+    hash = user_structure.hash(user, :full => true)
+    assert_equal nil, hash[:private_code]
   end
   
 end

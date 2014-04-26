@@ -19,6 +19,10 @@ module Moonrope
         end
       end
       
+      def /(action)
+        actions[action.to_sym]
+      end
+      
     end
   end
 end

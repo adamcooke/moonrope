@@ -12,13 +12,8 @@ module Moonrope
         @params = {}
       end
       
-      def execute(params = ParamSet.new)
-        
-        unless params.is_a?(ParamSet)
-          raise Moonrope::Errors::Error, "Passed params must be an instance of ParamSet"
-        end
-        
-        eval_environment = EvalEnvironment.new(@controller.base, :params => params)
+      def execute(request = nil)
+        eval_environment = EvalEnvironment.new(@controller.base, request)
         begin
           start_time = Time.now
           
@@ -52,8 +47,8 @@ module Moonrope
         end
       end
       
-      def check_access
-        eval_environment = EvalEnvironment.new(@controller.base)
+      def check_access(request = nil)
+        eval_environment = EvalEnvironment.new(@controller.base, request)
         if eval_environment.auth
           !!eval_environment.instance_eval(&access)
         else

@@ -10,11 +10,13 @@ module Moonrope
     end
     
     attr_reader :structures, :controllers, :dsl
+    attr_accessor :authenticator
     
     def initialize
       @dsl = Moonrope::DSL.new(self)
       @structures = []
       @controllers = []
+      @authenticator = Proc.new { false }
     end
     
     #
@@ -35,7 +37,7 @@ module Moonrope
     # Create a new rack request for this API
     #
     def request(*args)
-      Rack::Request.new(self, *args)
+      Moonrope::Request.new(self, *args)
     end
     
   end

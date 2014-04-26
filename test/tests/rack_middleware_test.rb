@@ -1,4 +1,5 @@
 class StructuresTest < Test::Unit::TestCase
+
   include Rack::Test::Methods
   
   def app

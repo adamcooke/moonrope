@@ -51,8 +51,6 @@ controller :users do
         error :not_found, "No user found matching 'not_found'"
       end
       
-      
-      
       # Create a new user object to return
       user = User.new
       user.id = 1
