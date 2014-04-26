@@ -3,7 +3,7 @@ module Moonrope
     
     PATH_REGEX = /\A\/api\/([\w\/\-\.]+)?/
     
-    attr_reader :env, :version, :controller_name, :action_name
+    attr_reader :env, :version, :controller_name, :action_name, :authenticated_user
     
     def initialize(base, env, path = nil)
       @base = base
@@ -45,10 +45,29 @@ module Moonrope
     end
     
     #
-    # Execute the approrpriate action for this requestr
+    # Execute the approrpriate action for this request and return a 
+    # ActionResult.
     #
     def execute
-      action.execute(self)
+      eval_env = EvalEnvironment.new(@base, self)
+      if @base.authenticator
+        begin
+          @authenticated_user = eval_env.instance_eval(&@base.authenticator)
+          # If we are authenticated, check whether the action permits access to 
+          # this user, if not raise an error.
+          if authenticated?
+            unless action.check_access(eval_env) == true
+              raise Moonrope::Errors::AccessDenied, "Access to #{@path} is not permitted."
+            end
+          end
+        rescue Moonrope::Errors::RequestError => e
+          result = Moonrope::Controllers::ActionResult.new(self)
+          result.status = e.status
+          result.data = e.data
+          return result
+        end
+      end
+      action.execute(eval_env)
     end
     
     #
@@ -63,6 +82,20 @@ module Moonrope
     #
     def headers
       @headers ||= self.class.extract_http_request_headers(@env)
+    end
+    
+    #
+    # Is this request to the API anonymous?
+    #
+    def anonymous?
+      authenticated_user.nil?
+    end
+    
+    #
+    # Is this request to the API authenticated?
+    #
+    def authenticated?
+      !anonymous?
     end
     
     private

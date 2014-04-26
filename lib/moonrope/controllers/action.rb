@@ -12,8 +12,17 @@ module Moonrope
         @params = {}
       end
       
+      #
+      # Executes the action and returns a ActionResult object with the result
+      # of the action. Accepts a Request or an EvalEnvironment.
+      #
       def execute(request = nil)
-        eval_environment = EvalEnvironment.new(@controller.base, request)
+        if request.is_a?(EvalEnvironment)
+          eval_environment = request
+        else
+          eval_environment = EvalEnvironment.new(@controller.base, request)
+        end
+        
         begin
           start_time = Time.now
           
@@ -47,15 +56,24 @@ module Moonrope
         end
       end
       
+      #
+      # Check whether the authenticated user has access to this request.
+      # Accepts a Request or an EvalEnvironment.
+      #
       def check_access(request = nil)
-        eval_environment = EvalEnvironment.new(@controller.base, request)
+        if request.is_a?(EvalEnvironment)
+          eval_environment = request
+        else
+          eval_environment = EvalEnvironment.new(@controller.base, request)
+        end
+        
         if eval_environment.auth
           !!eval_environment.instance_eval(&access)
         else
           false
         end
       end
-      
+            
     end
   end
 end

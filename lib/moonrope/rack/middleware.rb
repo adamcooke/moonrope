@@ -27,8 +27,8 @@ module Moonrope
           begin
             result = request.execute
             [200, result.headers, [result.to_json]]
-          #rescue => e
-          #  [500, {}, ["An internal server occurred."]]
+          rescue => e
+            [500, {}, ["An internal server occurred."]]
           end
 
         else
