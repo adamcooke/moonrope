@@ -19,13 +19,4 @@ require 'moonrope/rack/middleware'
 
 
 module Moonrope
-  
-  class << self
-    
-    def rack_path_prefix
-      @path_prefix ||= 'api'
-    end
-
-  end
-  
 end

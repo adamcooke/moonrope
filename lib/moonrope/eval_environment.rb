@@ -56,7 +56,7 @@ module Moonrope
       when :validation_error    then raise(Moonrope::Errors::ValidationError, message)
       when :parameter_error     then raise(Moonrope::Errors::ParameterError, message)
       else
-        raise Moonrope::Errors::Error, message
+        raise Moonrope::Errors::RequestError, message
       end
     end
     

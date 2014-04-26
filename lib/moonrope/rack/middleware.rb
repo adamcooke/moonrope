@@ -7,7 +7,7 @@ module Moonrope
       end
       
       def call(env)
-        if env['PATH_INFO'] =~ /\A\/#{Moonrope.rack_path_prefix}\/([\w\/\-\.]+)?/
+        if env['PATH_INFO'] =~ Moonrope::Request::PATH_REGEX
           
           #
           # Create a new request object
@@ -18,7 +18,7 @@ module Moonrope
           # Check the request is valid
           #
           unless request.valid?
-            return [400, {}, ["Invalid API Request. Must provide a version, controller & action as /#{Moonrope.rack_path_prefix}/v1/controller/action."]]
+            return [400, {}, ["Invalid API Request. Must provide a version, controller & action as /api/v1/controller/action."]]
           end
           
           #

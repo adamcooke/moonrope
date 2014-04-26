@@ -1,11 +1,16 @@
 module Moonrope
   class Request
     
+    PATH_REGEX = /\A\/api\/([\w\/\-\.]+)?/
+    
     attr_reader :env, :version, :controller_name, :action_name
     
-    def initialize(base, env, path)
+    def initialize(base, env, path = nil)
       @base = base
       @env = env
+      if path.nil? && env['PATH_INFO'] =~ PATH_REGEX
+        path = $1
+      end
       @version, @controller_name, @action_name = path ? path.split("/") : [nil, nil, nil]
     end
     
@@ -57,7 +62,7 @@ module Moonrope
     # Return all HTTP headers from the request
     #
     def headers
-      rack_request.headers
+      @headers ||= self.class.extract_http_request_headers(@env)
     end
     
     private
@@ -67,6 +72,21 @@ module Moonrope
     #
     def rack_request
       @rack_request ||= ::Rack::Request.new(@env)
+    end
+    
+    #
+    # Extract headers from the rack env
+    #
+    def self.extract_http_request_headers(env)
+      env.reject do |k, v|
+        !(/^HTTP_[A-Z_]+$/ === k) || v.nil?
+      end.map do |k, v|
+        [k.sub(/^HTTP_/, "").gsub("_", "-"), v]
+      end.inject(::Rack::Utils::HeaderHash.new) do |hash, k_v|
+        k, v = k_v
+        hash[k] = v
+        hash
+      end
     end
     
   end

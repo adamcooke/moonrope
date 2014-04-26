@@ -7,6 +7,17 @@ require 'moonrope'
 #
 $mr = Moonrope::Base.load(File.expand_path('../app/moonrope', __FILE__))
 
+class Test::Unit::TestCase
+  
+  private
+  
+  def make_rack_env_hash(path, params = {}, other_env = {})
+    request = Rack::Test::Session.new(nil)
+    request.send :env_for, path, {:params => params, :method => 'POST'}.merge(other_env)
+  end
+  
+end
+
 #
 # A fake request class for use in some tests
 #

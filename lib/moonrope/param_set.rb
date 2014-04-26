@@ -2,7 +2,7 @@ module Moonrope
   class ParamSet
     
     def initialize(params = {})
-      @params = (params.is_a?(String) ? JSON.parse(params) : params)
+      @params = (params.is_a?(String) ? JSON.parse(params) : params) || {}
     end
     
     def method_missing(name, value = nil)
