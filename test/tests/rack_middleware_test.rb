@@ -3,7 +3,7 @@ class RackMiddlewareTest < Test::Unit::TestCase
   include Rack::Test::Methods
   
   def app
-    Moonrope::Rack::Middleware.new($mr)
+    Moonrope::Rack.new($mr)
   end
   
   def test_non_api_requests_404

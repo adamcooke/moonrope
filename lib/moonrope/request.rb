@@ -61,7 +61,7 @@ module Moonrope
             end
           end
         rescue Moonrope::Errors::RequestError => e
-          result = Moonrope::Controllers::ActionResult.new(self)
+          result = Moonrope::ActionResult.new(self)
           result.status = e.status
           result.data = e.data
           return result

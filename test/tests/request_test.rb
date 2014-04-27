@@ -26,9 +26,9 @@ class RequestTest < Test::Unit::TestCase
   
   def test_controllers_and_actions
     request = $mr.request(make_rack_env_hash('/api/v1/users/list'))
-    assert request.controller.is_a?(Moonrope::Controllers::Controller)
+    assert request.controller.is_a?(Moonrope::Controller)
     assert_equal :users, request.controller.name
-    assert request.action.is_a?(Moonrope::Controllers::Action)
+    assert request.action.is_a?(Moonrope::Action)
     assert_equal :list, request.action.name
   end
   
@@ -42,7 +42,7 @@ class RequestTest < Test::Unit::TestCase
   def test_actions_can_be_executed
     request = $mr.request(make_rack_env_hash('/api/v1/users/list'))
     assert result = request.execute
-    assert result.is_a?(Moonrope::Controllers::ActionResult), "request.action does not return an ActionResult, was a #{result.class}"
+    assert result.is_a?(Moonrope::ActionResult), "request.action does not return an ActionResult, was a #{result.class}"
   end
   
   def test_actions_authenticate_when_executed

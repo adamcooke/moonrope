@@ -2,7 +2,7 @@ class ActionsTest < Test::Unit::TestCase
 
   def test_basic_definition
     action = $mr.controller(:users) / :list
-    assert action.is_a?(Moonrope::Controllers::Action)
+    assert action.is_a?(Moonrope::Action)
     assert_equal :list, action.name
     assert action.description
     assert action.description.length > 0
@@ -26,7 +26,7 @@ class ActionsTest < Test::Unit::TestCase
   def test_calling_actions
     action = $mr.controller(:users) / :list
     assert result = action.execute
-    assert result.is_a?(Moonrope::Controllers::ActionResult), "result is not a ActionResult"
+    assert result.is_a?(Moonrope::ActionResult), "result is not a ActionResult"
     assert result.data.is_a?(Array), "result.data is not an array"
     assert result.flags.is_a?(Hash), "result.flags is not a hash"
     assert result.flags[:pagination], "result.flags[:pagination] is not a hash"
@@ -46,7 +46,7 @@ class ActionsTest < Test::Unit::TestCase
   def test_check_structures
     action = $mr.controller(:users) / :info
     assert result = action.execute
-    assert result.is_a?(Moonrope::Controllers::ActionResult), "result is not a ActionResult"
+    assert result.is_a?(Moonrope::ActionResult), "result is not a ActionResult"
     assert_equal 1, result.data[:id]
     assert_equal 'adamcooke', result.data[:username]
   end

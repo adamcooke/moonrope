@@ -13,7 +13,7 @@ module Moonrope
     attr_accessor :authenticator
     
     def initialize
-      @dsl = Moonrope::DSL.new(self)
+      @dsl = Moonrope::DSL::BaseDSL.new(self)
       @structures = []
       @controllers = []
       @authenticator = Proc.new { false }

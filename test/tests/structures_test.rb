@@ -2,12 +2,12 @@ class StructuresTest < Test::Unit::TestCase
   
   def test_structures_are_defined
     assert_equal 2, $mr.structures.size
-    assert_equal true, $mr.structures.all? { |s| s.is_a?(Moonrope::Structures::Structure)}
+    assert_equal true, $mr.structures.all? { |s| s.is_a?(Moonrope::Structure)}
   end
   
   def test_structure_creation
     assert structure = $mr.structure(:user)
-    assert_equal Moonrope::Structures::Structure, structure.class
+    assert_equal Moonrope::Structure, structure.class
     assert structure.basic.is_a?(Proc)
     assert structure.full.is_a?(Proc)
   end

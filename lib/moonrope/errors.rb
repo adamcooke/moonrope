@@ -39,7 +39,7 @@ module Moonrope
     end
     
     class ParameterError < RequestError
-      def http_status_code
+      def status
         'parameter-error'
       end
       
