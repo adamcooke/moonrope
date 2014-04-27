@@ -46,7 +46,7 @@ this directory. You'll probably want to run this when your application starts to
 need to parse files on every request.
 
 ```ruby
-moonrope = Moonrope::CoreDSL.load("path/to/moonrope/dir")
+moonrope = Moonrope::Base.load("path/to/moonrope/dir")
 ```
 
 Once you have this, you can go ahead and call actions or generate structures. 
@@ -76,16 +76,6 @@ structure.hash(user, :full => true, :expansions => true)
 structure.hash(user, :full => true, :expansion => [:animals])
 ```
 
-If your structure includes a `restriction` block, you will need to ensure you have set
-the `auth` global before you call the `hash` method. The following example sets the
-`auth` global and then generates the hash.
-
-```ruby
-Moonrope.globals(:auth => my_authed_user) do
-  structure.hash(user)
-end
-```
-
 ### Calling an API action
 
 Once you have defined an API action, you can go ahead and call it using the examples 
@@ -100,23 +90,6 @@ action = controller.actions[:list]
 
 # Call the action without any parameters
 action.execute
-
-# Call the action with some parameters
-action.execute(:page => 1, :maximum => 1000)
-```
-
-As with structures, these execute calls can be wrapped in a globals block in order to
-set the authenticating user. If there is no `auth` global set and you call `check_access`,
-the method will always return false.
-
-```ruby
-Moonrope.globals(:auth => my_auth_user) do
-  if action.check_access
-    action.execute
-  else
-    raise AccessDenied, "Authenticated user does not have access to this action."
-  end  
-end
 ```
 
 The result from any of the `execute` method will be an instance of our `ActionResult` class.
