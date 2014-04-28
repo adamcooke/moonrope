@@ -5,8 +5,8 @@ GEM
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
-    rake (10.1.1)
-    test-unit (2.0.0.0)
+    rake (10.3.1)
+    test-unit (2.5.5)
 
 PLATFORMS
   ruby
@@ -15,5 +15,5 @@ DEPENDENCIES
   json
   rack
   rack-test
-  rake
-  test-unit
+  rake (~> 10.3.1)
+  test-unit (~> 2.5.5)

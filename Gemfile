@@ -3,7 +3,7 @@ gem 'json'
 gem 'rack'
 
 group :test do
-  gem 'rake'
-  gem 'test-unit'
+  gem 'rake', '~> 10.3.1'
+  gem 'test-unit', '~> 2.5.5'
   gem 'rack-test'
 end
