@@ -4,7 +4,7 @@ controller :users do
   # Specify an action to execute before all methods in this controller.
   #
   before do
-    set :headers, {'X-Hello' => 'World'}
+    set_header 'X-Hello', 'World'
   end
   
   action :list do
@@ -30,7 +30,7 @@ controller :users do
     # return a JSON-able object - a string, array or hash.
     #
     action do
-      set :flags, {:pagination => {:page => params['page'], :offset => 0, :total_records => 100, :total_pages => 4}}
+      set_flag :pagination, {:page => params['page'], :offset => 0, :total_records => 100, :total_pages => 4}
       []
     end
     

@@ -4,12 +4,13 @@ module Moonrope
     attr_accessor :name, :basic, :full
     attr_reader :dsl, :expansions, :restrictions, :base
     
-    def initialize(base, name)
+    def initialize(base, name, &block)
       @base = base
       @name = name
       @expansions = {}
       @restrictions = []
       @dsl = Moonrope::DSL::StructureDSL.new(self)
+      @dsl.instance_eval(&block) if block_given?
     end
     
     #
@@ -24,8 +25,10 @@ module Moonrope
       
       # Enhance with the full hash if requested
       if options[:full]
-        full_hash = environment.instance_eval(&self.full)
-        hash.merge!(full_hash)
+        if self.full.is_a?(Proc)
+          full_hash = environment.instance_eval(&self.full)
+          hash.merge!(full_hash)
+        end
         
         # Add restrictions
         if environment.auth

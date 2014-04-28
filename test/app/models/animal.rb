@@ -1,4 +1,4 @@
-class Animal
+class Animal < ModelBase
   
   attr_accessor :id
   attr_accessor :type

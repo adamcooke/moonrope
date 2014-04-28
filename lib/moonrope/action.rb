@@ -7,8 +7,8 @@ module Moonrope
     def initialize(controller, name, &block)
       @controller = controller
       @name = name
-      @dsl = Moonrope::DSL::ActionDSL.new(self)
       @params = {}
+      @dsl = Moonrope::DSL::ActionDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
     
@@ -59,8 +59,8 @@ module Moonrope
         result.data     = response
         result.status   = 'success'
         result.time     = time_to_run.round(2)
-        result.flags    = eval_environment.variables[:flags]    || {}
-        result.headers  = eval_environment.variables[:headers]  || {}
+        result.flags    = eval_environment.flags
+        result.headers  = eval_environment.headers
         
         # Return the result object
         result
@@ -84,7 +84,7 @@ module Moonrope
         eval_environment = EvalEnvironment.new(@controller.base, request)
       end
       
-      if eval_environment.auth
+      if eval_environment.auth && access.is_a?(Proc)
         !!eval_environment.instance_eval(&access)
       else
         false

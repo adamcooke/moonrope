@@ -19,6 +19,17 @@ class Test::Unit::TestCase
 end
 
 #
+# A fake base object for models
+#
+class ModelBase
+  def initialize(attributes = {})
+    attributes.each do |key, value|
+      instance_variable_set("@#{key}", value)
+    end
+  end
+end
+
+#
 # A fake request class for use in some tests
 #
 class FakeRequest

@@ -11,7 +11,7 @@ module Moonrope
       #
       def structure(name, &block)
         structure = Moonrope::Structure.new(@base, name)
-        structure.dsl.instance_eval(&block)
+        structure.dsl.instance_eval(&block) if block_given?
         @base.structures << structure
       end
     
@@ -25,7 +25,7 @@ module Moonrope
         else
           controller = Moonrope::Controller.new(@base, name)
         end
-        controller.dsl.instance_eval(&block)
+        controller.dsl.instance_eval(&block) if block_given?
         @base.controllers << controller
       end
     

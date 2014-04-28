@@ -24,11 +24,18 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert_equal @auth_user, @environment.auth
   end
   
-  def test_setting_variables
-    @environment.set(:fruit, 'bananas')
-    assert_equal 'bananas', @environment.variables[:fruit]
-    assert @environment.reset
-    assert !  @environment.variables.keys.include?(:fruit)
+  def test_setting_headers
+    @environment.set_header 'Header1', 'A'
+    assert_equal 'A', @environment.headers['Header1']
+    @environment.set_header 'Header2', 'B'
+    assert_equal 'B', @environment.headers['Header2']
+  end
+  
+  def test_setting_flags
+    @environment.set_flag 'Flag1', 'A'
+    assert_equal 'A', @environment.flags['Flag1']
+    @environment.set_flag 'Flag2', 'B'
+    assert_equal 'B', @environment.flags['Flag2']
   end
   
   def test_structure_access

@@ -1,16 +1,35 @@
 class ControllersTest < Test::Unit::TestCase
-
-  def test_controllers_are_defined
-    assert_equal 1, $mr.controllers.size
-    assert_equal true, $mr.controllers.all? { |s| s.is_a?(Moonrope::Controller)}
+  
+  def setup
+    @base = Moonrope::Base.new
   end
   
-  def test_controller_definition
-    controller = $mr.controller(:users)
-    assert_equal true, controller.is_a?(Moonrope::Controller)
-    assert controller.actions.is_a?(Hash)
-    assert_equal :users, controller.name
-    assert_equal 2, controller.actions.size
+  def test_controllers_actions_can_be_found_easily
+    controller = Moonrope::Controller.new(@base, :users) do
+      action :list do
+        action { true }
+      end
+    end
+    action = controller / :list
+    assert_equal :list, action.name
+    assert action.is_a?(Moonrope::Action)
   end
-
+  
+  def test_controllers_can_have_before_filters
+    controller = Moonrope::Controller.new(@base, :users) do
+      before { 1 }
+      before(:list) { 3 }
+      action :list do
+        action { true }
+      end
+      
+      action :show do
+        action { true }
+      end
+    end
+    assert_equal 2, controller.befores.size
+    assert_equal 2, controller.before_actions_for(:list).size
+    assert_equal 1, controller.before_actions_for(:show).size
+  end
+  
 end

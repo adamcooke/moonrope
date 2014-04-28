@@ -1,14 +1,13 @@
 module Moonrope
   class EvalEnvironment
     
-    attr_reader :base, :variables, :request
+    attr_reader :base, :request, :headers, :flags
     attr_accessor :default_params
     
     def initialize(base, request, accessors = {})
       @base = base
       @request = request
       @accessors = accessors
-      @variables = {}
       @default_params = {}
       reset
     end
@@ -39,17 +38,27 @@ module Moonrope
     end
     
     #
-    # Set a variable
+    # Provide access to set some return headers for the request.
+    # Does not permit reading the 
     #
-    def set(name, value = nil)
-      @variables[name] = value
+    def set_header(name, value)
+      @headers[name.to_s] = value
+    end
+    
+    #
+    # Provide access to set some return headers for the request.
+    # Does not permit reading the 
+    #
+    def set_flag(name, value)
+      @flags[name] = value
     end
     
     # 
-    # Reset the variables for this eval environment
+    # Reset the variables which change during runtime for this eval environment
     #
     def reset
-      @variables = {}
+      @flags = {}
+      @headers = {}
     end
     
     #
@@ -83,7 +92,13 @@ module Moonrope
     # exist.
     #
     def structure(structure, object, options = {})
-      if object && structure = @base.structure(structure)
+      if object
+        structure = case structure
+        when Symbol, String       then @base.structure(structure.to_sym)
+        when Moonrope::Structure  then structure
+        else
+          raise Moonrope::Errors::Error, "Invalid structure '#{structure}'"
+        end 
         structure.hash(object, options.merge(:request => @request))
       else
         nil

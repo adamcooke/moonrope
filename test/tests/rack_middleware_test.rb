@@ -3,7 +3,31 @@ class RackMiddlewareTest < Test::Unit::TestCase
   include Rack::Test::Methods
   
   def app
-    Moonrope::Rack.new($mr)
+    @app ||= begin
+      base = Moonrope::Base.new do
+        authenticator do
+          # if there is a x-moonrope-username header, check the auth
+          # or raise access denied.
+          if request.headers['X-Moonrope-Username']
+            if request.headers['X-Moonrope-Username'] == 'user' && request.headers['X-Moonrope-Password'] == 'password'
+              User.new(:admin => true)
+            else
+              error :access_denied, "No suitable credentials were provided."
+            end
+          end
+        end
+        
+        controller :users do
+          action :list do
+            # ensure that the auth is a user in order to access this request
+            access { auth.is_a?(User) }
+            # return an empty array
+            action { [] }
+          end
+        end
+      end
+      Moonrope::Rack.new(base)
+    end
   end
   
   def test_non_api_requests_404

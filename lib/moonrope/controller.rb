@@ -4,12 +4,13 @@ module Moonrope
     attr_accessor :name, :actions, :befores
     attr_reader :base, :dsl
     
-    def initialize(base, name)
+    def initialize(base, name, &block)
       @base = base
       @name = name
       @actions = {}
       @befores = []
       @dsl = Moonrope::DSL::ControllerDSL.new(self)
+      @dsl.instance_eval(&block) if block_given?
     end
     
     def before_actions_for(action)

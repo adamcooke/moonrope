@@ -1,4 +1,4 @@
-class User
+class User < ModelBase
   
   attr_accessor :id
   attr_accessor :username

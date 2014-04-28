@@ -10,7 +10,7 @@ module Moonrope
     
       def action(name, &block)
         action = Moonrope::Action.new(@controller, name)
-        action.dsl.instance_eval(&block)
+        action.dsl.instance_eval(&block) if block_given?
         @controller.actions[name] = action
       end
     

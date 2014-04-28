@@ -61,6 +61,7 @@ module Moonrope
             end
           end
         rescue Moonrope::Errors::RequestError => e
+          @authenticated_user ||= false # set authenticated user to false if they don't exist
           result = Moonrope::ActionResult.new(self)
           result.status = e.status
           result.data = e.data
@@ -95,7 +96,7 @@ module Moonrope
     # Is this request to the API authenticated?
     #
     def authenticated?
-      !anonymous?
+      !(authenticated_user.nil? || authenticated_user == false)
     end
     
     private
