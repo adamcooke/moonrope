@@ -1,10 +1,9 @@
 class EvalEnvironmentTest < Test::Unit::TestCase
   
   def setup
-    @auth_user = User.new
-    @auth_user.name = 'Admin User'
+    @auth_user = User.new(:name => 'Admin User')
     @request = FakeRequest.new(:params => {'page' => '1'}, :version => 2, :authenticated_user => @auth_user)
-    @environment = Moonrope::EvalEnvironment.new($mr, @request, :accessor1 => 'Hello')
+    @environment = Moonrope::EvalEnvironment.new(Moonrope::Base.new, @request, :accessor1 => 'Hello')
   end
   
   def test_version
@@ -39,7 +38,10 @@ class EvalEnvironmentTest < Test::Unit::TestCase
   end
   
   def test_structure_access
-    structure = @environment.structure(:user, User.new)
+    user_structure = Moonrope::Structure.new(@environment.base, :user) do
+      basic { {:id => o.id} }
+    end
+    structure = @environment.structure(user_structure, User.new)
     assert structure.is_a?(Hash), "structure was not a Hash, was a #{structure.class}"
   end
   

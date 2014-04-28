@@ -98,8 +98,12 @@ module Moonrope
         when Moonrope::Structure  then structure
         else
           raise Moonrope::Errors::Error, "Invalid structure '#{structure}'"
-        end 
-        structure.hash(object, options.merge(:request => @request))
+        end
+        if structure
+          structure.hash(object, options.merge(:request => @request))
+        else
+          raise Moonrope::Errors::Error, "No structure found named '#{structure}'"
+        end
       else
         nil
       end

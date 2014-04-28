@@ -2,11 +2,6 @@ require 'test/unit'
 require 'rack/test'
 require 'moonrope'
 
-#
-# Load the example moonrope DSL
-#
-$mr = Moonrope::Base.load(File.expand_path('../app/moonrope', __FILE__))
-
 class Test::Unit::TestCase
   
   private
