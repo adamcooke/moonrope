@@ -65,6 +65,28 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal true, action.check_access(authenticated_request)
   end
   
+  def test_checking_access_with_a_default
+    base = Moonrope::Base.new do
+      default_access do |action|
+        auth.is_a?(User)
+      end
+      
+      controller :users do
+        action :list do
+          action { true }
+        end
+      end
+    end
+    
+    action = base.controller(:users) / :list
+    # unauthenticated request returns false
+    assert_equal false, action.check_access
+    # authenticated request should return true because it will match the
+    # default access block
+    authenticated_request = FakeRequest.new(:authenticated_user => User.new)
+    assert_equal true, action.check_access(authenticated_request)
+  end
+  
   def test_structure_method_can_be_called
     # Create a new structure to test with
     user_structure = Moonrope::Structure.new(@base, :user) do

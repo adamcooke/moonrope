@@ -35,6 +35,13 @@ module Moonrope
       def authenticator(&block)
         @base.authenticator = block
       end
+      
+      #
+      # Set the default access check block
+      #
+      def default_access(&block)
+        @base.default_access = block
+      end
     
     end
   end

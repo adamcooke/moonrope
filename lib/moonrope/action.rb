@@ -86,6 +86,8 @@ module Moonrope
       
       if eval_environment.auth && access.is_a?(Proc)
         !!eval_environment.instance_eval(&access)
+      elsif @controller.base.default_access.is_a?(Proc)
+        !!eval_environment.instance_exec(self, &@controller.base.default_access)
       else
         false
       end

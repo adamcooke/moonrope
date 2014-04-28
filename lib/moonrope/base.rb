@@ -10,12 +10,13 @@ module Moonrope
     end
     
     attr_reader :structures, :controllers, :dsl
-    attr_accessor :authenticator
+    attr_accessor :authenticator, :default_access
     
     def initialize(&block)
       @structures = []
       @controllers = []
-      @authenticator = Proc.new { false }
+      @authenticator = nil
+      @default_access = nil
       @dsl = Moonrope::DSL::BaseDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
