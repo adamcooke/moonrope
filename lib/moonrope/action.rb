@@ -4,11 +4,23 @@ module Moonrope
     attr_reader :controller, :name, :dsl, :params
     attr_accessor :description, :access, :action
     
-    def initialize(controller, name)
+    def initialize(controller, name, &block)
       @controller = controller
       @name = name
       @dsl = Moonrope::DSL::ActionDSL.new(self)
       @params = {}
+      @dsl.instance_eval(&block) if block_given?
+    end
+    
+    #
+    # Return the default param values for any fields which 
+    # includes one.
+    #
+    def default_params
+      @params.inject({}) do |h,(k,v)|
+        h[k.to_s] = v[:default] if v[:default]
+        h
+      end
     end
     
     #
@@ -22,6 +34,12 @@ module Moonrope
         eval_environment = EvalEnvironment.new(@controller.base, request)
       end
       
+      #
+      # Set this actions default parameters in the eval environment so that
+      # it has access to them.
+      #
+      eval_environment.default_params = self.default_params
+
       begin
         start_time = Time.now
         

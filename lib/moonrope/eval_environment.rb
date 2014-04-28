@@ -2,12 +2,14 @@ module Moonrope
   class EvalEnvironment
     
     attr_reader :base, :variables, :request
+    attr_accessor :default_params
     
     def initialize(base, request, accessors = {})
       @base = base
       @request = request
       @accessors = accessors
       @variables = {}
+      @default_params = {}
       reset
     end
     
@@ -29,7 +31,11 @@ module Moonrope
     # Return the parameters for the request
     #
     def params
-      @params ||= (request ? request.params : ParamSet.new)
+      @params ||= begin
+        params = request ? request.params : ParamSet.new
+        params._defaults = @default_params
+        params
+      end
     end
     
     #

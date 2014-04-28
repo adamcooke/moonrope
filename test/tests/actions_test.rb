@@ -51,6 +51,22 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal 'adamcooke', result.data[:username]
   end
   
+  #
+  # Test that the default param value set on the param defintion line is set
+  # in the params.
+  #
+  def test_default_params
+    action = Moonrope::Action.new($mr.controller(:users), :default_params_test) do
+      param :page, "The page number", :default => 1234
+      param :limit, "The maximum number of results"
+      action { {:page => params.page, :limit => params.limit} }
+    end
+    result = action.execute
+    assert_equal({'page' => 1234}, action.default_params)
+    assert_equal 1234, result.data[:page]
+    assert_equal nil, result.data[:limit]
+  end
+  
   def test_request_is_passed_to_structures
     action = $mr.controller(:users) / :info
     # authenticated

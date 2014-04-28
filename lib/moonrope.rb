@@ -1,6 +1,5 @@
 require 'json'
 
-
 require 'moonrope/action'
 require 'moonrope/action_result'
 require 'moonrope/base'
