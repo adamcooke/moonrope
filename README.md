@@ -65,3 +65,4 @@ result.flags    #=> Any flags set in the action
 result.headers  #=> Any headers set in the action
 result.time     #=> The time taken to run the request
 ```
+
