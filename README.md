@@ -6,43 +6,13 @@ actions & structures.
 
 ## Defining Objects
 
-To get started, you'll need to create some structures and controllers to use with your API. 
-Create a directory and make two folders, one called `structures` and the other called `controllers`.
-
-### Defining a structure
-
-A structure sets out how to turn an object into a hash. Structures are aware of some API environment
-information like the version and the authenticated user allowing you to easily tailor the output
-based on the visitor.
-
-The best place to look for an example structure is within this repository in the
-[test/app/moonrope/structures/user.rb file](https://github.com/viaduct/moonrope/blob/master/test/app/moonrope/structures/user.rb).
-
-### Defining a controller & action
-
-A controller consists of a number of actions which carry out various tasks or return information. 
-These actions can then be called whenever needed after verifying access or parameter requirements.
-
-Check the [test/app/moonrope/controllers/users.rb file](https://github.com/viaduct/moonrope/blob/master/test/app/moonrope/controllers/users.rb) for an
-exanple of creating a controller.
-
-### Helpers
-
-When you are defining blocks for in your definitions, you can use a number of helper methods as listed 
-below.
-
-* `version` - returns the version of the API which has been requested
-* `auth` - returns the object which has authenticated this API request
-* `globals` - returns a hash of all Moonrope globals
-* `error(:not_found, 'Something wasn't found)` - raise a not found error with the provided error
-* `set(:variable, 'value')` - sets a variable which can be accessed after the method has been executed. 
-  This is used to set `headers` and `flags`.
+In order to use Moonrope, you need to define your API controllers, structure & other
+configuration. The best way to learn this is to look at the examples in the examples 
+directory of this repository.
 
 ## Usage
 
-In order to use Moonrope, you'll need to create a directory which contains your controllers
-and your structures. To begin, you'll need to create an instance of Moonrope by passing
-this directory. You'll probably want to run this when your application starts to that you don't
+To begin, you'll need to create an instance of Moonrope by passing your configuration directory. You'll probably want to run this when your application starts so that you don't
 need to parse files on every request.
 
 ```ruby
