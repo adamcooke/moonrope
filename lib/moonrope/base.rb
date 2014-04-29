@@ -36,6 +36,13 @@ module Moonrope
     end
     
     #
+    # Shorthand for requesting a controller
+    #
+    def /(name)
+      controller(name)
+    end
+    
+    #
     # Create a new rack request for this API
     #
     def request(*args)

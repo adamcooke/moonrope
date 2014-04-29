@@ -83,7 +83,7 @@ below.
 
 ```ruby
 # Get the action
-action = moonrope.controllers(:users) / :list
+action = moonrope / :users / :list
 
 # Execute the action
 result = action.execute

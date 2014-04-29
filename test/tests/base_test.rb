@@ -2,7 +2,9 @@ class ControllersTest < Test::Unit::TestCase
   
   def test_basic_definitions
     base = Moonrope::Base.new do
-      controller :users
+      controller :users do
+        action :list
+      end
       controller :animals
       structure :user
       structure :animal
@@ -19,6 +21,9 @@ class ControllersTest < Test::Unit::TestCase
     assert_equal :animals, base.controller(:animals).name
     assert_equal :user, base.structure(:user).name
     assert_equal :animal, base.structure(:animal).name
+    
+    # Check controllers & actions can be found nicely 
+    assert_equal :list, (base / :users / :list).name
   end
   
 end
