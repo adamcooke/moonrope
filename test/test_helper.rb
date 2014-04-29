@@ -24,6 +24,19 @@ class ModelBase
   end
 end
 
+class Animal < ModelBase
+  attr_accessor :id, :name, :color, :user
+end
+
+class User < ModelBase
+  attr_accessor :id, :username, :private_code, :admin
+  def animals
+    @animals ||= []
+  end
+end
+
+
+
 #
 # A fake request class for use in some tests
 #
@@ -45,13 +58,6 @@ class FakeRequest
     @options[:authenticated_user]
   end
   
-end
-
-# 
-# Require models
-#
-Dir[File.expand_path("../app/models/**/*.rb", __FILE__)].each do |filename|
-  require filename
 end
 
 #
