@@ -10,9 +10,7 @@ module Moonrope
     #
     def self.load(path)
       api = self.new
-      Dir["#{path}/**/*.rb"].each do |filename|
-        api.dsl.instance_eval(File.read(filename), filename)
-      end
+      api.load(path)
       api
     end
     
@@ -31,19 +29,48 @@ module Moonrope
     # @return [Proc] the default access condition
     attr_accessor :default_access
     
+    # @return [String] the directory the base was loaded from (if relevant)
+    attr_accessor :loaded_from
+    
     #
     # Initialize a new instance of the Moonrope::Base
     #
     # @yield instance evals the contents within the Base DSL
     #
     def initialize(&block)
+      unload
+      @dsl = Moonrope::DSL::BaseDSL.new(self)
+      @dsl.instance_eval(&block) if block_given?
+    end
+    
+    #
+    # Reset the whole base to contain no data.
+    #
+    def unload
       @structures = []
       @controllers = []
       @authenticator = nil
       @default_access = nil
-      @dsl = Moonrope::DSL::BaseDSL.new(self)
-      @dsl.instance_eval(&block) if block_given?
     end
+    
+    #
+    # Reload this whole base API from the path
+    #
+    def load(directory = nil)
+      directory = self.loaded_from if directory.nil?
+      if directory
+        unload
+        Dir["#{directory}/**/*.rb"].each do |filename|
+          self.dsl.instance_eval(File.read(filename), filename)
+        end
+        self.loaded_from = directory
+        self
+      else
+        raise Moonrope::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
+      end
+    end
+    
+    alias_method :reload, :load
     
     #
     # Return a structure of the given name

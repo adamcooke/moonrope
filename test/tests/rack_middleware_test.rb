@@ -26,7 +26,7 @@ class RackMiddlewareTest < Test::Unit::TestCase
           end
         end
       end
-      Moonrope::Rack.new(base)
+      Moonrope::RackMiddleware.new(nil, base)
     end
   end
   

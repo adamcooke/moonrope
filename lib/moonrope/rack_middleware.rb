@@ -1,13 +1,18 @@
 module Moonrope
-  class Rack
+  class RackMiddleware
     
     #
     # Initialize a new Moonrope::Rack server
     #
+    # @param app [Object] the next Rack application in the stack
     # @param base [Moonrope::Base] the base API to serve
+    # @param options [Hash] a hash of options
+    # 
     #
-    def initialize(base)
+    def initialize(app, base, options = {})
+      @app = app
       @base = base
+      @options = options
     end
     
     #
@@ -18,6 +23,10 @@ module Moonrope
     #
     def call(env)
       if env['PATH_INFO'] =~ Moonrope::Request::PATH_REGEX
+        
+        if @options[:reload_on_each_request]
+          @base.load
+        end
         
         #
         # Create a new request object
@@ -42,7 +51,11 @@ module Moonrope
         end
 
       else
-        [404, {}, ["Non-API request."]]
+        if @app && @app.respond_to?(:call)
+          @app.call(env)
+        else
+          [404, {}, ["Non-API request"]]
+        end
       end
     end
     

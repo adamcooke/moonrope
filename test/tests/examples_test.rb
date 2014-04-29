@@ -35,4 +35,8 @@ class ExamplesTest < Test::Unit::TestCase
     assert_equal 30, result.data.size
   end
   
+  def test_reloading
+    assert @base.load
+  end
+  
 end

@@ -14,10 +14,12 @@ require 'moonrope/dsl/structure_restriction_dsl'
 require 'moonrope/errors'
 require 'moonrope/eval_environment'
 require 'moonrope/param_set'
-require 'moonrope/rack'
+require 'moonrope/rack_middleware'
 require 'moonrope/request'
 require 'moonrope/structure'
 require 'moonrope/version'
 
-module Moonrope
+require 'moonrope/railtie' if defined?(Rails)
+
+module Moonrope  
 end
