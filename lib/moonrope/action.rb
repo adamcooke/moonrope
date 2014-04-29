@@ -68,8 +68,14 @@ module Moonrope
       # it has access to them.
       #
       eval_environment.default_params = self.default_params
-
+      
+      
       begin
+        #
+        # Validate the parameters
+        #
+        self.validate_parameters(eval_environment.params)
+        
         start_time = Time.now
         
         # Run before filters
@@ -123,6 +129,29 @@ module Moonrope
       else
         false
       end
+    end
+    
+    #
+    # Return whether or not the passed ParamSet is valid for this action
+    #
+    # @param param_set [Moonrope::ParamSet] the param set to check
+    # @return [Boolean]
+    #
+    def validate_parameters(param_set)
+      @params.each do |name, value|
+        if value[:required] && param_set[name].nil?
+          raise Moonrope::Errors::ParameterError, "`#{name}` parameter is required but is missing"
+        end
+        
+        if value[:regex] && param_set[name] && !(param_set[name].to_s =~ value[:regex])
+          raise Moonrope::Errors::ParameterError, "`#{name}` parameter is invalid"
+        end
+        
+        if value[:type] && param_set[name] && !param_set[name].is_a?(value[:type])
+          raise Moonrope::Errors::ParameterError, "`#{name}` should be a `#{value[:type]}` but is a `#{param_set[name].class}`"
+        end
+      end
+      true
     end
           
   end

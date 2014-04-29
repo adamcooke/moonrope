@@ -190,4 +190,60 @@ class ActionsTest < Test::Unit::TestCase
     assert json.is_a?(String)
   end
   
+  def test_that_param_validation_happens_on_executin
+    action = Moonrope::Action.new(@controller, :list) do
+      param :page, "Page number", :required => true
+      action { [1,2,3] }
+    end
+    assert result = action.execute
+    assert_equal 'parameter-error', result.status
+  end
+  
+  def test_actions_params_can_be_validated_for_presence
+    action = Moonrope::Action.new(@controller, :list) do
+      param :page, "Page number", :required => true
+    end
+    
+    # request without the param
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new)
+    end
+    
+    # request with the param
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('page' => 1))
+  end
+  
+  def test_actions_params_can_be_validated_for_type
+    action = Moonrope::Action.new(@controller, :list) do
+      param :page, "Page number", :type => Integer
+    end
+    
+    # request with a string valuee
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new('page' => 'stringy'))
+    end
+    
+    # request with an integer value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('page' => 1))
+
+    # request with an nil value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('page' => nil))
+  end
+  
+  def test_actions_params_can_be_validated_for_regex_matches
+    action = Moonrope::Action.new(@controller, :list) do
+      param :username, "Username", :regex => /\A[a-z]+\z/
+    end
+    # request with a nil value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new)
+    
+    # request with a matching value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('username' => 'adam'))
+    
+    # request with a string valuee
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new('username' => 'invalid-username1234'))
+    end
+  end  
+  
 end
