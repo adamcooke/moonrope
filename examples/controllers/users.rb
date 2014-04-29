@@ -33,7 +33,8 @@ controller :users do
     # Set a parameter allowing the user to pass the page which is being
     # requested. By default, if not set, this value will be 1.
     #
-    param :page, "The current page number for pagination.", :default => 1
+    param :page, "The current page number for pagination.", :default => 1, :required => true
+    param :status, "The status of users to display", :type => String, :regex => /\A[a-z0-9]+\z/
     
     #
     # Require that the autheticated user is an instance of User. This will
