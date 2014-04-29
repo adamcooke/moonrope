@@ -51,6 +51,8 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert response_json = JSON.parse(last_response.body)
     assert_equal 'success', response_json['status']
     assert response_json['data'].is_a?(Array)
+    assert_equal 'application/json', last_response.headers['Content-Type']
+    assert last_response.headers['Content-Length']
   end
   
   def test_authenticated_api_methods

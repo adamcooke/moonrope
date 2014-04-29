@@ -45,7 +45,11 @@ module Moonrope
         #
         begin
           result = request.execute
-          [200, result.headers, [result.to_json]]
+          json = result.to_json
+          global_headers = {}
+          global_headers['Content-Type'] = 'application/json'
+          global_headers['Content-Length'] = json.bytesize.to_s
+          [200, global_headers.merge(result.headers), [result.to_json]]
         rescue => e
           [500, {}, ["An internal server occurred."]]
         end
