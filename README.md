@@ -82,21 +82,16 @@ Once you have defined an API action, you can go ahead and call it using the exam
 below.
 
 ```ruby
-# Get the controller
-controller = moonrope.controllers(:users)
-
 # Get the action
-action = controller.actions[:list]
+action = moonrope.controllers(:users) / :list
 
-# Call the action without any parameters
-action.execute
+# Execute the action
+result = action.execute
+
+# Look at the result
+result.status   #=> Status of the request
+result.data     #=> The return value of the action
+result.flags    #=> Any flags set in the action
+result.headers  #=> Any headers set in the action
+result.time     #=> The time taken to run the request
 ```
-
-The result from any of the `execute` method will be an instance of our `ActionResult` class.
-It will respond to the following methods:
-
-* `data` - the return value of the `action`
-* `status` - the status of the request (success, not-found etc...)
-* `headers` - a hash containing HTTP headers which should be returned (defaults to an empty hash)
-* `flags` - a set of flags which should be returned
-* `time` - the length of time it took to execute the action

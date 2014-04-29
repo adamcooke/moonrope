@@ -155,6 +155,7 @@ class ActionsTest < Test::Unit::TestCase
       before { set_flag :before_all, true }      
       before(:other) { set_flag :before_other, true }
       before(:list) { set_flag :before_list, true }
+      before(:list, :potato) { set_flag :before_list_and_potato, true }
     end
     
     action = Moonrope::Action.new(controller, :list) do
@@ -164,6 +165,7 @@ class ActionsTest < Test::Unit::TestCase
     assert result = action.execute
     assert_equal true, result.flags[:before_all]
     assert_equal true, result.flags[:before_list]
+    assert_equal true, result.flags[:before_list_and_potato]
     assert_equal nil, result.flags[:before_other]
   end
   
