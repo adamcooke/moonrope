@@ -1,9 +1,34 @@
 module Moonrope
   class Action
     
-    attr_reader :controller, :name, :dsl, :params
-    attr_accessor :description, :access, :action
+    # @return [Moonrope::Controller] the associated controller
+    attr_reader :controller
     
+    # @return [Symbol] the name of the action
+    attr_reader :name
+    
+    # @return [Moonrope::DSL::Action] the action's DSL
+    attr_reader :dsl
+    
+    # @return [Hash] the params available for the action
+    attr_reader :params
+    
+    # @return [String] the description of the action
+    attr_accessor :description
+    
+    # @return [Proc] the access check condition for the action
+    attr_accessor :access
+    
+    # @return [Proc] the action for the action
+    attr_accessor :action
+    
+    #
+    # Initialize a new action
+    #
+    # @param controller [Moonrope::Controller] the controller this action belongs to
+    # @param name [Symbol] the name of the action
+    # @yield allows the action to be configured via Moonrope::DSL::ActionDSL
+    #
     def initialize(controller, name, &block)
       @controller = controller
       @name = name
@@ -13,8 +38,9 @@ module Moonrope
     end
     
     #
-    # Return the default param values for any fields which 
-    # includes one.
+    # Return a hash of all params for this action which are 
+    #
+    # @return [Hash] hash with field names as keys with default values
     #
     def default_params
       @params.inject({}) do |h,(k,v)|
@@ -25,7 +51,10 @@ module Moonrope
     
     #
     # Executes the action and returns a ActionResult object with the result
-    # of the action. Accepts a Request or an EvalEnvironment.
+    # of the action.
+    #
+    # @param request [Moonrope::Request or Moonrope::EvalEnvironment] 
+    # @return [Moonrope::ActionResult]
     #
     def execute(request = nil)
       if request.is_a?(EvalEnvironment)
@@ -76,6 +105,9 @@ module Moonrope
     #
     # Check whether the authenticated user has access to this request.
     # Accepts a Request or an EvalEnvironment.
+    #
+    # @param request [Moonrope::Request or Moonrope::EvalEnvironment]
+    # @return [Boolean]
     #
     def check_access(request = nil)
       if request.is_a?(EvalEnvironment)

@@ -1,54 +1,61 @@
 module Moonrope
   module DSL
     class StructureDSL
-    
+      
+      #
+      # Initialize a new StructureDSL
+      #
+      # @param structure [Moonrope::Structure]
+      #
       def initialize(structure)
         @structure = structure
       end
-    
+      
+      # @return [Moonrope::Structure] the associated structure
       attr_reader :structure
     
       #
-      # Set or get a basic data block for this structure
+      # Set the basic variables for the structure.
+      #
+      # @yield stores the contents of the block for the basic data
+      # @return [void]
       #
       def basic(&block)
         structure.basic = block
       end
 
       #
-      # Set or get a full data block for the structure
+      # Set the full variables for the structure.
+      #
+      # @yield stores the contents of the block for the full data
+      # @return [void]
       #
       def full(&block)
         structure.full = block
       end
     
       #
-      # Set up a new expansion
+      # Add a new expansion.
+      #
+      # @param name [Symbol] the name of the expansion
+      # @yield sets the block to execute for the expansion if requested
+      # @return [void]
       #
       def expansion(name, &block)
         structure.expansions[name] = block
       end
     
       #
-      # Set up a new restricted data set
+      # Add a new restricted block.
+      #
+      # @yield instance evals the block within RestrictionDSL
+      # @return [Moonrope::DSL::RestrictionDSL]
       #
       def restricted(&block)
-        dsl = RestrictionDSL.new
+        dsl = Moonrope::DSL::StructureRestrictionDSL.new
         dsl.instance_eval(&block)
         structure.restrictions << dsl
-      end
-    
-      #
-      # The DSL used for reading the 
-      #
-      class RestrictionDSL
-        def data(&block)
-          block_given? ? @data = block : @data
-        end
-      
-        def condition(&block)
-          block_given? ? @condition = block : @condition
-        end
+        dsl
       end
     
     end

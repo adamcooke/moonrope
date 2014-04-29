@@ -1,13 +1,21 @@
 module Moonrope
   module DSL
     class BaseDSL
-    
+      
+      #
+      # Initiaize a new BaseDSL
+      #
+      # @param base [Moonrope::Base]
+      #
       def initialize(base)
         @base = base
       end
     
       #
-      # Define a new global structure
+      # Define a new structure
+      #
+      # @param name [Symbol] the name of the structure
+      # @yield instance evals the block within the StructureDSL
       #
       def structure(name, &block)
         structure = Moonrope::Structure.new(@base, name)
@@ -16,7 +24,11 @@ module Moonrope
       end
     
       #
-      # Create a new controller or append actions to an existing controller
+      # Define a new controller or append values to an existing
+      # controller if it has already been defined.
+      #
+      # @param name [Symbol] the name of the controller
+      # @yield instance evals the block within the ControllerDSL
       #
       def controller(name, &block)
         existing = @base.controllers.select { |a| a.name == name }.first
@@ -30,14 +42,18 @@ module Moonrope
       end
     
       #
-      # Set the authenticator
+      # Set the authenticator for the API.
+      #
+      # @yield stores the block as the authenticator
       #
       def authenticator(&block)
         @base.authenticator = block
       end
       
       #
-      # Set the default access check block
+      # Set the default access check block.
+      #
+      # @yield stores the block as the access check
       #
       def default_access(&block)
         @base.default_access = block

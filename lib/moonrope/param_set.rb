@@ -1,19 +1,22 @@
 module Moonrope
   class ParamSet
     
+    #
+    # Initialize a new ParamSet
+    #
+    # @param params [Hash or String] the initial params. If string, will be parsed through JSON.
+    #
     def initialize(params = {})
       @params = (params.is_a?(String) ? JSON.parse(params) : params) || {}
       @defaults = {}
     end
-    
-    def method_missing(name, value = nil)
-      _value_for(name.to_s) || nil
-    end
-    
-    def [](key)
-      _value_for(key) || nil
-    end
-    
+
+    #
+    # Return the value for the given key 
+    #
+    # @param key [String] the key to lookup
+    # @return [Object] the value
+    #
     def _value_for(key)
       # Get the value from the params and defaults
       value = (@params[key.to_s] || @defaults[key.to_s])
@@ -23,6 +26,14 @@ module Moonrope
       value
     end
     
+    alias_method :[], :_value_for
+    alias_method :method_missing, :_value_for
+    
+    #
+    # Set the defaults for the param set
+    #
+    # @param defaults [Hash]
+    # @return [void]
     def _defaults=(defaults)
       if defaults.is_a?(Hash)
         @defaults = defaults

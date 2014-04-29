@@ -1,10 +1,21 @@
 module Moonrope
   class Rack
     
+    #
+    # Initialize a new Moonrope::Rack server
+    #
+    # @param base [Moonrope::Base] the base API to serve
+    #
     def initialize(base)
       @base = base
     end
     
+    #
+    # Make a new request
+    #
+    # @param env [Hash] a rack environment hash
+    # @return [Array] a rack triplet
+    #
     def call(env)
       if env['PATH_INFO'] =~ Moonrope::Request::PATH_REGEX
         

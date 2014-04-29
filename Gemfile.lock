@@ -7,6 +7,7 @@ GEM
       rack (>= 1.0)
     rake (10.3.1)
     test-unit (2.5.5)
+    yard (0.8.7.2)
 
 PLATFORMS
   ruby
@@ -17,3 +18,4 @@ DEPENDENCIES
   rack-test
   rake (~> 10.3.1)
   test-unit (~> 2.5.5)
+  yard (~> 0.8.7)

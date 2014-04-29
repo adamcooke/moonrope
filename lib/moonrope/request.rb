@@ -1,10 +1,26 @@
 module Moonrope
   class Request
     
+    # The path which will be intercepted by the Rack middleware
+    # and that all reuqest will arrive on.
     PATH_REGEX = /\A\/api\/([\w\/\-\.]+)?/
     
-    attr_reader :env, :version, :controller_name, :action_name, :authenticated_user
+    # @return [Hash] the rack environment
+    attr_reader :env
+    # @return [String] the name of the controller which was requested
+    attr_reader :controller_name
+    # @return [String] the name of the action which was requested
+    attr_reader :action_name
+    # @return [Object] the authenticated user
+    attr_reader :authenticated_user
     
+    #
+    # Initialize a new Moonrope::Request
+    #
+    # @param base [Moonrope::Base]
+    # @param env [Hash] a rack environment has
+    # @param path [String] the reqested path (after the /api/ prefix)
+    #
     def initialize(base, env, path = nil)
       @base = base
       @env = env
@@ -17,6 +33,8 @@ module Moonrope
     #
     # Return the requested API version from the request
     #
+    # @return [Integer]
+    #
     def version
       version = @version.to_s.gsub(/[^0-9]/, '').to_i
       version = 1 if version == 0
@@ -26,12 +44,16 @@ module Moonrope
     #
     # Return whether or not this request is valid and can continue?
     #
+    # @return [Boolean]
+    #
     def valid?
       !!(version > 0 && [controller_name, action_name].all? { |c| c =~ /\A[\w\-\.]+\z/} && controller && action)
     end
     
     #
     # Return the controller object for the request
+    # 
+    # @return [Moonrope::Controller]
     #
     def controller
       @controller ||= @base.controller(controller_name.to_sym)
@@ -40,13 +62,17 @@ module Moonrope
     #
     # Return the action object for the request
     #
+    # return [Moonrope::Action]
+    #
     def action
       @action ||= controller.actions[action_name.to_sym]
     end
     
     #
-    # Execute the approrpriate action for this request and return a 
-    # ActionResult.
+    # Execute the appropriate action for the request after running
+    # the various authentication checks.
+    #
+    # @return [Moonrope::ActionResult]
     #
     def execute
       eval_env = EvalEnvironment.new(@base, self)
@@ -74,12 +100,16 @@ module Moonrope
     #
     # Return all user supplier parameters
     #
+    # @return [Moonrope::ParamSet]
+    #
     def params
       @params ||= Moonrope::ParamSet.new(rack_request.params['params'])
     end
     
     #
     # Return all HTTP headers from the request
+    #
+    # @return [Rack::Utils::HeaderHash]
     #
     def headers
       @headers ||= self.class.extract_http_request_headers(@env)
@@ -88,12 +118,16 @@ module Moonrope
     #
     # Is this request to the API anonymous?
     #
+    # @return [Boolean]
+    #
     def anonymous?
       authenticated_user.nil?
     end
     
     #
     # Is this request to the API authenticated?
+    #
+    # @return [Boolean]
     #
     def authenticated?
       !(authenticated_user.nil? || authenticated_user == false)
@@ -104,12 +138,16 @@ module Moonrope
     #
     # Return/create a rack request object for use internally
     #
+    # @return [Rack::Request]
+    #
     def rack_request
       @rack_request ||= ::Rack::Request.new(@env)
     end
     
     #
     # Extract headers from the rack env
+    #
+    # @return [Rack::Utils::HeaderHash]
     #
     def self.extract_http_request_headers(env)
       env.reject do |k, v|
