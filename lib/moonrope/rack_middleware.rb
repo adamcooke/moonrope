@@ -39,6 +39,9 @@ module Moonrope
         unless request.valid?
           return [400, {}, ["Invalid API Request. Must provide a version, controller & action as /api/v1/controller/action."]]
         end
+
+        global_headers = {}
+        global_headers['Content-Type'] = 'application/json'
         
         #
         # Execute the request
@@ -46,15 +49,15 @@ module Moonrope
         begin
           result = request.execute
           json = result.to_json
-          global_headers = {}
-          global_headers['Content-Type'] = 'application/json'
           global_headers['Content-Length'] = json.bytesize.to_s
           [200, global_headers.merge(result.headers), [result.to_json]]
+        rescue JSON::ParserError => e
+          [400, global_headers, [{:status => 'invalid-json', :details => e.message}.to_json]]
         rescue => e
           Moonrope.logger.info e.class
           Moonrope.logger.info e.message
           Moonrope.logger.info e.backtrace.join("\n")
-          [500, {}, ["An internal server occurred."]]
+          [500, global_headers, [{:status => 'internal-server-error'}.to_json]]
         end
 
       else

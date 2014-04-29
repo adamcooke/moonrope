@@ -1,4 +1,5 @@
 require 'json'
+require 'logger'
 
 require 'moonrope/action'
 require 'moonrope/action_result'

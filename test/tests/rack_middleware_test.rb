@@ -55,6 +55,13 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert last_response.headers['Content-Length']
   end
   
+  def test_passing_invalid_json_renders_a_bad_request
+    get "/api/v1/users/list", {:params => "{invalidjson}"}
+    assert_equal 400, last_response.status
+    assert response_json = JSON.parse(last_response.body)
+    assert_equal 'invalid-json', response_json['status']
+  end
+  
   def test_authenticated_api_methods
     # correct credential
     get "/api/v1/users/list", {}, auth_headers('user', 'password')
