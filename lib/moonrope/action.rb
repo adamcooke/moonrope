@@ -69,6 +69,11 @@ module Moonrope
       #
       eval_environment.default_params = self.default_params
       
+      #
+      # Set the current action to the eval environment so it knows what action
+      # invoked this.
+      #
+      eval_environment.action = self
       
       begin
         #

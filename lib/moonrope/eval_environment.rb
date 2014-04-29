@@ -18,6 +18,9 @@ module Moonrope
     # @return [Hash] the default params to be merged with request params
     attr_accessor :default_params
     
+    # @return [Moonrope::Action] the action which invoked this environment
+    attr_accessor :action
+    
     #
     # Initialize a new EvalEnvironment
     #
@@ -97,9 +100,11 @@ module Moonrope
     # @param value [void] unused/wnated
     # @return [Object]
     #
-    def method_missing(name, value = nil)
+    def method_missing(name, *args)
       if @accessors.keys.include?(name.to_sym)
         @accessors[name.to_sym]
+      elsif helper = @base.helper(name.to_sym, action ? action.controller : nil)
+        instance_exec(*args, &helper.block)
       else
         super
       end

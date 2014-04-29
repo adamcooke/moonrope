@@ -42,7 +42,16 @@ module Moonrope
         @controller.befores << before_action
         before_action
       end
-    
+      
+      #
+      # Defines a new helper for this controller.
+      #
+      # @param name [Symbol] the name of the helper
+      # @yield stores the block to execute for the helper
+      #
+      def helper(name, &block)
+        @controller.base.helpers << Moonrope::Helper.new(name, @controller, &block)
+      end
     end
   end
 end

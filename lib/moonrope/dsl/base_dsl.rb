@@ -58,7 +58,17 @@ module Moonrope
       def default_access(&block)
         @base.default_access = block
       end
-    
+      
+      #
+      # Define a new helper in the global namespace
+      #
+      # @param name [Symbol] the name of the helper
+      # @yield stores the block to execute for the helper
+      #
+      def helper(name, &block)
+        @base.helpers << Moonrope::Helper.new(name, nil, &block)
+      end
+      
     end
   end
 end

@@ -20,6 +20,9 @@ module Moonrope
     # @return [Array] the array of defined controllers
     attr_accessor :controllers
     
+    # @return [Array] the array of defined helpers
+    attr_accessor :helpers
+    
     # @return [Moonrope::DSL::BaseDSL] the base DSL
     attr_accessor :dsl
     
@@ -49,6 +52,7 @@ module Moonrope
     def unload
       @structures = []
       @controllers = []
+      @helpers = []
       @authenticator = nil
       @default_access = nil
     end
@@ -103,6 +107,23 @@ module Moonrope
     #
     def request(*args)
       Moonrope::Request.new(self, *args)
+    end
+    
+    #
+    # Return a helper for the given name and, potentially controller
+    #
+    # @param name [Symbol] the name of the helper
+    # @param controller [Moonrope::Controller] the controller scope
+    #
+    def helper(name, controller = nil)
+      if controller
+        matched_helpers = @helpers.select do |h|
+          h.name == name.to_sym && (h.controller.nil? || h.controller == controller)
+        end
+      else
+        matched_helpers = @helpers.select { |h| h.name == name.to_sym && h.controller.nil? }
+      end
+      matched_helpers.first
     end
     
   end
