@@ -1,6 +1,8 @@
 module Moonrope
   class EvalEnvironment
     
+    include Moonrope::EvalHelpers
+    
     # @return [Moonrope::Base] the base object
     attr_reader :base
     
@@ -86,23 +88,6 @@ module Moonrope
     def reset
       @flags = {}
       @headers = {}
-    end
-    
-    #
-    # Raise an error.
-    #
-    # @param type [Symbol] the type of error to raise
-    # @param message [String, Hash or Array] options to pass with the error (usually a message)
-    #
-    def error(type, message)
-      case type
-      when :not_found           then raise(Moonrope::Errors::NotFound, message)
-      when :access_denied       then raise(Moonrope::Errors::AccessDenied, message)
-      when :validation_error    then raise(Moonrope::Errors::ValidationError, message)
-      when :parameter_error     then raise(Moonrope::Errors::ParameterError, message)
-      else
-        raise Moonrope::Errors::RequestError, message
-      end
     end
     
     #

@@ -83,7 +83,7 @@ module Moonrope
           # this user, if not raise an error.
           if authenticated?
             unless action.check_access(eval_env) == true
-              raise Moonrope::Errors::AccessDenied, "Access to #{@path} is not permitted."
+              raise Moonrope::Errors::AccessDenied, "Access to #{controller.name}/#{action.name} is not permitted."
             end
           end
         rescue Moonrope::Errors::RequestError => e

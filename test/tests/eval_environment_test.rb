@@ -45,27 +45,5 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert structure.is_a?(Hash), "structure was not a Hash, was a #{structure.class}"
   end
   
-  def test_errors
-    assert_raises Moonrope::Errors::NotFound do
-      @environment.error(:not_found, "Page not found")
-    end
-
-    assert_raises Moonrope::Errors::AccessDenied do
-      @environment.error(:access_denied, "User not authenticated")
-    end
-
-    assert_raises Moonrope::Errors::ValidationError do
-      @environment.error(:validation_error, [{:field => 'user', :message => 'should not be blank'}])
-    end
-    
-    assert_raises Moonrope::Errors::ParameterError do
-      @environment.error(:parameter_error, [{:field => 'page', :message => 'should be present'}])
-    end
-    
-    assert_raises Moonrope::Errors::RequestError do
-      @environment.error(:misc_error, "Unknown issue")
-    end
-  end
-  
 end
 

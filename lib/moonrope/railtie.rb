@@ -13,6 +13,9 @@ module Moonrope
         next
       end
       
+      # Set the logger
+      Moonrope.logger = Rails.logger
+      
       # Insert the Moonrope middleware into the application's middleware
       # stack (at the bottom).
       app.middleware.use(

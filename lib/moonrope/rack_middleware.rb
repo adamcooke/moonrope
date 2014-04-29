@@ -51,6 +51,9 @@ module Moonrope
           global_headers['Content-Length'] = json.bytesize.to_s
           [200, global_headers.merge(result.headers), [result.to_json]]
         rescue => e
+          Moonrope.logger.info e.class
+          Moonrope.logger.info e.message
+          Moonrope.logger.info e.backtrace.join("\n")
           [500, {}, ["An internal server occurred."]]
         end
 
