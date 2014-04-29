@@ -24,6 +24,7 @@ class ControllersTest < Test::Unit::TestCase
     
     # Check controllers & actions can be found nicely 
     assert_equal :list, (base / :users / :list).name
+    assert_equal :user, (base[:user]).name
   end
   
 end

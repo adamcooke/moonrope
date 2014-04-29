@@ -28,6 +28,8 @@ module Moonrope
       structures.select { |s| s.name == name }.first
     end
     
+    alias_method :[], :structure
+    
     #
     # Return a controller of the given name
     #
@@ -35,12 +37,7 @@ module Moonrope
       controllers.select { |a| a.name == name }.first
     end
     
-    #
-    # Shorthand for requesting a controller
-    #
-    def /(name)
-      controller(name)
-    end
+    alias_method :/, :controller
     
     #
     # Create a new rack request for this API
