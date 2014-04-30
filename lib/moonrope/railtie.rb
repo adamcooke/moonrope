@@ -5,7 +5,7 @@ module Moonrope
       
       # Initialize a new moonrope base from the API defined in
       # $RAILS_ROOT/app/api directory.
-      moonrope_directory = Rails.root.join('app', 'api')
+      moonrope_directory = Rails.root.join('api')
       if File.directory?(moonrope_directory)
         app.config.moonrope = Moonrope::Base.load(moonrope_directory)
       else
