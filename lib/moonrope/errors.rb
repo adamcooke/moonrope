@@ -42,10 +42,6 @@ module Moonrope
       def status
         'parameter-error'
       end
-      
-      def data
-        {:errors => @options}
-      end
     end
     
   end
