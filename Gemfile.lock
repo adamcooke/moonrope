@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    moonrope (0.0.0)
-      json (~> 1.8.1)
-      rack (~> 1.5.0)
+    moonrope (1.0.0)
+      json (~> 1.8)
+      rack (~> 1.5)
 
 GEM
   remote: https://rubygems.org/
@@ -21,7 +21,7 @@ PLATFORMS
 
 DEPENDENCIES
   moonrope!
-  rack-test
-  rake (~> 10.3.1)
-  test-unit (~> 2.5.5)
-  yard (~> 0.8.7)
+  rack-test (~> 0)
+  rake (~> 10.3)
+  test-unit (~> 2.5)
+  yard (~> 0.8)
