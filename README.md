@@ -16,14 +16,8 @@ which includes examples of how to define structures and controllers.
 
 ## Usage
 
-To get started, you need to create a new base API instance which is aware of
-all your defined controllers & structures. If you just have a directory of 
-these files, you can easily load it as follows:
+The quickest way to get started is to install Moonrope into an existing Rails
+application. You just need to pop `moonrope` into your Gemfile and restart
+your server.
 
-```ruby
-moonrope = Moonrope::Base.load('path/to/directory')
-```
-
-This `moonrope` instance contains all the information about your API. All 
-interactions your application has with your API will go through this.
-
+You should place all your configuration in a directory called RAILS_ROOT/api. 
