@@ -12,7 +12,7 @@ module Moonrope
       end
       
       def status
-        @options[:status] || 'error'
+        @options.is_a?(Hash) ? @options[:status] || 'error'  : 'error'
       end
       
       def data
