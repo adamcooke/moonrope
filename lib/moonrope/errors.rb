@@ -11,6 +11,10 @@ module Moonrope
         @options = options
       end
       
+      def status
+        @options[:status] || 'error'
+      end
+      
       def data
         {:message => @options}
       end
