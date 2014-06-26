@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     moonrope (1.0.2)
-      json (~> 1.8)
-      rack (~> 1.5)
+      json (>= 1.7)
+      rack (>= 1.4)
 
 GEM
   remote: https://rubygems.org/
