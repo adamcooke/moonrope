@@ -1,9 +1,14 @@
 module Moonrope
   class Request
-    
-    # The path which will be intercepted by the Rack middleware
-    # and that all reuqest will arrive on.
-    PATH_REGEX = /\A\/api\/([\w\/\-\.]+)?/
+        
+    class << self
+      attr_accessor :path_regex
+      
+      # @return [Regex] the regex which should be matched for all API requests
+      def path_regex
+        @path_regex ||= /\A\/api\/([\w\/\-\.]+)?/
+      end
+    end
     
     # @return [Hash] the rack environment
     attr_reader :env
@@ -24,7 +29,7 @@ module Moonrope
     def initialize(base, env, path = nil)
       @base = base
       @env = env
-      if path.nil? && env['PATH_INFO'] =~ PATH_REGEX
+      if path.nil? && env['PATH_INFO'] =~ self.class.path_regex
         path = $1
       end
       @version, @controller_name, @action_name = path ? path.split("/") : [nil, nil, nil]

@@ -15,6 +15,16 @@ module Moonrope
       
       # Set the logger
       Moonrope.logger = Rails.logger
+
+      # Set the request prefix if one has been set
+      if app.config.respond_to?(:moonrope_request_path_prefix) && app.config.moonrope_request_path_prefix.is_a?(String)
+        Moonrope::Request.path_prefix = app.config.moonrope_request_path_prefix
+      end
+      
+      if app.config.respond_to?(:moonrope_request_path_regex) && app.config.moonrope_request_path_regex.is_a?(Regexp)
+        Moonrope::Request.path_regex = app.config.moonrope_request_path_regex
+      end
+      
       
       # Insert the Moonrope middleware into the application's middleware
       # stack (at the bottom).

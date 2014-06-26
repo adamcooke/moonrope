@@ -22,7 +22,7 @@ module Moonrope
     # @return [Array] a rack triplet
     #
     def call(env)
-      if env['PATH_INFO'] =~ Moonrope::Request::PATH_REGEX
+      if env['PATH_INFO'] =~ Moonrope::Request.path_regex
         
         if @options[:reload_on_each_request]
           @base.load
