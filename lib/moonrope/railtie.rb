@@ -9,7 +9,7 @@ module Moonrope
       if File.directory?(moonrope_directory)
         app.config.moonrope = Moonrope::Base.load(moonrope_directory)
       else
-        $stderr.puts "Moonrope is installed but there is no API directory at ROOT/app/api."
+        $stderr.puts "Moonrope is installed but there is no API directory at ROOT/api."
         next
       end
       
