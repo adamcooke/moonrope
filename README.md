@@ -330,7 +330,7 @@ structure(:user, user, :full => true)
 structure(:user, user, :full => true, :expansions => true)
 
 # Return the full information plus specified expansions
-specified(:user, user, :full => true, :expansions => [:projects, :financials])
+structure(:user, user, :full => true, :expansions => [:projects, :financials])
 ```
 
 Remember, these can be used in structures as well as actions. So, you may
