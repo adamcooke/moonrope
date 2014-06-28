@@ -115,26 +115,44 @@ module Moonrope
     # object and return a hash or nil if the structure doesn't 
     # exist.
     #
-    # @param structure [Moonrope::Structure or Symbol] the structure to be used
+    # @param structure_name [Moonrope::Structure or Symbol] the structure to be used
     # @param object [Object] the object to pass through the structure
     # @param options [Hash] options to pass to the strucutre hash generator
     #
-    def structure(structure, object, options = {})
+    def structure(structure_name, object, options = {})
       if object
-        structure = case structure
-        when Symbol, String       then @base.structure(structure.to_sym)
-        when Moonrope::Structure  then structure
-        else
-          raise Moonrope::Errors::Error, "Invalid structure '#{structure}'"
-        end
-        if structure
+        structure = structure_for(structure_name)
+        if structure.is_a?(Moonrope::Structure)
           structure.hash(object, options.merge(:request => @request))
         else
-          raise Moonrope::Errors::Error, "No structure found named '#{structure}'"
+          raise Moonrope::Errors::Error, "No structure found named '#{structure_name}'"
         end
       else
         nil
       end
+    end
+    
+    #
+    # Return a Moonrope::Structure object for the provided name
+    #
+    # @param structure_name [Symbol or String] the structure to return
+    #
+    def structure_for(structure_name)
+      structure = case structure_name
+      when Symbol, String       then @base.structure(structure_name.to_sym)
+      when Moonrope::Structure  then structure_name
+      else
+        false
+      end
+    end
+    
+    #
+    # Return whether or not a given structure name is valid?
+    #
+    # @param structure_name [Symbol or String] the structure to return
+    #
+    def has_structure_for?(structure_name)
+      self.structure_for(structure_name).is_a?(Moonrope::Structure)
     end
     
   end

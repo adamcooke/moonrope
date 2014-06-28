@@ -21,6 +21,7 @@ module Moonrope
         structure = Moonrope::Structure.new(@base, name)
         structure.dsl.instance_eval(&block) if block_given?
         @base.structures << structure
+        structure
       end
     
       #
@@ -39,6 +40,7 @@ module Moonrope
         end
         controller.dsl.instance_eval(&block) if block_given?
         @base.controllers << controller
+        controller
       end
     
       #
@@ -66,7 +68,9 @@ module Moonrope
       # @yield stores the block to execute for the helper
       #
       def helper(name, &block)
-        @base.helpers << Moonrope::Helper.new(name, nil, &block)
+        helper_instance = Moonrope::Helper.new(name, nil, &block)
+        @base.helpers << helper_instance
+        helper_instance
       end
       
     end

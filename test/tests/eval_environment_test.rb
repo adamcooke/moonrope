@@ -45,5 +45,21 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert structure.is_a?(Hash), "structure was not a Hash, was a #{structure.class}"
   end
   
+  def test_structure_for
+    user_structure = @environment.base.dsl.structure(:user) do
+      basic { {:id => o.id} }
+    end
+    structure = @environment.structure_for(:user)
+    assert_equal structure, user_structure
+  end
+  
+  def test_has_structure_for
+    user_structure = @environment.base.dsl.structure(:user) do
+      basic { {:id => o.id} }
+    end
+    assert_equal false, @environment.has_structure_for?(:blah)
+    assert_equal true, @environment.has_structure_for?(:user)
+  end
+  
 end
 
