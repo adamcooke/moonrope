@@ -21,6 +21,14 @@ module Moonrope
         Moonrope::Request.path_regex = app.config.moonrope_request_path_regex
       end
       
+      # Catch ActiveRecord::RecordNotFound exception as a standard not-found error
+      if defined?(ActiveRecord)
+        app.config.moonrope.register_external_error ActiveRecord::RecordNotFound do |exception, result|
+          result.status = 'not-found'
+          result.data = {:message => exception.message}
+        end
+      end
+      
       # Insert the Moonrope middleware into the application's middleware
       # stack (at the bottom).
       app.middleware.use(

@@ -82,7 +82,7 @@ module Moonrope
     def execute
       eval_env = EvalEnvironment.new(@base, self)
       if @base.authenticator
-        begin
+        result = action.convert_errors_to_action_result do
           @authenticated_user = eval_env.instance_eval(&@base.authenticator)
           # If we are authenticated, check whether the action permits access to 
           # this user, if not raise an error.
@@ -91,11 +91,11 @@ module Moonrope
               raise Moonrope::Errors::AccessDenied, "Access to #{controller.name}/#{action.name} is not permitted."
             end
           end
-        rescue Moonrope::Errors::RequestError => e
-          @authenticated_user ||= false # set authenticated user to false if they don't exist
-          result = Moonrope::ActionResult.new(self)
-          result.status = e.status
-          result.data = e.data
+        end
+        
+        if result.is_a?(Moonrope::ActionResult)
+          # If we already have a result, we should return it and no longer execute
+          # this request.
           return result
         end
       end

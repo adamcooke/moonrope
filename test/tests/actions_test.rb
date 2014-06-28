@@ -244,6 +244,47 @@ class ActionsTest < Test::Unit::TestCase
     assert_raises Moonrope::Errors::ParameterError do
       action.validate_parameters(Moonrope::ParamSet.new('username' => 'invalid-username1234'))
     end
-  end  
+  end 
+  
+  def test_actions_can_raise_errors
+    action = Moonrope::Action.new(@controller, :list) do
+      action do
+        error :not_found, "Something wasn't found"
+      end
+    end
+    assert result = action.execute
+    assert_equal "not-found", result.status
+    assert_equal({:message => "Something wasn't found"}, result.data)
+  end
+  
+  class DummyError < StandardError; end
+  
+  def test_catching_external_errors
+    @controller.base.register_external_error DummyError do |exp, res|
+      res.status = 'dummy-error'
+      res.data = {:message => exp.message}
+    end
+    
+    action = Moonrope::Action.new(@controller, :list) do
+      action do
+        raise DummyError, "Something happened"
+      end
+    end
+    
+    assert result = action.execute
+    assert_equal 'dummy-error', result.status
+    assert_equal({:message => 'Something happened'}, result.data)
+  end
+  
+  class DummyError2 < StandardError; end
+  
+  def test_non_defined_errors_are_raised
+    action = Moonrope::Action.new(@controller, :list) do
+      action do
+        raise DummyError2, "Something happened"
+      end
+    end
+    assert_raises(DummyError2) { action.execute }
+  end
   
 end

@@ -50,6 +50,32 @@ module Moonrope
     end
     
     #
+    # Execute a block of code and catch approprite Moonrope errors and return
+    # a result.
+    #
+    def convert_errors_to_action_result(&block)
+      begin
+        yield block
+      rescue => exception
+        case exception
+        when Moonrope::Errors::RequestError
+          result = ActionResult.new(self)
+          result.status = exception.status
+          result.data = exception.data
+          result
+        else
+          if error_block = @controller.base.external_errors[exception.class]
+            result = ActionResult.new(self)
+            error_block.call(exception, result)
+            result
+          else
+            raise
+          end
+        end
+      end
+    end
+    
+    #
     # Executes the action and returns a ActionResult object with the result
     # of the action.
     #
@@ -75,7 +101,7 @@ module Moonrope
       #
       eval_environment.action = self
       
-      begin
+      convert_errors_to_action_result do
         #
         # Validate the parameters
         #
@@ -103,12 +129,6 @@ module Moonrope
         result.headers  = eval_environment.headers
         
         # Return the result object
-        result
-        
-      rescue Moonrope::Errors::RequestError => e
-        result = ActionResult.new(self)
-        result.status = e.status
-        result.data = e.data
         result
       end
     end
@@ -158,6 +178,6 @@ module Moonrope
       end
       true
     end
-          
+         
   end
 end

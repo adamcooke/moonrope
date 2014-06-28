@@ -126,5 +126,23 @@ module Moonrope
       matched_helpers.first
     end
     
+    #
+    # Return all the external errors which are registered for this base
+    #
+    # @return [Hash] a hash of external errors
+    #
+    def external_errors
+      @external_errors ||= {}
+    end
+    
+    #
+    # Register a new external error
+    #
+    # @param error_class [Class] a class which should be caught 
+    #
+    def register_external_error(error_class, &block)
+      self.external_errors[error_class] = block
+    end
+    
   end
 end

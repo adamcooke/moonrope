@@ -90,6 +90,7 @@ class RequestTest < Test::Unit::TestCase
       authenticator do
         error :access_denied, "Not permitted"
       end
+      
       controller :users do
         action :list do
           action { true}
@@ -98,8 +99,9 @@ class RequestTest < Test::Unit::TestCase
     end
     request = base.request(make_rack_env_hash('/api/v1/users/list'))
     assert result = request.execute
-    assert_equal false, request.authenticated_user
-    assert_equal false, request.anonymous?
+    assert_equal "access-denied", result.status
+    assert_equal nil, request.authenticated_user
+    assert_equal true, request.anonymous?
     assert_equal false, request.authenticated?
   end
   
@@ -113,7 +115,8 @@ class RequestTest < Test::Unit::TestCase
       end
     end
     request = base.request(make_rack_env_hash('/api/v1/users/list'))
-    assert request.execute
+    assert result = request.execute
+    assert_equal "success", result.status
     assert_equal nil, request.authenticated_user
     assert_equal true, request.anonymous?
     assert_equal false, request.authenticated?
