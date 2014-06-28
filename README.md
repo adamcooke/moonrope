@@ -104,7 +104,48 @@ validation & default population.
 
 ### Raising errors
 
+If, when you're exectuting an action, you may need to raise an error. For 
+example, you may have a validation error or an object which was requested 
+might not be found.
+
+```ruby
+action do
+  page = Page.find_by_id(params.id)
+  if page.nil?
+    error :not_found, "Page not found matching ID '#{params.id}'"
+  end
+end
+```
+
+You can use the following options as the first parameter to the `error` method.
+Each of these will raise a different type of error.
+
+* `:not_found` - an object hasn't been found
+* `:access_denied` - access to a given resource is not permitted
+* `:validation_error` - an object cannot be updated with the provided parameters
+* `:parameter_error` - a provided parameter is invalid
+* You can also pass any other type of error however this will be reported as a 
+  `error` to the end user plus whatever message you specify.
+
 ### Flags
+
+Flags contain extra information which you wish to return with your request
+without interrupting the data you are returning. Think of them like HTTP headers.
+A use case for these may be that you wish to paginate data and need to return
+pagination details along with the actual data.
+
+```ruby
+action do
+  # Get some pagianted data
+  pages = Page.paginate(:page => params.page)
+  # Set the flags
+  set_flag :current_page, pages.page
+  set_flag :items_per_page, pages.items_per_page
+  set_flag :total_pages, pages.total_pages
+  # Return all the pages as normal
+  pages
+end
+```
 
 ### Authentication
 
