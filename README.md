@@ -342,3 +342,14 @@ expansion :projects do
   o.projects.map { |p| structure(:project, p) }
 end
 ```
+
+If you wish to check whether or not a structure exists before calling it from
+an action, you can use the `has_structure_for?` method as shown below.
+
+```ruby
+if has_structure_for?(:user)
+  structure(:user, user)
+else
+  error :error, "Structure not found."
+end
+```
