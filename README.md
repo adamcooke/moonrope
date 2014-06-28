@@ -353,3 +353,11 @@ else
   error :error, "Structure not found."
 end
 ```
+
+## Accessing your API
+
+The final part of this documentation is about how to access your final API.
+If you're using Moonrope in a Rails application it will automatically be added
+to your Rack middleware stack. If not, you'll need to add it manually.
+
+By default, the API is exposed at `/api/v1/controller/action`. 
