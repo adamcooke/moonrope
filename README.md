@@ -149,6 +149,196 @@ end
 
 ### Authentication
 
+Deciding whether or not to permit access to your API is a fundamental part
+of any API. The **authenticator** uses information avaiable in the request
+and returns an object of the "authenticated object". In many cases this 
+authenticated object will be an instance of your user class but it can be 
+anything you decide.
+
+An authenticator is defined at the same level as controllers & structures.
+Best practice dictates it should be placed into its own `authenticator.rb`
+file.
+
+In this example, we are going to look at the contents of HTTP headers to
+get the provided username & password and resolve this to a local User object.
+If no user object is found, we will raise an access denied error.
+
+```ruby
+authenticator do
+  user = User.authenticate(request.headers['X-Auth-Username'], request.headers['X-Auth-Password])
+  if user.is_a?(User)
+    user
+  else
+    error :access_denied, "Invalid user credentials provided"
+  end
+end
+```
+
+#### Accessing the authenticated user in actions
+
+In order to access this authenticated user object, you can use the `auth` 
+method in your actions. For example:
+
+```ruby
+action do
+  if auth.has_access_to?(:users)
+    user.destroy
+  else
+    error :access_denied, "This user does not have access to users"
+  end
+end
+```
+
+#### Restricting access to actions
+
+There is also built-in restrictions which allow you to add restrictions at a
+global and per-action basis.
+
+The `default_access` block can be defined with your authenticator and, in 
+this example, will require that all users have API access.
+
+```ruby
+default_access do
+  auth.has_api_access?
+end
+```
+
+However, if you want to vary this on a per-action basis, you can override
+it as follows by specifying the `access` block when you define your action.
+
+```ruby
+action :list do
+  description "List all users"
+  access { auth.has_access_to?(:users) }
+  action do
+    # return users here
+  end
+end
+```
+
 ## Working with structures
 
+A structure is a blueprint outlining out an object can be converted into a hash
+for output in your API.
 
+Say, for example, you have a User object and you wish to present this over your
+API. You would find your user and then pass this through your `user` structure
+which will return an appropriate hash based on the context the structure is
+being called from and your authenticated object.
+
+### Creating a structure
+
+Structures should be placed into your `structures` directory and best practice
+dictates they should simply be named `object_structure.rb`, for example a user structure
+would be named `user_structure.rb`.
+
+```ruby
+structure :user do
+
+  basic do
+    {
+      :id => o.id,
+      :username => o.username
+    }
+  end
+  
+  full do
+    {
+      :first_name => o.first_name,
+      :last_name => o.last_name,
+      :age => o.age,
+      :created_at => o.created_at,
+      :updated_at => o.updated_at
+    }
+  end
+  
+end
+```
+
+This example is the most basic way of defining a structure. You see we have
+defined two blocks `basic` and `full`. The basic block contains a minimal amount
+of information about a user where as full contains more detailed fields. 
+
+The basic information from a structure is often used on its own when referenced
+from other structures. For example, if users had many projects, the project
+structure may reference user but only request the basic information as any further
+information is not needed.
+
+The full information would be returned when listing a specific user or a list
+of users on their own. For example, your users/list or users/info methods would
+likely return full information rather than just the basic. 
+
+Note that when full information is requested, it is always combined with the
+information from basic so there's no need to duplicate fields in both blocks.
+
+#### Expansions
+
+An expansion allows you to manually define extra information which can be
+returned with your user object. For example, in some API methods you may wish
+to return extra information about the user's current financial status which
+isn't usually returned.
+
+```ruby
+expansion :financials do
+  {
+    :balance => o.balance,
+    :last_payment_reminder_sent_at => o.last_payment_reminder_sent_at
+  }
+end
+```
+
+#### Restrictions
+
+In some cases, only certain users should be able to access certain information
+from a structure. By using a restriction block, you can specify conditions
+which should be met in order for certain data to be included within your hash.
+
+```ruby
+restricted do
+  condition { auth.is_global_admin? }
+  data do
+    {
+      :pin => o.pin,
+      :security_question => o.security_question,
+      :security_answer => o.security_answer
+    }
+  end
+end
+```
+
+In this example, we have added three additional fields to the user block
+when the authenticated user is a global admin. 
+
+Note: restricted information will only be included in structures when they are
+requested with full information.
+
+### Accessing structures from actions
+
+Now... how do you include structures from within an action I hear you ask. 
+That's actually pretty simple. Throughout both actions and structures, you can
+use the `structure` method to load a structure's hash. Here are a number of 
+examples which you can use to load a hash from a structure.
+
+```ruby
+# Return the basic information for a user
+structure(:user, user)
+
+# Return the full information for a user
+structure(:user, user, :full => true)
+
+# Return the full information plus all expansions
+structure(:user, user, :full => true, :expansions => true)
+
+# Return the full information plus specified expansions
+specified(:user, user, :full => true, :expansions => [:projects, :financials])
+```
+
+Remember, these can be used in structures as well as actions. So, you may
+want to create expansions which link to other structures. For example, if you
+wanted your user hash to include a list of associated projects:
+
+```ruby
+expansion :projects do
+  o.projects.map { |p| structure(:project, p) }
+end
+```
