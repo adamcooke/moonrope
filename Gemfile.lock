@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    moonrope (1.1.2)
+    moonrope (1.1.3)
       json (~> 1.7)
       rack (~> 1.4)
 
