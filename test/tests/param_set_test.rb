@@ -28,4 +28,12 @@ class ParamSetTest < Test::Unit::TestCase
     assert_equal nil, set['fruit']
   end
   
+  def test_key_presence
+    set = Moonrope::ParamSet.new('fruit' => 'Apple')
+    set._defaults = {'meat' => 'Beef'}
+    assert_equal true, set.has?(:fruit)
+    assert_equal true, set.has?(:meat)
+    assert_equal false, set.has?(:vegetable)
+  end
+  
 end

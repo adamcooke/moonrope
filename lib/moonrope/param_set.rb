@@ -40,5 +40,15 @@ module Moonrope
       end
     end
     
+    #
+    # Does the specified key exist?
+    #
+    # @param key [Symbol or String]
+    # @return [Boolean]
+    #
+    def has?(key)
+      @params.keys.include?(key.to_s) || @defaults.keys.include?(key.to_s)
+    end
+    
   end
 end
