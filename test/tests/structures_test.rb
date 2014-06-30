@@ -120,4 +120,29 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal nil, hash[:private_code]
   end
   
+  def test_structured_structures
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :id, "The ID of the aniaml object", :example => 1, :type => Integer
+        basic :name, "The name of the animal", :example => "Boris", :type => String
+        full :hair_color, "The color of the animal's hair", :example => "Blue", :type => String, :name => :color
+        expansion :user, "The associated user", :type => Hash, :structure => :user
+      end
+      
+      structure :user do
+        basic :id, "The ID of the user object", :example => 1, :type => Integer
+        basic :username, "The username", :example => "adam", :type => String
+      end
+    end
+    
+    user = User.new(:id => 1, :username => 'adam')
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger', :user => user)
+    
+    hash = base.structure(:animal).hash(animal, :full => true, :expansions => true)
+    assert_equal 1, hash[:id]
+    assert_equal 'Fido', hash[:name]
+    assert_equal 'Ginger', hash[:hair_color]
+    assert_equal Hash, hash[:user].class
+    assert_equal 'adam', hash[:user][:username]
+  end
 end

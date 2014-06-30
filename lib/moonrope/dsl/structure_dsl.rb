@@ -20,8 +20,13 @@ module Moonrope
       # @yield stores the contents of the block for the basic data
       # @return [void]
       #
-      def basic(&block)
-        structure.basic = block
+      def basic(*args, &block)
+        if block_given?
+          structure.basic = block
+        else
+          add(:basic, *args)
+        end
+        
       end
 
       #
@@ -30,8 +35,12 @@ module Moonrope
       # @yield stores the contents of the block for the full data
       # @return [void]
       #
-      def full(&block)
-        structure.full = block
+      def full(*args, &block)
+        if block_given?
+          structure.full = block
+        else
+          add(:full, *args)
+        end
       end
     
       #
@@ -41,8 +50,12 @@ module Moonrope
       # @yield sets the block to execute for the expansion if requested
       # @return [void]
       #
-      def expansion(name, &block)
-        structure.expansions[name] = block
+      def expansion(name, *args, &block)
+        if block_given?
+          structure.expansions[name] = block
+        else
+          add(:expansion, name, *args)
+        end
       end
     
       #
@@ -56,6 +69,19 @@ module Moonrope
         dsl.instance_eval(&block)
         structure.restrictions << dsl
         dsl
+      end
+      
+      #
+      # Add a new field to this structure
+      #
+      # @param type [Symbol] the type of field
+      # @param name [Symbol] the name of the field
+      # @param description [String] a description of the field
+      # @param options [Hash] options
+      # @return void
+      #
+      def add(type, name, description, options = {})
+        @structure.fields[name] = options.merge(:type => type, :description => description)
       end
     
     end

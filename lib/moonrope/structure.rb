@@ -22,6 +22,9 @@ module Moonrope
     # @return [Moonrope::Base] the base API
     attr_reader :base
     
+    # @return [Hash] fields which should be included in this structure
+    attr_reader :fields
+    
     #
     # Initialize a new structure
     #
@@ -33,6 +36,7 @@ module Moonrope
       @name = name
       @expansions = {}
       @restrictions = []
+      @fields = {}
       @dsl = Moonrope::DSL::StructureDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
@@ -45,38 +49,90 @@ module Moonrope
     # @return [Hash]
     #
     def hash(object, options = {})
-      # Set up an environment for 
+      # Set up an environment
       environment = EvalEnvironment.new(base, options[:request], :o => object)
-
+      
+      # Set a new hash
+      hash = Hash.new
+      
+      # Add the 'basic' structured fields
+      hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :basic }, object, options)
+      
       # Always get a basic hash to work from
-      hash = environment.instance_eval(&self.basic)
+      if self.basic.is_a?(Proc)
+        hash.merge! environment.instance_eval(&self.basic)
+      end
       
       # Enhance with the full hash if requested
       if options[:full]
+        
+        # Add the 'full' structured fields
+        hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :full }, object, options)
+        
         if self.full.is_a?(Proc)
           full_hash = environment.instance_eval(&self.full)
-          hash.merge!(full_hash)
+          hash.merge! full_hash
         end
         
         # Add restrictions
         if environment.auth
           @restrictions.each do |restriction|
             next unless environment.instance_eval(&restriction.condition) == true
-            hash.merge!(environment.instance_eval(&restriction.data))
+            hash.merge! environment.instance_eval(&restriction.data)
           end
         end
       end
       
       # Add expansions
-      if options[:expansions]
+      if options[:expansions]        
+        
+        # Add structured expansions
+        @fields.select { |k,v| v[:type] == :expansion }.each do |name, field_opts|
+          next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
+          hash.merge!(name.to_sym => value_for_field(object, options, name, field_opts))
+        end
+        
+        # Add the expansions
         expansions.each do |name, expansion|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          hash.merge!(name => environment.instance_eval(&expansion))
+          hash.merge!(name.to_sym => environment.instance_eval(&expansion))
         end
       end
       
       # Return the hash
       hash
+    end
+    
+    private
+    
+    #
+    # Return a returnable hash for a given set of structured fields.
+    #
+    def hash_for_fieldset(fields, object, options = {})
+      return {} unless fields.is_a?(Hash)
+      Hash.new.tap do |hash|
+        fields.each do |name, field_opts|
+          hash[name] = value_for_field(object, options, name, field_opts)
+        end
+      end
+    end
+    
+    #
+    # Return a value for a structured field.
+    #
+    def value_for_field(object, options,  name, field_opts = {})
+      value = object.send(field_opts[:name] || name)
+      if field_opts[:structure]
+        # If a structure is required, lookup the desired structure and set the
+        # hash value as appropriate.
+        if structure = self.base.structure(field_opts[:structure] || name)
+          structure_opts = field_opts[:structure_opts] || {}
+          structure.hash(value, structure_opts.merge(:request => options[:request]))
+        end
+      else
+        # Return the value as normal for non-structure values.
+        value
+      end
     end
     
   end
