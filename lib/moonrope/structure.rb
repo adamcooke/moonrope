@@ -127,7 +127,14 @@ module Moonrope
         # hash value as appropriate.
         if structure = self.base.structure(field_opts[:structure] || name)
           structure_opts = field_opts[:structure_opts] || {}
-          structure.hash(value, structure_opts.merge(:request => options[:request]))
+          if value.is_a?(Array)
+            value.map do |v|
+              structure.hash(v, structure_opts.merge(:request => options[:request]))
+            end
+          else
+            structure.hash(value, structure_opts.merge(:request => options[:request]))
+          end
+          
         end
       else
         # Return the value as normal for non-structure values.

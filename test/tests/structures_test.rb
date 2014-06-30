@@ -132,17 +132,29 @@ class StructuresTest < Test::Unit::TestCase
       structure :user do
         basic :id, "The ID of the user object", :example => 1, :type => Integer
         basic :username, "The username", :example => "adam", :type => String
+        expansion :animals, "The animals with this user", :type => Array, :structure => :animal, :structure_opts => {:full => true}
       end
     end
     
     user = User.new(:id => 1, :username => 'adam')
     animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger', :user => user)
-    
+    user.animals << animal
+    animal2 = Animal.new(:id => 2, :name => 'Boris', :color => 'Black', :user => user)
+    user.animals << animal2
+
     hash = base.structure(:animal).hash(animal, :full => true, :expansions => true)
     assert_equal 1, hash[:id]
     assert_equal 'Fido', hash[:name]
     assert_equal 'Ginger', hash[:hair_color]
     assert_equal Hash, hash[:user].class
     assert_equal 'adam', hash[:user][:username]
+    assert_equal nil, hash[:user][:animals]
+    
+    hash = base.structure(:user).hash(user, :full => true, :expansions => true)
+    assert_equal 'adam', hash[:username]
+    assert_equal Array, hash[:animals].class
+    assert_equal 'Fido', hash[:animals][0][:name]
+    assert_equal 'Boris', hash[:animals][1][:name]
+    assert_equal 'Black', hash[:animals][1][:hair_color]
   end
 end
