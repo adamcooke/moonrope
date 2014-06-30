@@ -4,6 +4,8 @@ module Moonrope
     class Error < StandardError
     end
     
+    class HelperAlreadyDefined < Error; end
+    
     class RequestError < Error
       attr_reader :options
       

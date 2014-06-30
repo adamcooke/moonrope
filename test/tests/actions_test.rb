@@ -286,5 +286,5 @@ class ActionsTest < Test::Unit::TestCase
     end
     assert_raises(DummyError2) { action.execute }
   end
-  
+    
 end

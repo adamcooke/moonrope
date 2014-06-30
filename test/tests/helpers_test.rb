@@ -58,4 +58,40 @@ class HelpersTest < Test::Unit::TestCase
     assert_raises(NoMethodError) { (base/:users/:action3).execute }
   end
   
+  def test_unloadable_helpers
+    base = Moonrope::Base.new
+    base.dsl.instance_eval do
+      helper :unloadable_helper, :unloadable => false do
+        666
+      end
+      
+      helper :normal_helper do
+        111
+      end
+    end
+    # initially they'll both exist
+    assert_equal Moonrope::Helper, base.helper(:unloadable_helper).class
+    assert_equal Moonrope::Helper, base.helper(:normal_helper).class
+    # unload the base
+    base.unload
+    # now only the unloadable helper remains
+    assert_equal Moonrope::Helper, base.helper(:unloadable_helper).class
+    assert_equal nil, base.helper(:normal_helper)
+  end
+  
+  def test_ensure_helpers_cant_be_double_loaded
+    base = Moonrope::Base.new do
+      helper :my_helper do
+        123
+      end
+    end
+    
+    assert_raises Moonrope::Errors::HelperAlreadyDefined do
+      base.dsl.instance_eval do
+        helper :my_helper do
+        end
+      end
+    end
+  end
+  
 end

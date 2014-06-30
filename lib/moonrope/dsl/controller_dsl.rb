@@ -49,8 +49,12 @@ module Moonrope
       # @param name [Symbol] the name of the helper
       # @yield stores the block to execute for the helper
       #
-      def helper(name, &block)
-        @controller.base.helpers << Moonrope::Helper.new(name, @controller, &block)
+      def helper(name, options = {}, &block)
+        if @controller.base.helper(name, @controller)
+          raise Moonrope::Errors::HelperAlreadyDefined, "Helper has already been defined with name `#{name}`"
+        end
+        
+        @controller.base.helpers << Moonrope::Helper.new(name, @controller, options, &block)
       end
     end
   end

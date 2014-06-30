@@ -52,7 +52,7 @@ module Moonrope
     def unload
       @structures = []
       @controllers = []
-      @helpers = []
+      @helpers = @helpers.is_a?(Array) ? @helpers.select { |h| h.options[:unloadable] == false } : []
       @authenticator = nil
       @default_access = nil
     end
@@ -70,7 +70,7 @@ module Moonrope
         self.loaded_from = directory
         self
       else
-        raise Moonrope::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
+        raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
       end
     end
     

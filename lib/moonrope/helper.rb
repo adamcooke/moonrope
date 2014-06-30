@@ -10,6 +10,8 @@ module Moonrope
     # @return [Proc] the proc to execute
     attr_reader :block
     
+    # @return [Hash] options for this helper
+    attr_reader :options
     
     #
     # Initialize a new helper
@@ -18,9 +20,10 @@ module Moonrope
     # @param controller [Moonrope::Controller] the controller the helper belongs to
     # @yield stores the block for use later
     #
-    def initialize(name, controller, &block)
+    def initialize(name, controller, options = {}, &block)
       @name = name
       @controller = controller
+      @options = options
       @block = block
     end
     

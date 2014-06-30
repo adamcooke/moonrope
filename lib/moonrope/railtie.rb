@@ -27,7 +27,19 @@ module Moonrope
           result.status = 'not-found'
           result.data = {:message => exception.message}
         end
+        
+        # Add a helper for auto setting parameters
+        app.config.moonrope.dsl.instance_eval do
+          helper :auto_set_params_for, :unloadable => false do |object|
+            current_action = object.new_record? ? :create_only : :update_only
+            request.action.params.select { |k,v| v[:set] == true || v[:set] == current_action }.keys.each do |param|
+              object.send("#{param}=", params[param])  if params.has?(param)
+            end
+          end
+        end
       end
+      
+      puts app.config.moonrope.helpers.inspect
       
       # Insert the Moonrope middleware into the application's middleware
       # stack (at the bottom).
