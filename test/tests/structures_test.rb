@@ -129,7 +129,9 @@ class StructuresTest < Test::Unit::TestCase
         expansion :user, "The associated user", :type => Hash, :structure => :user
         
         group :colors do
-          attribute :hair, "The animals hair color", :example => "Blue", :type => String, :name => :color
+          basic :eye, "The animal's eye color", :example => "Green", :type => String, :name => :color
+          full :hair, "The animals hair color", :example => "Blue", :type => String, :name => :color
+          expansion :owner, "The animal's owner", :structure => :user, :type => Hash, :name => :user
         end
       end
       
@@ -145,24 +147,42 @@ class StructuresTest < Test::Unit::TestCase
     user.animals << animal
     animal2 = Animal.new(:id => 2, :name => 'Boris', :color => 'Black', :user => user)
     user.animals << animal2
-
+    
+    # a full hash with all expansions
     hash = base.structure(:animal).hash(animal, :full => true, :expansions => true)
+    # standard attributes
     assert_equal 1, hash[:id]
     assert_equal 'Fido', hash[:name]
     assert_equal 'Ginger', hash[:hair_color]
+    # expansion in a group
+    assert_equal Hash, hash[:colors][:owner].class
+    # normal expansion
     assert_equal Hash, hash[:user].class
     assert_equal 'adam', hash[:user][:username]
     assert_equal nil, hash[:user][:animals]
-    
+    # group
     assert_equal Hash, hash[:colors].class
+    assert_equal 'Ginger', hash[:colors][:eye]
     assert_equal 'Ginger', hash[:colors][:hair]
     
+    # basic hash
+    hash = base.structure(:animal).hash(animal)
+    # normal attributes
+    assert_equal 1, hash[:id]
+    assert_equal 'Fido', hash[:name]
+    # groups
+    assert_equal Hash, hash[:colors].class
+    assert_equal 'Ginger', hash[:colors][:eye]
+    assert_equal nil, hash[:colors][:hair]
+    
+    # a full user hash with all expansions
     hash = base.structure(:user).hash(user, :full => true, :expansions => true)
-    assert_equal 'adam', hash[:username]
+    # arrays
     assert_equal Array, hash[:animals].class
     assert_equal 'Fido', hash[:animals][0][:name]
     assert_equal 'Boris', hash[:animals][1][:name]
     assert_equal 'Black', hash[:animals][1][:hair_color]
+
   end
   
   def test_ifs

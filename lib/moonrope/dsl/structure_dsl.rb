@@ -103,11 +103,21 @@ module Moonrope
           @group_name = group_name
         end
         
-        def attribute(name, description, options = {})
-          @dsl.attribute(:full, name, description, options.merge(:group => @group_name))
+        def attribute(type, name, description, options = {})
+          @dsl.attribute(type, name, description, options.merge(:group => @group_name))
         end
         
-        alias_method :full, :attribute
+        def basic(*args)
+          attribute(:basic, *args)
+        end
+        
+        def full(*args)
+          attribute(:full, *args)
+        end
+        
+        def expansion(*args)
+          attribute(:expansion, *args)
+        end
       end
       
     end

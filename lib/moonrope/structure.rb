@@ -56,29 +56,29 @@ module Moonrope
       hash = Hash.new
       
       # Add the 'basic' structured fields
-      hash.merge! hash_for_attributes(@attributes.select { |k,v| v[:type] == :basic }, object, environment)
+      hash.deep_merge! hash_for_attributes(@attributes.select { |k,v| v[:type] == :basic }, object, environment)
       
       # Always get a basic hash to work from
       if self.basic.is_a?(Proc)
-        hash.merge! environment.instance_eval(&self.basic)
+        hash.deep_merge! environment.instance_eval(&self.basic)
       end
       
       # Enhance with the full hash if requested
       if options[:full]
         
         # Add the 'full' structured fields
-        hash.merge! hash_for_attributes(@attributes.select { |k,v| v[:type] == :full }, object, environment)
+        hash.deep_merge! hash_for_attributes(@attributes.select { |k,v| v[:type] == :full }, object, environment)
         
         if self.full.is_a?(Proc)
           full_hash = environment.instance_eval(&self.full)
-          hash.merge! full_hash
+          hash.deep_merge! full_hash
         end
         
         # Add restrictions
         if environment.auth
           @restrictions.each do |restriction|
             next unless environment.instance_eval(&restriction.condition) == true
-            hash.merge! environment.instance_eval(&restriction.data)
+            hash.deep_merge! environment.instance_eval(&restriction.data)
           end
         end
       end
@@ -89,13 +89,13 @@ module Moonrope
         # Add structured expansions
         @attributes.select { |k,v| v[:type] == :expansion }.each do |name, attribute_opts|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          hash.merge!(name.to_sym => value_for_attribute(object, environment, name, attribute_opts))
+          hash.deep_merge!(hash_for_attributes({name => attribute_opts}, object, environment))
         end
         
         # Add the expansions
         expansions.each do |name, expansion|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          hash.merge!(name.to_sym => environment.instance_eval(&expansion))
+          hash.deep_merge!(name.to_sym => environment.instance_eval(&expansion))
         end
       end
       
@@ -112,7 +112,6 @@ module Moonrope
       return {} unless attributes.is_a?(Hash)
       Hash.new.tap do |hash|
         attributes.each do |name, attribute_opts|
-          
           if attribute_opts[:if].is_a?(Proc)
             if !environment.instance_eval(&attribute_opts[:if])
               # Skip this field...

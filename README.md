@@ -282,7 +282,7 @@ likely return full information rather than just the basic.
 Note that when full information is requested, it is always combined with the
 information from basic so there's no need to duplicate attribute definitions.
 
-##### Mapping
+#### Mapping
 
 Any attributes which you add to your structure are mapped one to one with the attributes
 available on the source object. If the name doesn't match, you can use the `:name`

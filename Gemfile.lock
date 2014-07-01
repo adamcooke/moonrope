@@ -2,12 +2,14 @@ PATH
   remote: .
   specs:
     moonrope (1.1.5)
+      deep_merge (~> 1.0)
       json (~> 1.7)
       rack (~> 1.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    deep_merge (1.0.1)
     json (1.8.1)
     rack (1.5.2)
     rack-test (0.6.2)

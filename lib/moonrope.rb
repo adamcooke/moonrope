@@ -1,5 +1,6 @@
 require 'json'
 require 'logger'
+require 'deep_merge'
 
 require 'moonrope/action'
 require 'moonrope/action_result'
