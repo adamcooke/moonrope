@@ -65,7 +65,7 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal true, action.check_access(authenticated_request)
   end
   
-  def test_checking_access_without_a_block
+  def test_checking_access_with_a_symbol
     action = Moonrope::Action.new(@controller, :list) do
       access :admin
     end
@@ -79,6 +79,47 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal false, action.check_access(authenticated_request)
     # user and an admin
     authenticated_request = FakeRequest.new(:authenticated_user => User.new(:admin => true))
+    assert_equal true, action.check_access(authenticated_request)
+  end
+  
+  def test_checking_access_with_a_type
+    action = Moonrope::Action.new(@controller, :list) do
+      access :must_be => User
+    end
+    # authentication which is not a valid type
+    authenticated_request = FakeRequest.new(:authenticated_user => Animal.new)
+    assert_equal false, action.check_access(authenticated_request)
+    # not an admin but is a user
+    authenticated_request = FakeRequest.new(:authenticated_user => User.new(:admin => false))
+    assert_equal true, action.check_access(authenticated_request)
+    # user and an admin
+    authenticated_request = FakeRequest.new(:authenticated_user => User.new(:admin => true))
+    assert_equal true, action.check_access(authenticated_request)
+  end
+  
+  def test_checking_access_with_a_type_and_method
+    action = Moonrope::Action.new(@controller, :list) do
+      access :must_be => User, :with => :admin
+    end
+    # authentication which is not a valid type
+    authenticated_request = FakeRequest.new(:authenticated_user => Animal.new)
+    assert_equal false, action.check_access(authenticated_request)
+    # not an admin but is a user
+    authenticated_request = FakeRequest.new(:authenticated_user => User.new(:admin => false))
+    assert_equal false, action.check_access(authenticated_request)
+    # user and an admin
+    authenticated_request = FakeRequest.new(:authenticated_user => User.new(:admin => true))
+    assert_equal true, action.check_access(authenticated_request)
+  end
+  
+  def test_checking_access_with_a_true
+    action = Moonrope::Action.new(@controller, :list) do
+      access true
+    end
+    # no authentication has been provided
+    assert_equal false, action.check_access
+    # authentication which is not a valid type
+    authenticated_request = FakeRequest.new(:authenticated_user => Animal.new)
     assert_equal true, action.check_access(authenticated_request)
   end
   

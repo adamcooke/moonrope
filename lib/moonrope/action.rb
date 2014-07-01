@@ -156,6 +156,15 @@ module Moonrope
           !!eval_environment.instance_exec(self, &access_condition)
         elsif access_condition.is_a?(Symbol)
           !!(eval_environment.auth.respond_to?(access_condition) && eval_environment.auth.send(access_condition))
+        elsif access_condition.is_a?(Hash) && access_condition[:must_be] && access_condition[:with]
+          !!(eval_environment.auth.is_a?(access_condition[:must_be]) &&
+              eval_environment.auth.respond_to?(access_condition[:with]) &&
+              eval_environment.auth.send(access_condition[:with])
+            )
+        elsif access_condition.is_a?(Hash) && access_condition[:must_be]
+          !!(eval_environment.auth.is_a?(access_condition[:must_be]))
+        elsif access_condition == true
+          true
         else
           false
         end

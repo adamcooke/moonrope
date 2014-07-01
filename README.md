@@ -216,6 +216,25 @@ action :list do
 end
 ```
 
+In addition to passing a block to the `access` or `default_access` methods
+you can also use any of the following:
+
+```ruby
+# Ensure that the authenticated object responds to can_delete_animals? and that
+# this method returns a truthy value.
+access :can_delete_animals?
+
+# Ensure that the authenticated object is a User.
+access :must_be => User
+
+# Ensure that the authenticated object is a User, responds to has_api_access?
+# and that method returns a truthy value.
+access :must_be => User, :with => :has_api_access?
+
+# Ensure that the authenticated object is present. Its value is not important.
+access true
+```
+
 ## Working with structures
 
 A structure is a blueprint outlining out an object can be converted into a hash
