@@ -177,37 +177,7 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal 1234, result.data[:page]
     assert_equal nil, result.data[:limit]
   end
-  
-  def test_request_is_passed_to_structures
-    # Create a structure which has different data for different types of
-    # request.
-    user_structure = Moonrope::Structure.new(@base, :user) do
-      basic { {:username => o.username} }
-      restricted do
-        condition { auth.admin == true }
-        data { {:private_code => o.private_code} }
-      end
-    end
     
-    # Create an action which returns a structure normally
-    action = Moonrope::Action.new(@controller, :list) do
-      action do 
-        user = User.new(:username => 'lucifer', :private_code => 666)
-        structure user_structure, user, :full => true
-      end
-    end
-    
-    # Authenticated request
-    admin_user = User.new(:username => 'admin', :admin => true)
-    authenticated_request = FakeRequest.new(:authenticated_user => admin_user)
-    assert result = action.execute(authenticated_request)
-    assert_equal 666, result.data[:private_code]
-    
-    # Unauthenticated request
-    assert result = action.execute
-    assert_equal nil, result.data[:private_code]
-  end
-  
   def test_before_filters_are_executed
     controller = Moonrope::Controller.new(@base, :users) do
       before { set_flag :before_all, true }      

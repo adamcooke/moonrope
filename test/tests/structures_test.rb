@@ -97,29 +97,7 @@ class StructuresTest < Test::Unit::TestCase
     hash = user_structure.hash(user, :expansions => [:animals])
     assert_equal Array, hash[:animals].class, "hash[:animals] is present"
   end
-  
-  def test_restrictions
-    user = User.new(:id => 1, :username => 'dave', :private_code => 5555)
-    accessing_user = User.new(:id => 2, :username => 'admin', :admin => true)
-
-    structure = Moonrope::Structure.new(@base, :animal) do
-      basic { { :id => o.id } }
-      restricted do
-        condition { auth.admin == true }
-        data { {:private_code => o.private_code} }
-      end
-    end
     
-    # with auth
-    authenticated_request = FakeRequest.new(:authenticated_user => accessing_user)
-    hash = structure.hash(user, :full => true, :request => authenticated_request)
-    assert_equal user.private_code, hash[:private_code]
-    
-    # no auth
-    hash = structure.hash(user, :full => true)
-    assert_equal nil, hash[:private_code]
-  end
-  
   def test_structured_structures
     base = Moonrope::Base.new do
       structure :animal do
@@ -182,7 +160,6 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal 'Fido', hash[:animals][0][:name]
     assert_equal 'Boris', hash[:animals][1][:name]
     assert_equal 'Black', hash[:animals][1][:hair_color]
-
   end
   
   def test_ifs
@@ -197,6 +174,25 @@ class StructuresTest < Test::Unit::TestCase
     hash = base.structure(:animal).hash(animal)
     assert_equal 1, hash[:id1]
     assert_equal nil, hash[:id2]
+  end
+  
+  def test_scopes
+    base = Moonrope::Base.new do
+      structure :animal do
+        scope :group => :group1 do
+          basic :id, "The ID of the animal"
+        end
+        
+        scope :if => Proc.new { false } do
+          basic :id2, "ID2", :name => :id
+        end
+      end
+    end
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
+    hash = base.structure(:animal).hash(animal, :full => true)
+    assert_equal 1, hash[:group1][:id]
+    # id2 shouldn't exist because it's if block returns false
+    assert_equal false, hash.keys.include?(:id2)
   end
   
 end

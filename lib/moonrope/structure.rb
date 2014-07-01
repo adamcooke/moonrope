@@ -16,9 +16,6 @@ module Moonrope
     # @return [Hash] all expansions for the structure
     attr_reader :expansions
     
-    # @return [Array] all restrictions for the structure
-    attr_reader :restrictions
-    
     # @return [Moonrope::Base] the base API
     attr_reader :base
     
@@ -35,7 +32,6 @@ module Moonrope
       @base = base
       @name = name
       @expansions = {}
-      @restrictions = []
       @attributes = {}
       @dsl = Moonrope::DSL::StructureDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
@@ -72,14 +68,6 @@ module Moonrope
         if self.full.is_a?(Proc)
           full_hash = environment.instance_eval(&self.full)
           hash.deep_merge! full_hash
-        end
-        
-        # Add restrictions
-        if environment.auth
-          @restrictions.each do |restriction|
-            next unless environment.instance_eval(&restriction.condition) == true
-            hash.deep_merge! environment.instance_eval(&restriction.data)
-          end
         end
       end
       

@@ -11,7 +11,6 @@ require 'moonrope/dsl/base_dsl'
 require 'moonrope/dsl/action_dsl'
 require 'moonrope/dsl/controller_dsl'
 require 'moonrope/dsl/structure_dsl'
-require 'moonrope/dsl/structure_restriction_dsl'
 
 require 'moonrope/errors'
 require 'moonrope/eval_helpers'
