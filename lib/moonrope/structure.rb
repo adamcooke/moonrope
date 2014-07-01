@@ -112,7 +112,13 @@ module Moonrope
       return {} unless fields.is_a?(Hash)
       Hash.new.tap do |hash|
         fields.each do |name, field_opts|
-          hash[name] = value_for_field(object, options, name, field_opts)
+          value = value_for_field(object, options, name, field_opts)
+          if field_opts[:group]
+            hash[field_opts[:group]] ||= {}
+            hash[field_opts[:group]][name] = value
+          else
+            hash[name] = value
+          end
         end
       end
     end
@@ -134,7 +140,6 @@ module Moonrope
           else
             structure.hash(value, structure_opts.merge(:request => options[:request]))
           end
-          
         end
       else
         # Return the value as normal for non-structure values.

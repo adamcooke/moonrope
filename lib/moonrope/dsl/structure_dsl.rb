@@ -24,7 +24,7 @@ module Moonrope
         if block_given?
           structure.basic = block
         else
-          add(:basic, *args)
+          field(:basic, *args)
         end
         
       end
@@ -39,7 +39,7 @@ module Moonrope
         if block_given?
           structure.full = block
         else
-          add(:full, *args)
+          field(:full, *args)
         end
       end
     
@@ -54,7 +54,7 @@ module Moonrope
         if block_given?
           structure.expansions[name] = block
         else
-          add(:expansion, name, *args)
+          field(:expansion, name, *args)
         end
       end
     
@@ -80,10 +80,36 @@ module Moonrope
       # @param options [Hash] options
       # @return void
       #
-      def add(type, name, description, options = {})
+      def field(type, name, description, options = {})
         @structure.fields[name] = options.merge(:type => type, :description => description)
       end
+      
+      #
+      # All fields within this group will be added to a hash named 
+      # the same
+      #
+      def group(name, &block)
+        group_dsl = GroupDSL.new(self, name)
+        group_dsl.instance_eval(&block)
+        group_dsl
+      end
     
+      #
+      # A DSL class for groups
+      #
+      class GroupDSL
+        def initialize(dsl, group_name)
+          @dsl = dsl
+          @group_name = group_name
+        end
+        
+        def field(name, description, options = {})
+          @dsl.field(:full, name, description, options.merge(:group => @group_name))
+        end
+        
+        alias_method :full, :field
+      end
+      
     end
   end
 end

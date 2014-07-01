@@ -127,6 +127,10 @@ class StructuresTest < Test::Unit::TestCase
         basic :name, "The name of the animal", :example => "Boris", :type => String
         full :hair_color, "The color of the animal's hair", :example => "Blue", :type => String, :name => :color
         expansion :user, "The associated user", :type => Hash, :structure => :user
+        
+        group :colors do
+          field :hair, "The animals hair color", :example => "Blue", :type => String, :name => :color
+        end
       end
       
       structure :user do
@@ -136,7 +140,7 @@ class StructuresTest < Test::Unit::TestCase
       end
     end
     
-    user = User.new(:id => 1, :username => 'adam')
+    user = User.new(:id => 1, :username => 'adam', :private_code => 9876)
     animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger', :user => user)
     user.animals << animal
     animal2 = Animal.new(:id => 2, :name => 'Boris', :color => 'Black', :user => user)
@@ -149,6 +153,9 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal Hash, hash[:user].class
     assert_equal 'adam', hash[:user][:username]
     assert_equal nil, hash[:user][:animals]
+    
+    assert_equal Hash, hash[:colors].class
+    assert_equal 'Ginger', hash[:colors][:hair]
     
     hash = base.structure(:user).hash(user, :full => true, :expansions => true)
     assert_equal 'adam', hash[:username]
