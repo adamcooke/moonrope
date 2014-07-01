@@ -254,29 +254,22 @@ would be named `user_structure.rb`.
 ```ruby
 structure :user do
 
-  basic do
-    {
-      :id => o.id,
-      :username => o.username
-    }
-  end
+  basic :id, "The ID of the user", :type => Integer, :example => 1234
+  basic :username, "The user's username", :type => String, :example => "adam"
   
-  full do
-    {
-      :first_name => o.first_name,
-      :last_name => o.last_name,
-      :age => o.age,
-      :created_at => o.created_at,
-      :updated_at => o.updated_at
-    }
-  end
+  full :full_name, "The user's first name", :type => String, :example => "Adam"
+  full :last_name, "The user's last name", :type => String, :example => "Cooke"
+  full :age, "The user's age", :type => Integer, :example => 27
+  full :created_at, "The creation time for the user", :type => String, :example => "2014-07-01T11:32:59+01:00"
+  full :updated_at, "The creation time for the user", :type => String, :example => "2014-07-01T11:32:59+01:00"
   
 end
 ```
 
-This example is the most basic way of defining a structure. You see we have
-defined two blocks `basic` and `full`. The basic block contains a minimal amount
-of information about a user where as full contains more detailed fields. 
+This example is the most basic way of defining a structure. You see we have defined
+a number of fields which should be included in our structure. Fields are either defined
+as basic or full - basic fields are always included in the structure whereas full fields
+are only included when requested. 
 
 The basic information from a structure is often used on its own when referenced
 from other structures. For example, if users had many projects, the project
@@ -288,7 +281,17 @@ of users on their own. For example, your users/list or users/info methods would
 likely return full information rather than just the basic. 
 
 Note that when full information is requested, it is always combined with the
-information from basic so there's no need to duplicate fields in both blocks.
+information from basic so there's no need to duplicate field definitions.
+
+##### Mapping
+
+Any fields which you add to your structure are mapped one to one with the attributes
+available on the source object. If the name doesn't match, you can use the `:name`
+option to set the actual name of the attribute on the source field.
+
+```ruby
+basic :user_id, "The user's ID", :name => :id
+```
 
 #### Expansions
 
@@ -297,14 +300,19 @@ returned with your user object. For example, in some API methods you may wish
 to return extra information about the user's current financial status which
 isn't usually returned.
 
+In most cases, an expansion will be a link to another structure which you have
+defined. An expansion can be defined as shown below:
+
 ```ruby
-expansion :financials do
-  {
-    :balance => o.balance,
-    :last_payment_reminder_sent_at => o.last_payment_reminder_sent_at
-  }
-end
+# A single object which is associated with your user (belongs to)
+expansion :currency, "The currency this user should be billed", :type => Hash, :structure => :currency
+# or including an array of objects (has many)
+expansion :projects, "All projects assigned to the user", :type => Array, :structure => :project
 ```
+
+The same `:structure => :name` can be used on any field which you define in your
+structure. Therefore, if you need to always include a structure, you can simply
+add it to a full or basic line.
 
 #### Restrictions
 
