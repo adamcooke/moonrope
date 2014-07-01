@@ -179,8 +179,17 @@ class StructuresTest < Test::Unit::TestCase
   def test_scopes
     base = Moonrope::Base.new do
       structure :animal do
-        scope :group => :group1 do
+        group :group1 do
           basic :id, "The ID of the animal"
+          basic :name, "Name"
+          group :group2 do
+            basic :id_g2, "ID", :name => :id
+            basic :name2, "Name", :name => :name
+            group :group3 do
+              basic :id_g3, "ID", :name => :id
+              basic :name3, "Name", :name => :name
+            end
+          end
         end
         
         scope :if => Proc.new { false } do
@@ -190,7 +199,15 @@ class StructuresTest < Test::Unit::TestCase
     end
     animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
     hash = base.structure(:animal).hash(animal, :full => true)
+
     assert_equal 1, hash[:group1][:id]
+    assert_equal 1, hash[:group1][:group2][:id_g2]
+    assert_equal 1, hash[:group1][:group2][:group3][:id_g3]
+
+    assert_equal 'Fido', hash[:group1][:name]
+    assert_equal 'Fido', hash[:group1][:group2][:name2]
+    assert_equal 'Fido', hash[:group1][:group2][:group3][:name3]
+
     # id2 shouldn't exist because it's if block returns false
     assert_equal false, hash.keys.include?(:id2)
   end

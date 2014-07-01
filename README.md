@@ -334,31 +334,6 @@ a block to the `:if` option when defining an attribute.
 basic :pin, "The user's PIN code", :if => Proc.new { auth.is_super_special_admin? }
 ```
 
-#### Restrictions
-
-In some cases, only certain users should be able to access certain information
-from a structure. By using a restriction block, you can specify conditions
-which should be met in order for certain data to be included within your hash.
-
-```ruby
-restricted do
-  condition { auth.is_global_admin? }
-  data do
-    {
-      :pin => o.pin,
-      :security_question => o.security_question,
-      :security_answer => o.security_answer
-    }
-  end
-end
-```
-
-In this example, we have added three additional attributes to the user block
-when the authenticated user is a global admin. 
-
-Note: restricted information will only be included in structures when they are
-requested with full information.
-
 ### Accessing structures from actions
 
 Now... how do you include structures from within an action I hear you ask. 

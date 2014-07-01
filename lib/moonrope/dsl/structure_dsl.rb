@@ -5,24 +5,33 @@ module Moonrope
       # @return [Moonrope::Structure] the associated structure
       attr_reader :structure
       
+      # @return [Array] groups which should applied
+      attr_accessor :groups
+      
+      # @return [Hash] options
+      attr_accessor :options
+      
       #
       # Initialize a new StructureDSL
       #
       # @param structure [Moonrope::Structure]
       #
-      def initialize(structure, options = {})
+      def initialize(structure)
         @structure = structure
-        @options = options
+        @options = {}
+        @groups = []
       end
       
       def scope(options = {}, &block)
-        scope_dsl = self.class.new(@structure, options)
+        scope_dsl = self.class.new(@structure)
+        scope_dsl.options = options
         scope_dsl.instance_eval(&block)
-        scope_dsl
       end
       
       def group(name, &block)
-        scope(:group => name, &block)
+        scope_dsl = self.class.new(@structure)
+        scope_dsl.groups = [@groups, name].flatten
+        scope_dsl.instance_eval(&block)
       end
       
       def attribute(type, name, description, options = {})
@@ -31,7 +40,7 @@ module Moonrope
         attribute.structure_opts    = options[:structure_opts]
         attribute.value_type        = options[:type]
         attribute.source_attribute  = options[:source] || options[:name]
-        attribute.group             = options[:group] || @options[:group]
+        attribute.groups            = @groups
         attribute.condition         = options[:if] || @options[:if]
         @structure.attributes[type] << attribute
       end

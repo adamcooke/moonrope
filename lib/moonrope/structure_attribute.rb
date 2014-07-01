@@ -3,7 +3,7 @@ module Moonrope
     
     attr_accessor :name
     attr_accessor :condition
-    attr_accessor :group
+    attr_accessor :groups
     attr_accessor :source_attribute
     attr_accessor :description
     attr_accessor :value_type
@@ -14,6 +14,7 @@ module Moonrope
       @type = type
       @name = name
       @description = description
+      @groups = []
     end
     
     def source_attribute

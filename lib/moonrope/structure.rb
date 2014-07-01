@@ -109,12 +109,20 @@ module Moonrope
           end
           
           value = value_for_attribute(object, environment, attribute)
-          if attribute.group
-            hash[attribute.group] ||= {}
-            hash[attribute.group][attribute.name] = value
-          else
+          
+          if attribute.groups.empty?
             hash[attribute.name] = value
+          else
+            last_hash = hash
+            attribute.groups.each_with_index do |group, index|
+              last_hash[group] ||= {}
+              if index == attribute.groups.size - 1
+                last_hash[group][attribute.name] = value
+              end
+              last_hash = last_hash[group]
+            end
           end
+          
         end
       end
     end
