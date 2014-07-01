@@ -49,7 +49,7 @@ module Moonrope
         attribute.structure         = options[:structure]
         attribute.structure_opts    = options[:structure_opts]
         attribute.value_type        = options[:type]
-        attribute.source_attribute  = options[:source] || options[:name]
+        attribute.source_attribute  = options[:source_attribute]
         attribute.value             = options[:value]
         attribute.groups            = @groups
         attribute.conditions        = @conditions

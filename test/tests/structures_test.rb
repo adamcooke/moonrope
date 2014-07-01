@@ -103,13 +103,13 @@ class StructuresTest < Test::Unit::TestCase
       structure :animal do
         basic :id, "The ID of the aniaml object", :example => 1, :type => Integer
         basic :name, "The name of the animal", :example => "Boris", :type => String
-        full :hair_color, "The color of the animal's hair", :example => "Blue", :type => String, :name => :color
+        full :hair_color, "The color of the animal's hair", :example => "Blue", :type => String, :source_attribute => :color
         expansion :user, "The associated user", :type => Hash, :structure => :user
         
         group :colors do
-          basic :eye, "The animal's eye color", :example => "Green", :type => String, :name => :color
-          full :hair, "The animals hair color", :example => "Blue", :type => String, :name => :color
-          expansion :owner, "The animal's owner", :structure => :user, :type => Hash, :name => :user
+          basic :eye, "The animal's eye color", :example => "Green", :type => String, :source_attribute => :color
+          full :hair, "The animals hair color", :example => "Blue", :type => String, :source_attribute => :color
+          expansion :owner, "The animal's owner", :structure => :user, :type => Hash, :source_attribute => :user
         end
       end
       
@@ -166,11 +166,11 @@ class StructuresTest < Test::Unit::TestCase
     base = Moonrope::Base.new do
       structure :animal do
         condition Proc.new { true } do
-          basic :id1, "The ID1 of the aniaml object", :example => 1, :type => Integer, :name => :id
+          basic :id1, "The ID1 of the aniaml object", :example => 1, :type => Integer, :source_attribute => :id
         end
         
         condition Proc.new { false } do
-          basic :id2, "The ID2 of the aniaml object", :example => 2, :type => Integer, :name => :id
+          basic :id2, "The ID2 of the aniaml object", :example => 2, :type => Integer, :source_attribute => :id
         end
       end
     end
@@ -188,11 +188,11 @@ class StructuresTest < Test::Unit::TestCase
           basic :id, "The ID of the animal"
           basic :name, "Name"
           group :group2 do
-            basic :id_g2, "ID", :name => :id
-            basic :name2, "Name", :name => :name
+            basic :id_g2, "ID", :source_attribute => :id
+            basic :name2, "Name", :source_attribute => :name
             group :group3 do
-              basic :id_g3, "ID", :name => :id
-              basic :name3, "Name", :name => :name
+              basic :id_g3, "ID", :source_attribute => :id
+              basic :name3, "Name", :source_attribute => :name
             end
           end
         end
