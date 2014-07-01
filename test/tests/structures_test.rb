@@ -217,4 +217,18 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal false, hash.keys.include?(:id2)
   end
   
+  def test_passing_values_from_the_definition
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :example, "An example field which is always 1234", :value => 1234
+        basic :example_with_block, "Another example", :value => Proc.new { "#{o.name}!!!" }
+      end
+    end
+    
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
+    hash = base.structure(:animal).hash(animal)
+    assert_equal 1234, hash[:example]
+    assert_equal "Fido!!!", hash[:example_with_block]
+  end
+  
 end

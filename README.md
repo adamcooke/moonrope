@@ -289,7 +289,14 @@ available on the source object. If the name doesn't match, you can use the `:nam
 option to set the actual name of the attribute on the source object.
 
 ```ruby
-basic :user_id, "The user's ID", :name => :id
+basic :user_id, "The user's ID", :source => :id
+```
+
+Alternatively, you can specify a block which will be used when mapping the value to the
+correct object.
+
+```ruby
+basic :name_in_caps, "The user's name in uppercase", :value => Proc.new { o.name.upcase }
 ```
 
 #### Grouping

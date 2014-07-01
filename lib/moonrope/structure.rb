@@ -116,7 +116,13 @@ module Moonrope
             end
           end
           
-          value = value_for_attribute(object, environment, attribute)
+          if attribute.value.is_a?(Proc)
+            value = environment.instance_eval(&attribute.value)
+          elsif attribute.value
+            value = attribute.value
+          else
+            value = value_for_attribute(object, environment, attribute)
+          end
           
           if attribute.groups.empty?
             hash[attribute.name] = value

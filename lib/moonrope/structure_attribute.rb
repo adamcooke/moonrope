@@ -9,6 +9,7 @@ module Moonrope
     attr_accessor :value_type
     attr_accessor :structure
     attr_accessor :structure_opts
+    attr_accessor :value
     
     def initialize(type, name, description)
       @type = type

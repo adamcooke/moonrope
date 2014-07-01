@@ -39,8 +39,6 @@ module Moonrope
         end
       end
       
-      puts app.config.moonrope.helpers.inspect
-      
       # Insert the Moonrope middleware into the application's middleware
       # stack (at the bottom).
       app.middleware.use(
