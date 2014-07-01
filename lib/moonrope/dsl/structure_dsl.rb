@@ -51,6 +51,7 @@ module Moonrope
         attribute.value_type        = options[:type]
         attribute.source_attribute  = options[:source_attribute]
         attribute.value             = options[:value]
+        attribute.example           = options[:eg] || options[:example]
         attribute.groups            = @groups
         attribute.conditions        = @conditions
         @structure.attributes[type] << attribute

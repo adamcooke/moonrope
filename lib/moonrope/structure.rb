@@ -76,7 +76,7 @@ module Moonrope
         
         # Add structured expansions
         @attributes[:expansion].each do |attribute|
-          next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
+          next if options[:expansions].is_a?(Array) && !options[:expansions].include?(attribute.name.to_sym)
           hash.deep_merge!(hash_for_attributes([attribute], object, environment))
         end
         
