@@ -52,22 +52,22 @@ module Moonrope
       hash = Hash.new
       
       # Add the 'basic' structured fields
-      hash.deep_merge! hash_for_attributes(@attributes[:basic], object, environment)
+      DeepMerge.deep_merge! hash_for_attributes(@attributes[:basic], object, environment), hash
       
       # Always get a basic hash to work from
       if self.basic.is_a?(Proc)
-        hash.deep_merge! environment.instance_eval(&self.basic)
+        DeepMerge.deep_merge! environment.instance_eval(&self.basic), hash
       end
       
       # Enhance with the full hash if requested
       if options[:full]
         
         # Add the 'full' structured fields
-        hash.deep_merge! hash_for_attributes(@attributes[:full], object, environment)
+        DeepMerge.deep_merge! hash_for_attributes(@attributes[:full], object, environment), hash
         
         if self.full.is_a?(Proc)
           full_hash = environment.instance_eval(&self.full)
-          hash.deep_merge! full_hash
+          DeepMerge.deep_merge! full_hash,hash
         end
       end
       
@@ -77,13 +77,13 @@ module Moonrope
         # Add structured expansions
         @attributes[:expansion].each do |attribute|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(attribute.name.to_sym)
-          hash.deep_merge!(hash_for_attributes([attribute], object, environment))
+          DeepMerge.deep_merge! hash_for_attributes([attribute], object, environment), hash
         end
         
         # Add the expansions
         expansions.each do |name, expansion|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          hash.deep_merge!(name.to_sym => environment.instance_eval(&expansion))
+          DeepMerge.deep_merge!({name.to_sym => environment.instance_eval(&expansion)}, hash)
         end
       end
       
