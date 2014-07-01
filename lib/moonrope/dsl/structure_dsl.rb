@@ -24,7 +24,7 @@ module Moonrope
         if block_given?
           structure.basic = block
         else
-          field(:basic, *args)
+          attribute(:basic, *args)
         end
         
       end
@@ -39,7 +39,7 @@ module Moonrope
         if block_given?
           structure.full = block
         else
-          field(:full, *args)
+          attribute(:full, *args)
         end
       end
     
@@ -54,7 +54,7 @@ module Moonrope
         if block_given?
           structure.expansions[name] = block
         else
-          field(:expansion, name, *args)
+          attribute(:expansion, name, *args)
         end
       end
     
@@ -72,20 +72,20 @@ module Moonrope
       end
       
       #
-      # Add a new field to this structure
+      # Add a new attribute to this structure
       #
-      # @param type [Symbol] the type of field
-      # @param name [Symbol] the name of the field
-      # @param description [String] a description of the field
+      # @param type [Symbol] the type of attribute
+      # @param name [Symbol] the name of the attribute
+      # @param description [String] a description of the attribute
       # @param options [Hash] options
       # @return void
       #
-      def field(type, name, description, options = {})
-        @structure.fields[name] = options.merge(:type => type, :description => description)
+      def attribute(type, name, description, options = {})
+        @structure.attributes[name] = options.merge(:type => type, :description => description)
       end
       
       #
-      # All fields within this group will be added to a hash named 
+      # All attributes within this group will be added to a hash named 
       # the same
       #
       def group(name, &block)
@@ -103,11 +103,11 @@ module Moonrope
           @group_name = group_name
         end
         
-        def field(name, description, options = {})
-          @dsl.field(:full, name, description, options.merge(:group => @group_name))
+        def attribute(name, description, options = {})
+          @dsl.attribute(:full, name, description, options.merge(:group => @group_name))
         end
         
-        alias_method :full, :field
+        alias_method :full, :attribute
       end
       
     end

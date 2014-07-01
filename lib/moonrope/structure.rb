@@ -22,8 +22,8 @@ module Moonrope
     # @return [Moonrope::Base] the base API
     attr_reader :base
     
-    # @return [Hash] fields which should be included in this structure
-    attr_reader :fields
+    # @return [Hash] attributes which should be included in this structure
+    attr_reader :attributes
     
     #
     # Initialize a new structure
@@ -36,7 +36,7 @@ module Moonrope
       @name = name
       @expansions = {}
       @restrictions = []
-      @fields = {}
+      @attributes = {}
       @dsl = Moonrope::DSL::StructureDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
@@ -56,7 +56,7 @@ module Moonrope
       hash = Hash.new
       
       # Add the 'basic' structured fields
-      hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :basic }, object, environment)
+      hash.merge! hash_for_attributes(@attributes.select { |k,v| v[:type] == :basic }, object, environment)
       
       # Always get a basic hash to work from
       if self.basic.is_a?(Proc)
@@ -67,7 +67,7 @@ module Moonrope
       if options[:full]
         
         # Add the 'full' structured fields
-        hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :full }, object, environment)
+        hash.merge! hash_for_attributes(@attributes.select { |k,v| v[:type] == :full }, object, environment)
         
         if self.full.is_a?(Proc)
           full_hash = environment.instance_eval(&self.full)
@@ -87,9 +87,9 @@ module Moonrope
       if options[:expansions]        
         
         # Add structured expansions
-        @fields.select { |k,v| v[:type] == :expansion }.each do |name, field_opts|
+        @attributes.select { |k,v| v[:type] == :expansion }.each do |name, attribute_opts|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          hash.merge!(name.to_sym => value_for_field(object, environment, name, field_opts))
+          hash.merge!(name.to_sym => value_for_attribute(object, environment, name, attribute_opts))
         end
         
         # Add the expansions
@@ -108,22 +108,22 @@ module Moonrope
     #
     # Return a returnable hash for a given set of structured fields.
     #
-    def hash_for_fieldset(fields, object, environment)
-      return {} unless fields.is_a?(Hash)
+    def hash_for_attributes(attributes, object, environment)
+      return {} unless attributes.is_a?(Hash)
       Hash.new.tap do |hash|
-        fields.each do |name, field_opts|
+        attributes.each do |name, attribute_opts|
           
-          if field_opts[:if].is_a?(Proc)
-            if !environment.instance_eval(&field_opts[:if])
+          if attribute_opts[:if].is_a?(Proc)
+            if !environment.instance_eval(&attribute_opts[:if])
               # Skip this field...
               next
             end
           end
           
-          value = value_for_field(object, environment, name, field_opts)
-          if field_opts[:group]
-            hash[field_opts[:group]] ||= {}
-            hash[field_opts[:group]][name] = value
+          value = value_for_attribute(object, environment, name, attribute_opts)
+          if attribute_opts[:group]
+            hash[attribute_opts[:group]] ||= {}
+            hash[attribute_opts[:group]][name] = value
           else
             hash[name] = value
           end
@@ -134,13 +134,13 @@ module Moonrope
     #
     # Return a value for a structured field.
     #
-    def value_for_field(object, environment,  name, field_opts = {})
-      value = object.send(field_opts[:name] || name)
-      if field_opts[:structure]
+    def value_for_attribute(object, environment,  name, attribute_opts = {})
+      value = object.send(attribute_opts[:name] || name)
+      if attribute_opts[:structure]
         # If a structure is required, lookup the desired structure and set the
         # hash value as appropriate.
-        if structure = self.base.structure(field_opts[:structure] || name)
-          structure_opts = field_opts[:structure_opts] || {}
+        if structure = self.base.structure(attribute_opts[:structure] || name)
+          structure_opts = attribute_opts[:structure_opts] || {}
           if value.is_a?(Array)
             value.map do |v|
               structure.hash(v, structure_opts.merge(:request => environment.request))

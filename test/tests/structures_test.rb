@@ -129,7 +129,7 @@ class StructuresTest < Test::Unit::TestCase
         expansion :user, "The associated user", :type => Hash, :structure => :user
         
         group :colors do
-          field :hair, "The animals hair color", :example => "Blue", :type => String, :name => :color
+          attribute :hair, "The animals hair color", :example => "Blue", :type => String, :name => :color
         end
       end
       

@@ -267,27 +267,26 @@ end
 ```
 
 This example is the most basic way of defining a structure. You see we have defined
-a number of fields which should be included in our structure. Fields are either defined
-as basic or full - basic fields are always included in the structure whereas full fields
-are only included when requested. 
+a number of attributes which should be included in our structure. Basic attributes are
+always included in the structure whereas full attributes are only included when requested. 
 
-The basic information from a structure is often used on its own when referenced
+The basic attributes from a structure is often used on its own when referenced
 from other structures. For example, if users had many projects, the project
 structure may reference user but only request the basic information as any further
 information is not needed.
 
-The full information would be returned when listing a specific user or a list
+The full attributes would be returned when listing a specific user or a list
 of users on their own. For example, your users/list or users/info methods would
 likely return full information rather than just the basic. 
 
 Note that when full information is requested, it is always combined with the
-information from basic so there's no need to duplicate field definitions.
+information from basic so there's no need to duplicate attribute definitions.
 
 ##### Mapping
 
-Any fields which you add to your structure are mapped one to one with the attributes
+Any attributes which you add to your structure are mapped one to one with the attributes
 available on the source object. If the name doesn't match, you can use the `:name`
-option to set the actual name of the attribute on the source field.
+option to set the actual name of the attribute on the source object.
 
 ```ruby
 basic :user_id, "The user's ID", :name => :id
@@ -310,11 +309,11 @@ expansion :currency, "The currency this user should be billed", :type => Hash, :
 expansion :projects, "All projects assigned to the user", :type => Array, :structure => :project
 ```
 
-The same `:structure => :name` can be used on any field which you define in your
+The same `:structure => :name` can be used on any attribute which you define in your
 structure. Therefore, if you need to always include a structure, you can simply
 add it to a full or basic line.
 
-#### Conditional fields
+#### Conditional attributes
 
 You can specify a condition on any attribute or expansion. This can be done by passing
 a block to the `:if` option when defining an attribute.
@@ -342,7 +341,7 @@ restricted do
 end
 ```
 
-In this example, we have added three additional fields to the user block
+In this example, we have added three additional attributes to the user block
 when the authenticated user is a global admin. 
 
 Note: restricted information will only be included in structures when they are
