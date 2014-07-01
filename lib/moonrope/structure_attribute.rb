@@ -2,8 +2,8 @@ module Moonrope
   class StructureAttribute
     
     attr_accessor :name
-    attr_accessor :condition
     attr_accessor :groups
+    attr_accessor :conditions
     attr_accessor :source_attribute
     attr_accessor :description
     attr_accessor :value_type
@@ -15,6 +15,7 @@ module Moonrope
       @name = name
       @description = description
       @groups = []
+      @conditions = []
     end
     
     def source_attribute

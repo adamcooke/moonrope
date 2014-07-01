@@ -165,8 +165,13 @@ class StructuresTest < Test::Unit::TestCase
   def test_ifs
     base = Moonrope::Base.new do
       structure :animal do
-        basic :id1, "The ID1 of the aniaml object", :example => 1, :type => Integer, :if => Proc.new { true }, :name => :id
-        basic :id2, "The ID2 of the aniaml object", :example => 2, :type => Integer, :if => Proc.new { false }, :name => :id
+        condition Proc.new { true } do
+          basic :id1, "The ID1 of the aniaml object", :example => 1, :type => Integer, :name => :id
+        end
+        
+        condition Proc.new { false } do
+          basic :id2, "The ID2 of the aniaml object", :example => 2, :type => Integer, :name => :id
+        end
       end
     end
     
@@ -192,7 +197,7 @@ class StructuresTest < Test::Unit::TestCase
           end
         end
         
-        scope :if => Proc.new { false } do
+        condition Proc.new { false } do
           basic :id2, "ID2", :name => :id
         end
       end

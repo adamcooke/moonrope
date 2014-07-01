@@ -331,7 +331,9 @@ You can specify a condition on any attribute or expansion. This can be done by p
 a block to the `:if` option when defining an attribute.
 
 ```ruby
-basic :pin, "The user's PIN code", :if => Proc.new { auth.is_super_special_admin? }
+condition Proc.new { auth.is_super_special_admin? } do
+  basic :pin, "The user's PIN code"
+end
 ```
 
 ### Accessing structures from actions

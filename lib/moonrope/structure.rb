@@ -101,9 +101,17 @@ module Moonrope
       Hash.new.tap do |hash|
         attributes.each do |attribute|
           
-          if attribute.condition.is_a?(Proc)
-            if !environment.instance_eval(&attribute.condition)
-              # Skip this field...
+          unless attribute.conditions.empty?
+            matched = false
+            attribute.conditions.each do |condition|
+              if !environment.instance_eval(&condition)
+                matched = true
+                break
+              end
+            end
+            if matched
+              # Skip this item because a condition didn't evaluate
+              # to true.
               next
             end
           end

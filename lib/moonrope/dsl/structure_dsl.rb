@@ -8,6 +8,9 @@ module Moonrope
       # @return [Array] groups which should applied
       attr_accessor :groups
       
+      # @return [Array] conditions which should applied
+      attr_accessor :conditions
+      
       # @return [Hash] options
       attr_accessor :options
       
@@ -20,6 +23,7 @@ module Moonrope
         @structure = structure
         @options = {}
         @groups = []
+        @conditions = []
       end
       
       def scope(options = {}, &block)
@@ -34,6 +38,12 @@ module Moonrope
         scope_dsl.instance_eval(&block)
       end
       
+      def condition(condition, &block)
+        scope_dsl = self.class.new(@structure)
+        scope_dsl.conditions = [@conditions, condition].flatten
+        scope_dsl.instance_eval(&block)
+      end
+      
       def attribute(type, name, description, options = {})
         attribute                   = StructureAttribute.new(type, name, description)
         attribute.structure         = options[:structure]
@@ -41,7 +51,7 @@ module Moonrope
         attribute.value_type        = options[:type]
         attribute.source_attribute  = options[:source] || options[:name]
         attribute.groups            = @groups
-        attribute.condition         = options[:if] || @options[:if]
+        attribute.conditions        = @conditions
         @structure.attributes[type] << attribute
       end
       
