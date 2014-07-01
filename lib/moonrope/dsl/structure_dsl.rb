@@ -26,8 +26,14 @@ module Moonrope
       end
       
       def attribute(type, name, description, options = {})
-        options = options.merge(:type => type, :description => description)
-        @structure.attributes[name] = @options.merge(options)
+        attribute                   = StructureAttribute.new(type, name, description)
+        attribute.structure         = options[:structure]
+        attribute.structure_opts    = options[:structure_opts]
+        attribute.value_type        = options[:type]
+        attribute.source_attribute  = options[:source] || options[:name]
+        attribute.group             = options[:group] || @options[:group]
+        attribute.condition         = options[:if] || @options[:if]
+        @structure.attributes[type] << attribute
       end
       
       def basic(*args, &block)

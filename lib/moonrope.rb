@@ -20,6 +20,7 @@ require 'moonrope/param_set'
 require 'moonrope/rack_middleware'
 require 'moonrope/request'
 require 'moonrope/structure'
+require 'moonrope/structure_attribute'
 require 'moonrope/version'
 
 require 'moonrope/railtie' if defined?(Rails)
