@@ -292,6 +292,18 @@ option to set the actual name of the attribute on the source object.
 basic :user_id, "The user's ID", :name => :id
 ```
 
+#### Grouping
+
+Attributes can be placed into groups which will return a hash containing all items
+within the group. 
+
+```ruby
+group :financials do
+  basic :balance, "The user's current balance", :type => Integer, :example => 12345
+  full :last_invoice_raised_at, "The time the last invoice was made", :type => String, :example => ""
+end
+```
+
 #### Expansions
 
 An expansion allows you to manually define extra information which can be
