@@ -56,7 +56,7 @@ module Moonrope
       hash = Hash.new
       
       # Add the 'basic' structured fields
-      hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :basic }, object, options)
+      hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :basic }, object, environment)
       
       # Always get a basic hash to work from
       if self.basic.is_a?(Proc)
@@ -67,7 +67,7 @@ module Moonrope
       if options[:full]
         
         # Add the 'full' structured fields
-        hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :full }, object, options)
+        hash.merge! hash_for_fieldset(@fields.select { |k,v| v[:type] == :full }, object, environment)
         
         if self.full.is_a?(Proc)
           full_hash = environment.instance_eval(&self.full)
@@ -89,7 +89,7 @@ module Moonrope
         # Add structured expansions
         @fields.select { |k,v| v[:type] == :expansion }.each do |name, field_opts|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          hash.merge!(name.to_sym => value_for_field(object, options, name, field_opts))
+          hash.merge!(name.to_sym => value_for_field(object, environment, name, field_opts))
         end
         
         # Add the expansions
@@ -108,11 +108,19 @@ module Moonrope
     #
     # Return a returnable hash for a given set of structured fields.
     #
-    def hash_for_fieldset(fields, object, options = {})
+    def hash_for_fieldset(fields, object, environment)
       return {} unless fields.is_a?(Hash)
       Hash.new.tap do |hash|
         fields.each do |name, field_opts|
-          value = value_for_field(object, options, name, field_opts)
+          
+          if field_opts[:if].is_a?(Proc)
+            if !environment.instance_eval(&field_opts[:if])
+              # Skip this field...
+              next
+            end
+          end
+          
+          value = value_for_field(object, environment, name, field_opts)
           if field_opts[:group]
             hash[field_opts[:group]] ||= {}
             hash[field_opts[:group]][name] = value
@@ -126,7 +134,7 @@ module Moonrope
     #
     # Return a value for a structured field.
     #
-    def value_for_field(object, options,  name, field_opts = {})
+    def value_for_field(object, environment,  name, field_opts = {})
       value = object.send(field_opts[:name] || name)
       if field_opts[:structure]
         # If a structure is required, lookup the desired structure and set the
@@ -135,10 +143,10 @@ module Moonrope
           structure_opts = field_opts[:structure_opts] || {}
           if value.is_a?(Array)
             value.map do |v|
-              structure.hash(v, structure_opts.merge(:request => options[:request]))
+              structure.hash(v, structure_opts.merge(:request => environment.request))
             end
           else
-            structure.hash(value, structure_opts.merge(:request => options[:request]))
+            structure.hash(value, structure_opts.merge(:request => environment.request))
           end
         end
       else

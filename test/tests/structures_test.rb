@@ -164,4 +164,19 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal 'Boris', hash[:animals][1][:name]
     assert_equal 'Black', hash[:animals][1][:hair_color]
   end
+  
+  def test_ifs
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :id1, "The ID1 of the aniaml object", :example => 1, :type => Integer, :if => Proc.new { true }, :name => :id
+        basic :id2, "The ID2 of the aniaml object", :example => 2, :type => Integer, :if => Proc.new { false }, :name => :id
+      end
+    end
+    
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
+    hash = base.structure(:animal).hash(animal)
+    assert_equal 1, hash[:id1]
+    assert_equal nil, hash[:id2]
+  end
+  
 end

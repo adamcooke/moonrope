@@ -314,6 +314,15 @@ The same `:structure => :name` can be used on any field which you define in your
 structure. Therefore, if you need to always include a structure, you can simply
 add it to a full or basic line.
 
+#### Conditional fields
+
+You can specify a condition on any attribute or expansion. This can be done by passing
+a block to the `:if` option when defining an attribute.
+
+```ruby
+basic :pin, "The user's PIN code", :if => Proc.new { auth.is_super_special_admin? }
+```
+
 #### Restrictions
 
 In some cases, only certain users should be able to access certain information
