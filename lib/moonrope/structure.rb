@@ -146,7 +146,7 @@ module Moonrope
     #
     def value_for_attribute(object, environment,  attribute)
       value = object.send(attribute.source_attribute)
-      if attribute.structure
+      if value && attribute.structure
         # If a structure is required, lookup the desired structure and set the
         # hash value as appropriate.
         if structure = self.base.structure(attribute.structure)
