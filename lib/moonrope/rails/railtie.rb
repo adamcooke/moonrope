@@ -5,11 +5,11 @@ module Moonrope
       
       # Initialize a new moonrope base from the API defined in
       # $RAILS_ROOT/app/api directory.
-      moonrope_directory = Rails.root.join('api')
+      moonrope_directory = Rails.root.join('app', 'api')
       if File.directory?(moonrope_directory)
         app.config.moonrope = Moonrope::Base.load(moonrope_directory)
       else
-        $stderr.puts "Moonrope is installed but there is no API directory at ROOT/api."
+        $stderr.puts "Moonrope is installed but there is no API directory at ROOT/app/api."
         next
       end
       
@@ -47,6 +47,10 @@ module Moonrope
         :reload_on_each_request => !app.config.cache_classes
       )
       
+    end
+
+    generators do
+      require 'moonrope/rails/generator'
     end
     
   end
