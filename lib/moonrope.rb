@@ -23,7 +23,10 @@ require 'moonrope/structure'
 require 'moonrope/structure_attribute'
 require 'moonrope/version'
 
-require 'moonrope/railtie' if defined?(Rails)
+if defined?(Rails)
+  require 'moonrope/rails/railtie'
+  require 'moonrope/rails/generator'
+end
 
 module Moonrope
   
