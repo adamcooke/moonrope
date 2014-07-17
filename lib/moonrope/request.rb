@@ -138,8 +138,6 @@ module Moonrope
       !(authenticated_user.nil? || authenticated_user == false)
     end
     
-    private
-    
     #
     # Return/create a rack request object for use internally
     #
@@ -149,6 +147,8 @@ module Moonrope
       @rack_request ||= ::Rack::Request.new(@env)
     end
     
+    private
+
     #
     # Extract headers from the rack env
     #

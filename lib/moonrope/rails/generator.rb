@@ -3,9 +3,9 @@ module Moonrope
     desc "This generator creates your a Moonrope directory structure"
 
     def generate_directories
-      empty_directory 'app/api/controllers'
-      empty_directory 'app/api/helpers'
-      empty_directory 'app/api/structures'
+      empty_directory 'api/controllers'
+      empty_directory 'api/helpers'
+      empty_directory 'api/structures'
     end
 
   end
