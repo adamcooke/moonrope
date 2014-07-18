@@ -50,7 +50,8 @@ module Moonrope
     end
 
     generators do
-      require 'moonrope/rails/generator'
+      require 'moonrope/rails/generators/install_generator'
+      require 'moonrope/rails/generators/structure_generator'
     end
     
   end
