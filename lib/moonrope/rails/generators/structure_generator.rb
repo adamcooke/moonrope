@@ -4,43 +4,110 @@ module Moonrope
     argument :model_name, :type => :string, :description => "Name of model you wish to generate a struct for"
     class_option :recurse, :type => :boolean, :default => false, :description => "Recurse into linked models"
 
-    def call
-      begin
-        @klass_name = model_name.constantize
-      rescue NameError
-        puts "#{model_name} could not be found"
-      end
+    attr_reader :structures_generated
 
-      puts "structure :#{structure_name(@klass_name)} do"
-      @klass_name.content_columns.each do |column|
-        puts build_content_column(column)
+    desc "Create a structure from an ActiveRecord model"
+    def call
+      @structures_generated = []
+
+      model = model_name.constantize
+      StructureBuilder.build(self, model)
+    end
+
+    no_tasks do
+      def write_structure(name, contents)
+        unless @structures_generated.include?(name)
+          create_file("api/structures/#{name}_struct.rb", contents)
+          @structures_generated << name
+        end
       end
-      puts "end"
     end
 
     private
 
-    def build_content_column(column, extent="full")
-      type = column_type_to_class(column.type)
-      "  #{extent} :#{column.name}, \"#{column.name.humanize} for #{@klass_name.model_name.human}\", :type => #{type}"
-    end
+    class StructureBuilder
 
-    def column_type_to_class(type)
-      case type
-      when :integer, :boolean           then Integer
-      when :float, :decimal             then Float
-      when :datetime, :timestamp, :time then Time
-      when :date                        then Date
-      else String
+      DEFAULT_BASIC_FIELDS = ["name", "permalink", "slug", "description", "subject", "identifier"]
+
+      attr_reader :klass, :generator
+
+      def self.build(generator, model_name)
+        self.new(generator, model_name).build
       end
-    end
 
-    def default_basic_fields
-      [@klass_name.primary_key, "name", "permalink", "slug", "description"]
-    end
+      def initialize(generator, klass)
+        @generator = generator
+        @klass = klass
+        @to_build = []
+      end
 
-    def structure_name(klass)
-      klass.model_name.demodulize.underscore
+      def structure_name
+        @structure_name ||= klass.model_name.demodulize.underscore
+      end
+
+      def build
+        contents = Array.new.tap do |lines|
+          lines << "structure :#{structure_name} do"
+
+          basic_cols, full_cols = klass.columns.reject {|c| c.name =~ /_id$/ }.partition {|c| basic_field?(c.name) }
+
+          basic_cols.each do |column|
+            lines << build_content_column(column, "basic")
+          end
+          lines << ""
+
+          full_cols.each do |column|
+            lines << build_content_column(column, "full")
+          end
+          lines << ""
+
+          klass.reflections.each do |relation_name, column|
+            unless column.options[:polymorphic]
+              builder = self.class.new(generator, column.klass)
+              @to_build << builder
+              lines << build_relation_column(column, builder.structure_name, "expansion")
+            end
+          end
+
+          lines << "end"
+        end.join("\n")
+
+        generator.write_structure(structure_name, contents)
+
+        @to_build.each do |builder|
+          builder.build unless generator.structures_generated.include?(builder.structure_name)
+        end
+      end
+
+      private
+
+      def build_content_column(column, extent)
+        type = column_type_to_class(column.type)
+        "  #{extent} :#{column.name}, \"#{column.name.humanize} for #{klass.model_name.human}\", :type => #{type}"
+      end
+
+      def build_relation_column(column, structure_name, extent)
+        "  #{extent} :#{column.name}, \"#{column.name.to_s.humanize} for #{klass.model_name.human}\", :structure => :#{structure_name}"
+      end
+
+      def column_type_to_class(type)
+        case type
+        when :integer, :boolean           then Integer
+        when :float, :decimal             then Float
+        when :datetime, :timestamp, :time then Time
+        when :date                        then Date
+        else String
+        end
+      end
+
+      def basic_field?(col_name)
+        basic_fields.include?(col_name)
+      end
+
+      def basic_fields
+        @basic_fields ||= [klass.primary_key] + DEFAULT_BASIC_FIELDS
+      end
+
     end
 
   end
