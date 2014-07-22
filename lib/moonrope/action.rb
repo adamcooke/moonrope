@@ -147,7 +147,7 @@ module Moonrope
         eval_environment = EvalEnvironment.new(@controller.base, request)
       end
       
-      access_condition = self.access || @controller.base.default_access
+      access_condition = self.access || @controller.access || @controller.base.default_access
       
       if eval_environment.auth
         # If there's no authentication object, access is permitted otherwise

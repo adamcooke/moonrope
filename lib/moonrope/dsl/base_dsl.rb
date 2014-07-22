@@ -57,8 +57,8 @@ module Moonrope
       #
       # @yield stores the block as the access check
       #
-      def default_access(&block)
-        @base.default_access = block
+      def default_access(value = nil, &block)
+        @base.default_access = block_given? ? block : value
       end
       
       #
