@@ -11,7 +11,7 @@ module Moonrope
       @structures_generated = []
 
       model = model_name.constantize
-      StructureBuilder.build(self, model)
+      StructureBuilder.build(self, model, options)
     end
 
     no_tasks do
@@ -31,13 +31,14 @@ module Moonrope
 
       attr_reader :klass, :generator
 
-      def self.build(generator, model_name)
-        self.new(generator, model_name).build
+      def self.build(generator, model_name, options={})
+        self.new(generator, model_name, options).build
       end
 
-      def initialize(generator, klass)
+      def initialize(generator, klass, options={})
         @generator = generator
         @klass = klass
+        @options = options
         @to_build = []
       end
 
@@ -63,8 +64,8 @@ module Moonrope
 
           klass.reflections.each do |relation_name, column|
             unless column.options[:polymorphic]
-              builder = self.class.new(generator, column.klass)
-              @to_build << builder
+              builder = self.class.new(generator, column.klass, @options)
+              @to_build << builder if @options['recurse']
               lines << build_relation_column(column, builder.structure_name, "expansion")
             end
           end
