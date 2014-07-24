@@ -57,7 +57,17 @@ module Moonrope
           Moonrope.logger.info e.class
           Moonrope.logger.info e.message
           Moonrope.logger.info e.backtrace.join("\n")
-          [500, global_headers, [{:status => 'internal-server-error'}.to_json]]
+          
+          response = {:status => 'internal-server-error'}
+          
+          # If in development, return more details about the exception which was raised.
+          if @base.environment == 'development'
+            response[:error] = e.class.to_s
+            response[:message] = e.message
+            response[:backtrace] = e.backtrace[0,6]
+          end
+          
+          [500, global_headers, [response.to_json]]
         end
 
       else

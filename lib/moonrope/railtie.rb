@@ -15,6 +15,9 @@ module Moonrope
       
       # Set the logger
       Moonrope.logger = Rails.logger
+      
+      # Set the environment to match the Rails environment
+      app.config.moonrope.environment = Rails.env.to_s
 
       # Set the request regex if one has been set
       if app.config.respond_to?(:moonrope_request_path_regex) && app.config.moonrope_request_path_regex.is_a?(Regexp)

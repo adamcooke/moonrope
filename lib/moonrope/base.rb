@@ -35,6 +35,9 @@ module Moonrope
     # @return [String] the directory the base was loaded from (if relevant)
     attr_accessor :loaded_from
     
+    # @return [String] the moonrope environment
+    attr_accessor :environment
+    
     #
     # Initialize a new instance of the Moonrope::Base
     #
@@ -42,6 +45,7 @@ module Moonrope
     #
     def initialize(&block)
       unload
+      @environment = 'development'
       @dsl = Moonrope::DSL::BaseDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
