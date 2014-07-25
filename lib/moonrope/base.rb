@@ -59,6 +59,7 @@ module Moonrope
       @helpers = @helpers.is_a?(Array) ? @helpers.select { |h| h.options[:unloadable] == false } : []
       @authenticator = nil
       @default_access = nil
+      @loaded_from = []
     end
     
     #
@@ -68,12 +69,10 @@ module Moonrope
       directories = self.loaded_from if directories.empty?
       if directories.size > 0
         unload
+        self.loaded_from = []
         directories.each do |directory|
-          Dir["#{directory}/**/*.rb"].each do |filename|
-            self.dsl.instance_eval(File.read(filename), filename)
-          end
+          load_directory(directory)
         end
-        self.loaded_from = directories
         self
       else
         raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
@@ -81,6 +80,21 @@ module Moonrope
     end
     
     alias_method :reload, :load
+    
+    #
+    # Load from a given directory
+    #
+    def load_directory(directory)
+      if File.exist?(directory)
+        Dir["#{directory}/**/*.rb"].each do |filename|
+          self.dsl.instance_eval(File.read(filename), filename)
+        end
+        self.loaded_from << directory unless self.loaded_from.include?(directory)
+        true
+      else
+        false
+      end
+    end
     
     #
     # Return a structure of the given name
