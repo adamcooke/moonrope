@@ -34,14 +34,34 @@ module Moonrope
         request = @base.request(env, $1)
         
         #
+        # Set some global headers which are always returned
+        #
+        global_headers = {}
+        global_headers['Content-Type'] = 'text/plain'
+        global_headers['Access-Control-Allow-Origin'] = '*'
+        if env['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
+          global_headers['Access-Control-Allow-Headers'] = env['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
+        end
+        global_headers['Access-Control-Allow-Methods'] = '*'
+        
+        #
+        # Options always returns a 200
+        #
+        if env['REQUEST_METHOD'] == 'OPTIONS'
+          return [200, global_headers, ['OK']]
+        end
+        
+        #
+        # Responses are now in JSON
+        #
+        global_headers['Content-Type'] = 'application/json'
+        
+        #
         # Check the request is valid
         #
         unless request.valid?
-          return [400, {}, ["Invalid API Request. Must provide a version, controller & action as /api/v1/controller/action."]]
+          return [400, global_headers, [{:status => 'invalid-controller-or-action'}.to_json]]
         end
-
-        global_headers = {}
-        global_headers['Content-Type'] = 'application/json'
         
         #
         # Execute the request
