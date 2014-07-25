@@ -64,14 +64,16 @@ module Moonrope
     #
     # Reload this whole base API from the path
     #
-    def load(directory = nil)
-      directory = self.loaded_from if directory.nil?
-      if directory
+    def load(*directories)
+      directories = self.loaded_from if directories.empty?
+      if directories.size > 0
         unload
-        Dir["#{directory}/**/*.rb"].each do |filename|
-          self.dsl.instance_eval(File.read(filename), filename)
+        directories.each do |directory|
+          Dir["#{directory}/**/*.rb"].each do |filename|
+            self.dsl.instance_eval(File.read(filename), filename)
+          end
         end
-        self.loaded_from = directory
+        self.loaded_from = directories
         self
       else
         raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
