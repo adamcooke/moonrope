@@ -151,7 +151,7 @@ module Moonrope
         # hash value as appropriate.
         if structure = self.base.structure(attribute.structure)
           structure_opts = attribute.structure_opts || {}
-          if value.is_a?(Array)
+          if value.respond_to?(:map)
             value.map do |v|
               structure.hash(v, structure_opts.merge(:request => environment.request))
             end
