@@ -18,9 +18,13 @@ module Moonrope
       # @yield instance evals the block within the StructureDSL
       #
       def structure(name, &block)
-        structure = Moonrope::Structure.new(@base, name)
+        if existing = @base.structures.select { |s| s.name == name }.first
+          structure = existing
+        else
+          structure = Moonrope::Structure.new(@base, name)
+          @base.structures << structure
+        end
         structure.dsl.instance_eval(&block) if block_given?
-        @base.structures << structure
         structure
       end
     
@@ -37,9 +41,9 @@ module Moonrope
           controller = existing
         else
           controller = Moonrope::Controller.new(@base, name)
+          @base.controllers << controller
         end
         controller.dsl.instance_eval(&block) if block_given?
-        @base.controllers << controller
         controller
       end
     
