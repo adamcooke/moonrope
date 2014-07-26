@@ -32,8 +32,8 @@ module Moonrope
     # @return [Proc] the default access condition
     attr_accessor :default_access
     
-    # @return [String] the directory the base was loaded from (if relevant)
-    attr_accessor :loaded_from
+    # @return [Array] the array of directories to load from  (if relevant)
+    attr_accessor :load_directories
     
     # @return [String] the moonrope environment
     attr_accessor :environment
@@ -46,6 +46,7 @@ module Moonrope
     def initialize(&block)
       unload
       @environment = 'development'
+      @load_directories = []
       @dsl = Moonrope::DSL::BaseDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
@@ -59,20 +60,22 @@ module Moonrope
       @helpers = @helpers.is_a?(Array) ? @helpers.select { |h| h.options[:unloadable] == false } : []
       @authenticator = nil
       @default_access = nil
-      @loaded_from = []
     end
     
     #
     # Reload this whole base API from the path
     #
     def load(*directories)
-      directories = self.loaded_from if directories.empty?
+      directories = self.load_directories if directories.empty?
       if directories.size > 0
         unload
-        self.loaded_from = []
+        new_directories = []
         directories.each do |directory|
-          load_directory(directory)
+          if load_directory(directory)
+            new_directories << directory
+          end
         end
+        self.load_directories = new_directories
         self
       else
         raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
@@ -89,7 +92,18 @@ module Moonrope
         Dir["#{directory}/**/*.rb"].each do |filename|
           self.dsl.instance_eval(File.read(filename), filename)
         end
-        self.loaded_from << directory unless self.loaded_from.include?(directory)
+        true
+      else
+        false
+      end
+    end
+    
+    #
+    # Add a dirctory to the directories to load
+    #
+    def add_load_directory(directory)
+      if load_directory(directory)
+        self.load_directories << directory unless self.load_directories.include?(directory)
         true
       else
         false
