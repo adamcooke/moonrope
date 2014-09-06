@@ -38,6 +38,9 @@ module Moonrope
     # @return [String] the moonrope environment
     attr_accessor :environment
     
+    # @return [Proc] a proc to execute before every request
+    attr_accessor :on_request
+    
     #
     # Initialize a new instance of the Moonrope::Base
     #

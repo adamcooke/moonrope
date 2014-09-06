@@ -73,6 +73,20 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert_equal 'access-denied', response_json['status']    
   end
   
+  
+  def test_request_callback_is_invoked
+    request_count = 0
+    app.base.on_request = Proc.new do |base, env|
+      request_count += 1
+    end
+    assert_equal 0, request_count
+    get "/api/v1/users/list"
+    assert_equal 1, request_count
+    get "/api/v1/users/list"
+    assert_equal 2, request_count
+  end
+  
+  
   private
   
   def auth_headers(username, password)

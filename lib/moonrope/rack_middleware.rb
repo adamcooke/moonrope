@@ -15,6 +15,8 @@ module Moonrope
       @options = options
     end
     
+    attr_reader :base
+    
     #
     # Make a new request
     #
@@ -26,6 +28,13 @@ module Moonrope
         
         if @options[:reload_on_each_request]
           @base.load
+        end
+        
+        #
+        # Call the on request block if one has been defined for the base.
+        #
+        if @base.on_request.is_a?(Proc)
+          @base.on_request.call(@base, env)
         end
         
         #
