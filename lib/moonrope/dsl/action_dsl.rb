@@ -37,7 +37,7 @@ module Moonrope
         if description_or_options.is_a?(String)
           options = options_if_description.merge(:description => description_or_options)
         else
-          options = options_if_description
+          options = description_or_options
         end
         @action.params[name] = options
       end
