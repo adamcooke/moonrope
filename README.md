@@ -254,14 +254,14 @@ would be named `user_structure.rb`.
 ```ruby
 structure :user do
 
-  basic :id, "The ID of the user", :type => Integer, :example => 1234
-  basic :username, "The user's username", :type => String, :example => "adam"
+  basic :id, :type => Integer, :example => 1234
+  basic :username, :type => String, :example => "adam"
 
-  full :full_name, "The user's first name", :type => String, :example => "Adam"
-  full :last_name, "The user's last name", :type => String, :example => "Cooke"
-  full :age, "The user's age", :type => Integer, :example => 27
-  full :created_at, "The creation time for the user", :type => String, :example => "2014-07-01T11:32:59+01:00"
-  full :updated_at, "The creation time for the user", :type => String, :example => "2014-07-01T11:32:59+01:00"
+  full :full_name, :type => String, :example => "Adam"
+  full :last_name, :type => String, :example => "Cooke"
+  full :age, :type => Integer, :example => 27
+  full :created_at, :type => String, :example => "2014-07-01T11:32:59+01:00"
+  full :updated_at, :type => String, :example => "2014-07-01T11:32:59+01:00"
 
 end
 ```
@@ -289,14 +289,14 @@ available on the source object. If the name doesn't match, you can use the `:nam
 option to set the actual name of the attribute on the source object.
 
 ```ruby
-basic :user_id, "The user's ID", :source_attribute => :id
+basic :user_id, :source_attribute => :id
 ```
 
 Alternatively, you can specify a block which will be used when mapping the value to the
 correct object.
 
 ```ruby
-basic :name_in_caps, "The user's name in uppercase", :value => Proc.new { o.name.upcase }
+basic :name_in_caps, :value => Proc.new { o.name.upcase }
 ```
 
 #### Grouping
@@ -306,8 +306,8 @@ within the group.
 
 ```ruby
 group :financials do
-  basic :balance, "The user's current balance", :type => Integer, :example => 12345
-  full :last_invoice_raised_at, "The time the last invoice was made", :type => String, :example => ""
+  basic :balance, :type => Integer, :example => 12345
+  full :last_invoice_raised_at, :type => String, :example => ""
 end
 ```
 
@@ -323,9 +323,9 @@ defined. An expansion can be defined as shown below:
 
 ```ruby
 # A single object which is associated with your user (belongs to)
-expansion :currency, "The currency this user should be billed", :type => Hash, :structure => :currency
+expansion :currency, :type => Hash, :structure => :currency
 # or including an array of objects (has many)
-expansion :projects, "All projects assigned to the user", :type => Array, :structure => :project
+expansion :projects, :type => Array, :structure => :project
 ```
 
 The same `:structure => :name` can be used on any attribute which you define in your
@@ -339,7 +339,7 @@ a block to the `:if` option when defining an attribute.
 
 ```ruby
 condition Proc.new { auth.is_super_special_admin? } do
-  basic :pin, "The user's PIN code"
+  basic :pin
 end
 ```
 

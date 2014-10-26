@@ -101,22 +101,22 @@ class StructuresTest < Test::Unit::TestCase
   def test_structured_structures
     base = Moonrope::Base.new do
       structure :animal do
-        basic :id, "The ID of the aniaml object", :example => 1, :type => Integer
-        basic :name, "The name of the animal", :example => "Boris", :type => String
-        full :hair_color, "The color of the animal's hair", :example => "Blue", :type => String, :source_attribute => :color
-        expansion :user, "The associated user", :type => Hash, :structure => :user
+        basic :id, :description => "The ID of the aniaml object", :example => 1, :type => Integer
+        basic :name, :description => "The name of the animal", :example => "Boris", :type => String
+        full :hair_color, :description => "The color of the animal's hair", :example => "Blue", :type => String, :source_attribute => :color
+        expansion :user, :type => Hash, :structure => :user
 
         group :colors do
-          basic :eye, "The animal's eye color", :example => "Green", :type => String, :source_attribute => :color
-          full :hair, "The animals hair color", :example => "Blue", :type => String, :source_attribute => :color
-          expansion :owner, "The animal's owner", :structure => :user, :type => Hash, :source_attribute => :user
+          basic :eye, :example => "Green", :type => String, :source_attribute => :color
+          full :hair, :example => "Blue", :type => String, :source_attribute => :color
+          expansion :owner, :structure => :user, :type => Hash, :source_attribute => :user
         end
       end
 
       structure :user do
-        basic :id, "The ID of the user object", :example => 1, :type => Integer
-        basic :username, "The username", :example => "adam", :type => String
-        expansion :animals, "The animals with this user", :type => Array, :structure => :animal, :structure_opts => {:full => true}
+        basic :id, :example => 1, :type => Integer
+        basic :username, :example => "adam", :type => String
+        expansion :animals, :type => Array, :structure => :animal, :structure_opts => {:full => true}
       end
     end
 
@@ -166,11 +166,11 @@ class StructuresTest < Test::Unit::TestCase
     base = Moonrope::Base.new do
       structure :animal do
         condition Proc.new { true } do
-          basic :id1, "The ID1 of the aniaml object", :example => 1, :type => Integer, :source_attribute => :id
+          basic :id1, :example => 1, :type => Integer, :source_attribute => :id
         end
 
         condition Proc.new { false } do
-          basic :id2, "The ID2 of the aniaml object", :example => 2, :type => Integer, :source_attribute => :id
+          basic :id2, :example => 2, :type => Integer, :source_attribute => :id
         end
       end
     end
@@ -185,20 +185,20 @@ class StructuresTest < Test::Unit::TestCase
     base = Moonrope::Base.new do
       structure :animal do
         group :group1 do
-          basic :id, "The ID of the animal"
-          basic :name, "Name"
+          basic :id
+          basic :name
           group :group2 do
-            basic :id_g2, "ID", :source_attribute => :id
-            basic :name2, "Name", :source_attribute => :name
+            basic :id_g2, :source_attribute => :id
+            basic :name2, :source_attribute => :name
             group :group3 do
-              basic :id_g3, "ID", :source_attribute => :id
-              basic :name3, "Name", :source_attribute => :name
+              basic :id_g3, :source_attribute => :id
+              basic :name3, :source_attribute => :name
             end
           end
         end
 
         condition Proc.new { false } do
-          basic :id2, "ID2", :name => :id
+          basic :id2, :name => :id
         end
       end
     end
@@ -220,8 +220,8 @@ class StructuresTest < Test::Unit::TestCase
   def test_passing_values_from_the_definition
     base = Moonrope::Base.new do
       structure :animal do
-        basic :example, "An example field which is always 1234", :value => 1234
-        basic :example_with_block, "Another example", :value => Proc.new { "#{o.name}!!!" }
+        basic :example, :value => 1234
+        basic :example_with_block, :value => Proc.new { "#{o.name}!!!" }
       end
     end
 
@@ -229,6 +229,17 @@ class StructuresTest < Test::Unit::TestCase
     hash = base.structure(:animal).hash(animal)
     assert_equal 1234, hash[:example]
     assert_equal "Fido!!!", hash[:example_with_block]
+  end
+
+  def test_creating_a_structure_with_description
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :example, "Hello there!", :value => 1234
+        basic :example2, :description => "Bananas!"
+      end
+    end
+    assert_equal "Hello there!", base.structure(:animal).attributes[:basic].select { |a| a.name == :example }.first.description
+    assert_equal "Bananas!", base.structure(:animal).attributes[:basic].select { |a| a.name == :example2 }.first.description
   end
 
 end

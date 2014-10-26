@@ -12,10 +12,9 @@ module Moonrope
     attr_accessor :value
     attr_accessor :example
 
-    def initialize(type, name, description)
+    def initialize(type, name)
       @type = type
       @name = name
-      @description = description
       @groups = []
       @conditions = []
     end

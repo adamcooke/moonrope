@@ -44,8 +44,17 @@ module Moonrope
         scope_dsl.instance_eval(&block)
       end
 
-      def attribute(type, name, description, options = {})
-        attribute                   = StructureAttribute.new(type, name, description)
+      def attribute(type, name, options_or_description = {}, options_if_description = {})
+
+        if options_or_description.is_a?(String)
+          options_if_description[:description] = options_or_description
+          options = options_if_description
+        else
+          options = options_or_description
+        end
+
+        attribute                   = StructureAttribute.new(type, name)
+        attribute.description       = options[:description]
         attribute.structure         = options[:structure]
         attribute.structure_opts    = options[:structure_opts]
         attribute.value_type        = options[:type]
