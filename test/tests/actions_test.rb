@@ -17,8 +17,8 @@ class ActionsTest < Test::Unit::TestCase
 
   def test_defining_params
     action = Moonrope::Action.new(@controller, :list) do
-      param :page, "The page number"
-      param :limit, "The maximum results"
+      param :page
+      param :limit
     end
     assert action.params.is_a?(Hash)
     assert_equal [:page, :limit], action.params.keys
@@ -189,8 +189,8 @@ class ActionsTest < Test::Unit::TestCase
 
   def test_default_params
     action = Moonrope::Action.new(@controller, :default_params_test) do
-      param :page, "The page number", :default => 1234
-      param :limit, "The maximum number of results"
+      param :page, :default => 1234
+      param :limit
       action { {:page => params.page, :limit => params.limit} }
     end
     result = action.execute
