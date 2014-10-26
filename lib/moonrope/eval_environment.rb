@@ -119,17 +119,31 @@ module Moonrope
     # @param object [Object] the object to pass through the structure
     # @param options [Hash] options to pass to the strucutre hash generator
     #
-    def structure(structure_name, object, options = {})
-      if object
-        structure = structure_for(structure_name)
-        if structure.is_a?(Moonrope::Structure)
-          structure.hash(object, options.merge(:request => @request))
-        else
-          raise Moonrope::Errors::Error, "No structure found named '#{structure_name}'"
-        end
+    def structure(structure_name_or_object, object_or_options = {}, options_if_structure_name = {})
+
+      if structure_name_or_object.is_a?(Symbol) || structure_name_or_object.is_a?(String) || structure_name_or_object.is_a?(Moonrope::Structure)
+        structure_name = structure_name_or_object
+        object = object_or_options
+        options = options_if_structure_name
+      elsif structure_name_or_object.class.name.respond_to?(:underscore)
+        structure_name = structure_name_or_object.class.name.underscore.to_sym
+        object = structure_name_or_object
+        options = object_or_options
       else
-        nil
+        raise Moonrope::Errors::Error, "Could not determine structure name"
       end
+
+      if object.nil?
+        return nil
+      end
+
+      structure = structure_for(structure_name)
+
+      unless structure.is_a?(Moonrope::Structure)
+        raise Moonrope::Errors::Error, "No structure found named '#{structure_name}'"
+      end
+
+      structure.hash(object, options.merge(:request => @request))
     end
 
     #

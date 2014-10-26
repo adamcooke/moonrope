@@ -35,7 +35,16 @@ class User < ModelBase
   end
 end
 
-
+class UserWithUnderscore < User
+  class << self
+    def name
+      s = Struct.new(:underscore, :to_s).new
+      s.to_s = 'User'
+      s.underscore = 'user'
+      s
+    end
+  end
+end
 
 #
 # A fake request class for use in some tests

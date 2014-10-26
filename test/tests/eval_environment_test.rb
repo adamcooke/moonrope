@@ -45,6 +45,14 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert structure.is_a?(Hash), "structure was not a Hash, was a #{structure.class}"
   end
 
+  def test_structure_access_with_auto_determination
+    user_structure = @environment.base.dsl.structure(:user) do
+      basic { {:id => o.id} }
+    end
+    structure = @environment.structure(UserWithUnderscore.new)
+    assert structure.is_a?(Hash), "structure was not a Hash, was a #{structure.class}"
+  end
+
   def test_structure_for
     user_structure = @environment.base.dsl.structure(:user) do
       basic { {:id => o.id} }
