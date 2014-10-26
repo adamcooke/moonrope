@@ -81,10 +81,10 @@ action which defines some parameters.
 ```ruby
 action :say_hello do
   description "Say some things to a user"
-  param :name, "The person's name", :required => true, :type => String
-  param :age, "The person's age", :required => true, :type => Integer
-  param :hair_color, "The person's hair color", :type => String, :default => 'Unknown'
-  param :phone_number, "The phone number", :type => String, :regex => /\A\+[\d\s]+\z/
+  param :name, :required => true, :type => String
+  param :age, :required => true, :type => Integer
+  param :hair_color, :type => String, :default => 'Unknown'
+  param :phone_number, :type => String, :regex => /\A\+[\d\s]+\z/
   action do
     "Hello #{params.name}! You are #{params.age} and your hair is #{params.hair_color}!"
   end
