@@ -1,26 +1,26 @@
 module Moonrope
   class EvalEnvironment
-    
+
     include Moonrope::EvalHelpers
-    
+
     # @return [Moonrope::Base] the base object
     attr_reader :base
-    
+
     # @return [Moonrope::Request] the associated request
     attr_reader :request
-    
+
     # @return [Hash] the headers
     attr_reader :headers
-    
+
     # @return [Hash] the flags
     attr_reader :flags
-    
+
     # @return [Hash] the default params to be merged with request params
     attr_accessor :default_params
-    
+
     # @return [Moonrope::Action] the action which invoked this environment
     attr_accessor :action
-    
+
     #
     # Initialize a new EvalEnvironment
     #
@@ -35,21 +35,21 @@ module Moonrope
       @default_params = {}
       reset
     end
-    
+
     #
     # @return [Integer] the requested API version
     #
     def version
       request ? request.version : 1
     end
-    
+
     #
     # @return [Object] the authenticated object
     #
     def auth
       request ? request.authenticated_user : nil
     end
-    
+
     #
     # @return [Hash] all parameters sent for this request including defaults
     #
@@ -60,7 +60,7 @@ module Moonrope
         params
       end
     end
-    
+
     #
     # Set a header which should be returned to the client.
     #
@@ -71,7 +71,7 @@ module Moonrope
     def set_header(name, value)
       @headers[name.to_s] = value
     end
-    
+
     #
     # Set a flag which should be returned to the client.
     #
@@ -82,17 +82,17 @@ module Moonrope
     def set_flag(name, value)
       @flags[name] = value
     end
-    
-    # 
+
+    #
     # Clear all flags & headers from this environment.
-    # 
+    #
     # @return [void]
     #
     def reset
       @flags = {}
       @headers = {}
     end
-    
+
     #
     # Attempts to find an return an accessor from the has
     #
@@ -109,10 +109,10 @@ module Moonrope
         super
       end
     end
-    
+
     #
     # Generate a new structure from the core DSL for the given
-    # object and return a hash or nil if the structure doesn't 
+    # object and return a hash or nil if the structure doesn't
     # exist.
     #
     # @param structure_name [Moonrope::Structure or Symbol] the structure to be used
@@ -131,7 +131,7 @@ module Moonrope
         nil
       end
     end
-    
+
     #
     # Return a Moonrope::Structure object for the provided name
     #
@@ -145,7 +145,7 @@ module Moonrope
         false
       end
     end
-    
+
     #
     # Return whether or not a given structure name is valid?
     #
@@ -154,6 +154,6 @@ module Moonrope
     def has_structure_for?(structure_name)
       self.structure_for(structure_name).is_a?(Moonrope::Structure)
     end
-    
+
   end
 end

@@ -1,6 +1,6 @@
 class ParamSetTest < Test::Unit::TestCase
-  
-  
+
+
   def test_param_set
     set = Moonrope::ParamSet.new('fruit' => 'Banana')
     # Test that values which aren't included are nil
@@ -11,7 +11,7 @@ class ParamSetTest < Test::Unit::TestCase
     assert_equal 'Banana', set[:fruit]
     assert_equal 'Banana', set['fruit']
   end
-  
+
   def test_default_params
     set = Moonrope::ParamSet.new('fruit' => 'Banana')
     set._defaults = {'vegetable' => 'Tomato', 'fruit' => 'Apple'}
@@ -20,14 +20,14 @@ class ParamSetTest < Test::Unit::TestCase
     # Check that the fruit default isn't used.
     assert_equal 'Banana', set.fruit
   end
-  
+
   def test_nilification
     set = Moonrope::ParamSet.new('fruit' => '')
     assert_equal nil, set.fruit
     assert_equal nil, set[:fruit]
     assert_equal nil, set['fruit']
   end
-  
+
   def test_key_presence
     set = Moonrope::ParamSet.new('fruit' => 'Apple')
     set._defaults = {'meat' => 'Beef'}
@@ -35,5 +35,5 @@ class ParamSetTest < Test::Unit::TestCase
     assert_equal true, set.has?(:meat)
     assert_equal false, set.has?(:vegetable)
   end
-  
+
 end

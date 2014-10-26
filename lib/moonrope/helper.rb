@@ -1,6 +1,6 @@
 module Moonrope
   class Helper
-    
+
     # @return [Symbol] the name of the helper
     attr_reader :name
 
@@ -9,10 +9,10 @@ module Moonrope
 
     # @return [Proc] the proc to execute
     attr_reader :block
-    
+
     # @return [Hash] options for this helper
     attr_reader :options
-    
+
     #
     # Initialize a new helper
     #
@@ -26,6 +26,6 @@ module Moonrope
       @options = options
       @block = block
     end
-    
+
   end
 end

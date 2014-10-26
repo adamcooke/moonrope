@@ -1,7 +1,7 @@
 # Moonrope
 
 Moonrope is an API server & client tool for Ruby/Rack applications. It
-provides everything you need to create an API within your application and 
+provides everything you need to create an API within your application and
 have a Ruby API client provided without any development.
 
 This repository is the server-side library which allows you to easily define
@@ -19,15 +19,15 @@ your API actions & data structures and serve them out using Rack middleware.
   action may return data, update data or destroy data. Every action returns
   some data to a user.
 
-* **Structure** - a structure allows you to convert a Ruby object (in most 
+* **Structure** - a structure allows you to convert a Ruby object (in most
   cases this would be an Active Record model) into a hash which can be returned
   to a user.
 
-* **Helper** - a helper is a method which you can define globally or on a 
+* **Helper** - a helper is a method which you can define globally or on a
   per controller basis. A helper can execute code & return objects which you
   can use in your actions.
-  
-These various components are defined in files which are then loaded by 
+
+These various components are defined in files which are then loaded by
 Moonrope automatically when your application starts. In a Rails application,
 by default these should be placed into a `api` directory in the root of
 your application. The actual directory structure for your Moonrope API should
@@ -57,8 +57,8 @@ controller :hello do
 end
 ```
 
-This is the most basic definition of a controller & action. It specifies the 
-name of the controller (`hello`) and then adds an action to this controller. 
+This is the most basic definition of a controller & action. It specifies the
+name of the controller (`hello`) and then adds an action to this controller.
 This action has the name `world`, a description and a block which specifies
 what you should be executed when this action is run.
 
@@ -91,21 +91,21 @@ action :say_hello do
 end
 ```
 
-When defining a parameter you can define a number of options to assist with 
-validation & default population. 
+When defining a parameter you can define a number of options to assist with
+validation & default population.
 
 * `:required => true` - this will require that this parameter is passed with
   the request. If not an error will be raised before the action is executed.
-* `:type => String` - this sets what type of object should be submitted. In 
+* `:type => String` - this sets what type of object should be submitted. In
   most cases this should be `String`, `Integer`, `Hash` or `Array`.
 * `:default => 'Value here'` - sets the default value for the parameter if
-  none is passed. 
+  none is passed.
 * `:regex => //` - sets a regex which the passed value must conform to
 
 ### Raising errors
 
-If, when you're exectuting an action, you may need to raise an error. For 
-example, you may have a validation error or an object which was requested 
+If, when you're exectuting an action, you may need to raise an error. For
+example, you may have a validation error or an object which was requested
 might not be found.
 
 ```ruby
@@ -124,7 +124,7 @@ Each of these will raise a different type of error.
 * `:access_denied` - access to a given resource is not permitted
 * `:validation_error` - an object cannot be updated with the provided parameters
 * `:parameter_error` - a provided parameter is invalid
-* You can also pass any other type of error however this will be reported as a 
+* You can also pass any other type of error however this will be reported as a
   `error` to the end user plus whatever message you specify.
 
 ### Flags
@@ -151,8 +151,8 @@ end
 
 Deciding whether or not to permit access to your API is a fundamental part
 of any API. The **authenticator** uses information avaiable in the request
-and returns an object of the "authenticated object". In many cases this 
-authenticated object will be an instance of your user class but it can be 
+and returns an object of the "authenticated object". In many cases this
+authenticated object will be an instance of your user class but it can be
 anything you decide.
 
 An authenticator is defined at the same level as controllers & structures.
@@ -176,7 +176,7 @@ end
 
 #### Accessing the authenticated user in actions
 
-In order to access this authenticated user object, you can use the `auth` 
+In order to access this authenticated user object, you can use the `auth`
 method in your actions. For example:
 
 ```ruby
@@ -194,7 +194,7 @@ end
 There is also built-in restrictions which allow you to add restrictions at a
 global and per-action basis.
 
-The `default_access` block can be defined with your authenticator and, in 
+The `default_access` block can be defined with your authenticator and, in
 this example, will require that all users have API access.
 
 ```ruby
@@ -256,19 +256,19 @@ structure :user do
 
   basic :id, "The ID of the user", :type => Integer, :example => 1234
   basic :username, "The user's username", :type => String, :example => "adam"
-  
+
   full :full_name, "The user's first name", :type => String, :example => "Adam"
   full :last_name, "The user's last name", :type => String, :example => "Cooke"
   full :age, "The user's age", :type => Integer, :example => 27
   full :created_at, "The creation time for the user", :type => String, :example => "2014-07-01T11:32:59+01:00"
   full :updated_at, "The creation time for the user", :type => String, :example => "2014-07-01T11:32:59+01:00"
-  
+
 end
 ```
 
 This example is the most basic way of defining a structure. You see we have defined
 a number of attributes which should be included in our structure. Basic attributes are
-always included in the structure whereas full attributes are only included when requested. 
+always included in the structure whereas full attributes are only included when requested.
 
 The basic attributes from a structure is often used on its own when referenced
 from other structures. For example, if users had many projects, the project
@@ -277,7 +277,7 @@ information is not needed.
 
 The full attributes would be returned when listing a specific user or a list
 of users on their own. For example, your users/list or users/info methods would
-likely return full information rather than just the basic. 
+likely return full information rather than just the basic.
 
 Note that when full information is requested, it is always combined with the
 information from basic so there's no need to duplicate attribute definitions.
@@ -302,7 +302,7 @@ basic :name_in_caps, "The user's name in uppercase", :value => Proc.new { o.name
 #### Grouping
 
 Attributes can be placed into groups which will return a hash containing all items
-within the group. 
+within the group.
 
 ```ruby
 group :financials do
@@ -345,9 +345,9 @@ end
 
 ### Accessing structures from actions
 
-Now... how do you include structures from within an action I hear you ask. 
+Now... how do you include structures from within an action I hear you ask.
 That's actually pretty simple. Throughout both actions and structures, you can
-use the `structure` method to load a structure's hash. Here are a number of 
+use the `structure` method to load a structure's hash. Here are a number of
 examples which you can use to load a hash from a structure.
 
 ```ruby
@@ -391,4 +391,4 @@ The final part of this documentation is about how to access your final API.
 If you're using Moonrope in a Rails application it will automatically be added
 to your Rack middleware stack. If not, you'll need to add it manually.
 
-By default, the API is exposed at `/api/v1/controller/action`. 
+By default, the API is exposed at `/api/v1/controller/action`.

@@ -1,8 +1,8 @@
 module Moonrope
   module DSL
     class ActionDSL
-      
-      # 
+
+      #
       # Initialize a new ActionDSL
       #
       # @param action [Moonrope::Action]
@@ -10,8 +10,8 @@ module Moonrope
       def initialize(action)
         @action = action
       end
-      
-      # 
+
+      #
       # Set the description for the action
       #
       #   description "Returns all users which are configured"
@@ -22,7 +22,7 @@ module Moonrope
       def description(value)
         @action.description = value
       end
-      
+
       #
       # Add a new param to the action's param set.
       #
@@ -36,7 +36,7 @@ module Moonrope
       def param(name, description, options = {})
         @action.params[name] = options.merge(:description => description)
       end
-      
+
       #
       # Set the access condition for the action.
       #
@@ -50,7 +50,7 @@ module Moonrope
       def access(value = nil, &block)
         @action.access = block_given? ? block : value
       end
-    
+
       #
       # Set the action to execute when this action is invoked.
       #
@@ -60,11 +60,11 @@ module Moonrope
       #
       # @yield the contents of the yield will be saved as the action
       # @return [void]
-      # 
+      #
       def action(&block)
         @action.action = block
       end
-    
+
     end
   end
 end

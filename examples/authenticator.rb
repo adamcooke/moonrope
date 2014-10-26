@@ -1,4 +1,4 @@
-# 
+#
 # By default, if an action doesn't specify an access condition,
 # assume access is granted if the authentication object is an
 # instance of User.
@@ -14,11 +14,11 @@ end
 # we will return a user object.
 #
 authenticator do
-  
+
   if request.headers['X-Username'] == 'username' && request.headers == ['X-Password']
     User.new(:id => 100, :username => 'auth-user')
   else
     error :access_denied, "Supplied username & password was incorrect."
   end
-  
+
 end

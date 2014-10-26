@@ -1,8 +1,8 @@
 module Moonrope
   class Base
-    
+
     #
-    # Load a set of Moonrope configuration files from a given 
+    # Load a set of Moonrope configuration files from a given
     # directory.
     #
     # @param path [String] the path to a directory containing Moonrope files
@@ -13,34 +13,34 @@ module Moonrope
       api.load(path)
       api
     end
-    
+
     # @return [Array] the array of defined structures
     attr_reader :structures
-    
+
     # @return [Array] the array of defined controllers
     attr_accessor :controllers
-    
+
     # @return [Array] the array of defined helpers
     attr_accessor :helpers
-    
+
     # @return [Moonrope::DSL::BaseDSL] the base DSL
     attr_accessor :dsl
-    
+
     # @return [Proc] the authentictor
     attr_accessor :authenticator
-    
+
     # @return [Proc] the default access condition
     attr_accessor :default_access
-    
+
     # @return [Array] the array of directories to load from  (if relevant)
     attr_accessor :load_directories
-    
+
     # @return [String] the moonrope environment
     attr_accessor :environment
-    
+
     # @return [Proc] a proc to execute before every request
     attr_accessor :on_request
-    
+
     #
     # Initialize a new instance of the Moonrope::Base
     #
@@ -53,7 +53,7 @@ module Moonrope
       @dsl = Moonrope::DSL::BaseDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
-    
+
     #
     # Reset the whole base to contain no data.
     #
@@ -64,7 +64,7 @@ module Moonrope
       @authenticator = nil
       @default_access = nil
     end
-    
+
     #
     # Reload this whole base API from the path
     #
@@ -84,9 +84,9 @@ module Moonrope
         raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
       end
     end
-    
+
     alias_method :reload, :load
-    
+
     #
     # Load from a given directory
     #
@@ -100,7 +100,7 @@ module Moonrope
         false
       end
     end
-    
+
     #
     # Add a dirctory to the directories to load
     #
@@ -112,7 +112,7 @@ module Moonrope
         false
       end
     end
-    
+
     #
     # Return a structure of the given name
     #
@@ -122,9 +122,9 @@ module Moonrope
     def structure(name)
       structures.select { |s| s.name == name }.first
     end
-    
+
     alias_method :[], :structure
-    
+
     #
     # Return a controller of the given name
     #
@@ -134,9 +134,9 @@ module Moonrope
     def controller(name)
       controllers.select { |a| a.name == name }.first
     end
-    
+
     alias_method :/, :controller
-    
+
     #
     # Create a new rack request for this API.
     #
@@ -145,7 +145,7 @@ module Moonrope
     def request(*args)
       Moonrope::Request.new(self, *args)
     end
-    
+
     #
     # Return a helper for the given name and, potentially controller
     #
@@ -162,7 +162,7 @@ module Moonrope
       end
       matched_helpers.first
     end
-    
+
     #
     # Return all the external errors which are registered for this base
     #
@@ -171,15 +171,15 @@ module Moonrope
     def external_errors
       @external_errors ||= {}
     end
-    
+
     #
     # Register a new external error
     #
-    # @param error_class [Class] a class which should be caught 
+    # @param error_class [Class] a class which should be caught
     #
     def register_external_error(error_class, &block)
       self.external_errors[error_class] = block
     end
-    
+
   end
 end

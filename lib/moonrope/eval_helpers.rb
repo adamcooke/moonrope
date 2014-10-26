@@ -1,6 +1,6 @@
 module Moonrope
   module EvalHelpers
-    
+
     #
     # Raise an error.
     #
@@ -17,7 +17,7 @@ module Moonrope
         raise Moonrope::Errors::RequestError, message
       end
     end
-    
+
     #
     # Return paginated information
     #
@@ -30,6 +30,6 @@ module Moonrope
         block.call(result)
       end
     end
-    
+
   end
 end

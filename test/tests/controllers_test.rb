@@ -1,9 +1,9 @@
 class ControllersTest < Test::Unit::TestCase
-  
+
   def setup
     @base = Moonrope::Base.new
   end
-  
+
   def test_controllers_actions_can_be_found_easily
     controller = Moonrope::Controller.new(@base, :users) do
       action :list do
@@ -14,7 +14,7 @@ class ControllersTest < Test::Unit::TestCase
     assert_equal :list, action.name
     assert action.is_a?(Moonrope::Action)
   end
-  
+
   def test_controllers_can_have_before_filters
     controller = Moonrope::Controller.new(@base, :users) do
       before { 1 }
@@ -22,7 +22,7 @@ class ControllersTest < Test::Unit::TestCase
       action :list do
         action { true }
       end
-      
+
       action :show do
         action { true }
       end
@@ -31,5 +31,5 @@ class ControllersTest < Test::Unit::TestCase
     assert_equal 2, controller.before_actions_for(:list).size
     assert_equal 1, controller.before_actions_for(:show).size
   end
-  
+
 end

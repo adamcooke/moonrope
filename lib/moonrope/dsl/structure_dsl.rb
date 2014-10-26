@@ -1,19 +1,19 @@
 module Moonrope
   module DSL
     class StructureDSL
-      
+
       # @return [Moonrope::Structure] the associated structure
       attr_reader :structure
-      
+
       # @return [Array] groups which should applied
       attr_accessor :groups
-      
+
       # @return [Array] conditions which should applied
       attr_accessor :conditions
-      
+
       # @return [Hash] options
       attr_accessor :options
-      
+
       #
       # Initialize a new StructureDSL
       #
@@ -25,25 +25,25 @@ module Moonrope
         @groups = []
         @conditions = []
       end
-      
+
       def scope(options = {}, &block)
         scope_dsl = self.class.new(@structure)
         scope_dsl.options = options
         scope_dsl.instance_eval(&block)
       end
-      
+
       def group(name, &block)
         scope_dsl = self.class.new(@structure)
         scope_dsl.groups = [@groups, name].flatten
         scope_dsl.instance_eval(&block)
       end
-      
+
       def condition(condition, &block)
         scope_dsl = self.class.new(@structure)
         scope_dsl.conditions = [@conditions, condition].flatten
         scope_dsl.instance_eval(&block)
       end
-      
+
       def attribute(type, name, description, options = {})
         attribute                   = StructureAttribute.new(type, name, description)
         attribute.structure         = options[:structure]
@@ -56,7 +56,7 @@ module Moonrope
         attribute.conditions        = @conditions
         @structure.attributes[type] << attribute
       end
-      
+
       def basic(*args, &block)
         if block_given?
           @structure.basic = block
@@ -72,7 +72,7 @@ module Moonrope
           attribute(:full, *args)
         end
       end
-      
+
       def expansion(name, *args, &block)
         if block_given?
           @structure.expansions[name] = block
@@ -80,7 +80,7 @@ module Moonrope
           attribute(:expansion, name, *args)
         end
       end
-    
+
     end
   end
 end

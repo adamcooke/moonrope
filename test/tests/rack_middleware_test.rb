@@ -1,7 +1,7 @@
 class RackMiddlewareTest < Test::Unit::TestCase
 
   include Rack::Test::Methods
-  
+
   def app
     @app ||= begin
       base = Moonrope::Base.new do
@@ -16,7 +16,7 @@ class RackMiddlewareTest < Test::Unit::TestCase
             end
           end
         end
-        
+
         controller :users do
           action :list do
             # ensure that the auth is a user in order to access this request
@@ -29,21 +29,21 @@ class RackMiddlewareTest < Test::Unit::TestCase
       Moonrope::RackMiddleware.new(nil, base)
     end
   end
-  
+
   def test_non_api_requests_404
     get "/"
     assert_equal 404, last_response.status
   end
-  
+
   def test_api_request_validation
     get "/api/"
     assert_equal 400, last_response.status
     get "/api/v1"
     assert_equal 400, last_response.status
     get "/api/v1/controller"
-    assert_equal 400, last_response.status    
+    assert_equal 400, last_response.status
   end
-  
+
   def test_api_methods
     params = {:page => 1}.to_json
     get "/api/v1/users/list", {:params => params}
@@ -54,14 +54,14 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert_equal 'application/json', last_response.headers['Content-Type']
     assert last_response.headers['Content-Length']
   end
-  
+
   def test_passing_invalid_json_renders_a_bad_request
     get "/api/v1/users/list", {:params => "{invalidjson}"}
     assert_equal 400, last_response.status
     assert response_json = JSON.parse(last_response.body)
     assert_equal 'invalid-json', response_json['status']
   end
-  
+
   def test_authenticated_api_methods
     # correct credential
     get "/api/v1/users/list", {}, auth_headers('user', 'password')
@@ -70,10 +70,10 @@ class RackMiddlewareTest < Test::Unit::TestCase
     # invalid password
     get "/api/v1/users/list", {}, auth_headers('user-invalid', 'password-invalid')
     assert response_json = JSON.parse(last_response.body)
-    assert_equal 'access-denied', response_json['status']    
+    assert_equal 'access-denied', response_json['status']
   end
-  
-  
+
+
   def test_request_callback_is_invoked
     request_count = 0
     app.base.on_request = Proc.new do |base, env|
@@ -85,12 +85,12 @@ class RackMiddlewareTest < Test::Unit::TestCase
     get "/api/v1/users/list"
     assert_equal 2, request_count
   end
-  
-  
+
+
   private
-  
+
   def auth_headers(username, password)
     {'HTTP_X_MOONROPE_USERNAME' => username, 'HTTP_X_MOONROPE_PASSWORD' => password}
   end
-  
+
 end

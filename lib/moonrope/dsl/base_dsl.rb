@@ -1,7 +1,7 @@
 module Moonrope
   module DSL
     class BaseDSL
-      
+
       #
       # Initiaize a new BaseDSL
       #
@@ -10,7 +10,7 @@ module Moonrope
       def initialize(base)
         @base = base
       end
-    
+
       #
       # Define a new structure
       #
@@ -27,7 +27,7 @@ module Moonrope
         structure.dsl.instance_eval(&block) if block_given?
         structure
       end
-    
+
       #
       # Define a new controller or append values to an existing
       # controller if it has already been defined.
@@ -46,7 +46,7 @@ module Moonrope
         controller.dsl.instance_eval(&block) if block_given?
         controller
       end
-    
+
       #
       # Set the authenticator for the API.
       #
@@ -55,7 +55,7 @@ module Moonrope
       def authenticator(&block)
         @base.authenticator = block
       end
-      
+
       #
       # Set the default access check block.
       #
@@ -64,7 +64,7 @@ module Moonrope
       def default_access(value = nil, &block)
         @base.default_access = block_given? ? block : value
       end
-      
+
       #
       # Define a new helper in the global namespace
       #
@@ -80,7 +80,7 @@ module Moonrope
         @base.helpers << helper_instance
         helper_instance
       end
-      
+
     end
   end
 end

@@ -1,27 +1,27 @@
 module Moonrope
   class Action
-    
+
     # @return [Moonrope::Controller] the associated controller
     attr_reader :controller
-    
+
     # @return [Symbol] the name of the action
     attr_reader :name
-    
+
     # @return [Moonrope::DSL::Action] the action's DSL
     attr_reader :dsl
-    
+
     # @return [Hash] the params available for the action
     attr_reader :params
-    
+
     # @return [String] the description of the action
     attr_accessor :description
-    
+
     # @return [Proc] the access check condition for the action
     attr_accessor :access
-    
+
     # @return [Proc] the action for the action
     attr_accessor :action
-    
+
     #
     # Initialize a new action
     #
@@ -36,9 +36,9 @@ module Moonrope
       @dsl = Moonrope::DSL::ActionDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
-    
+
     #
-    # Return a hash of all params for this action which are 
+    # Return a hash of all params for this action which are
     #
     # @return [Hash] hash with field names as keys with default values
     #
@@ -48,7 +48,7 @@ module Moonrope
         h
       end
     end
-    
+
     #
     # Execute a block of code and catch approprite Moonrope errors and return
     # a result.
@@ -74,12 +74,12 @@ module Moonrope
         end
       end
     end
-    
+
     #
     # Executes the action and returns a ActionResult object with the result
     # of the action.
     #
-    # @param request [Moonrope::Request or Moonrope::EvalEnvironment] 
+    # @param request [Moonrope::Request or Moonrope::EvalEnvironment]
     # @return [Moonrope::ActionResult]
     #
     def execute(request = nil)
@@ -88,38 +88,38 @@ module Moonrope
       else
         eval_environment = EvalEnvironment.new(@controller.base, request)
       end
-      
+
       #
       # Set this actions default parameters in the eval environment so that
       # it has access to them.
       #
       eval_environment.default_params = self.default_params
-      
+
       #
       # Set the current action to the eval environment so it knows what action
       # invoked this.
       #
       eval_environment.action = self
-      
+
       convert_errors_to_action_result do
         #
         # Validate the parameters
         #
         self.validate_parameters(eval_environment.params)
-        
+
         start_time = Time.now
-        
+
         # Run before filters
         controller.before_actions_for(name).each do |action|
           eval_environment.instance_eval(&action.block)
         end
-        
+
         # Run the actual action
         response = eval_environment.instance_eval(&action)
-        
+
         # Calculate the length of time this request takes
         time_to_run = Time.now - start_time
-        
+
         # Prepare a action result
         result = ActionResult.new(self)
         result.data     = response
@@ -127,12 +127,12 @@ module Moonrope
         result.time     = time_to_run.round(2)
         result.flags    = eval_environment.flags
         result.headers  = eval_environment.headers
-        
+
         # Return the result object
         result
       end
     end
-    
+
     #
     # Check whether the authenticated user has access to this request.
     # Accepts a Request or an EvalEnvironment.
@@ -146,9 +146,9 @@ module Moonrope
       else
         eval_environment = EvalEnvironment.new(@controller.base, request)
       end
-      
+
       access_condition = self.access || @controller.access || @controller.base.default_access
-      
+
       if eval_environment.auth
         # If there's no authentication object, access is permitted otherwise
         # we'll do the normal testing.
@@ -174,7 +174,7 @@ module Moonrope
         !access_condition
       end
     end
-    
+
     #
     # Return whether or not the passed ParamSet is valid for this action
     #
@@ -186,17 +186,17 @@ module Moonrope
         if value[:required] && param_set[name].nil?
           raise Moonrope::Errors::ParameterError, "`#{name}` parameter is required but is missing"
         end
-        
+
         if value[:regex] && param_set[name] && !(param_set[name].to_s =~ value[:regex])
           raise Moonrope::Errors::ParameterError, "`#{name}` parameter is invalid"
         end
-        
+
         if value[:type] && param_set[name] && !param_set[name].is_a?(value[:type])
           raise Moonrope::Errors::ParameterError, "`#{name}` should be a `#{value[:type]}` but is a `#{param_set[name].class}`"
         end
       end
       true
     end
-         
+
   end
 end

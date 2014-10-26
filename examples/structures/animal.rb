@@ -5,12 +5,12 @@ structure :animal do
   basic do
     {:id => o.id, :name => o.name}
   end
-  
+
   #
   # Return more information about the animal.
   #
   full do
     {:color => o.color, :user => structure(:user, o.user)}
   end
-  
+
 end

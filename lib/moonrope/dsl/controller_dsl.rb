@@ -1,7 +1,7 @@
 module Moonrope
   module DSL
     class ControllerDSL
-      
+
       #
       # Initialize a new ControllerDSL
       #
@@ -10,10 +10,10 @@ module Moonrope
       def initialize(controller)
         @controller = controller
       end
-      
+
       # @return [Moonrope::Controller] the associated controller
       attr_reader :controller
-      
+
       #
       # Defines a new action within the controller.
       #
@@ -27,12 +27,12 @@ module Moonrope
         @controller.actions[name] = action
         action
       end
-      
+
       #
       # Defines a new before action within the controller.
       #
       # @param actions [Symbol] the names of the actions to apply to (none for all)
-      # @yield stores the block as the block to be executed 
+      # @yield stores the block as the block to be executed
       # @return [Moonrope::BeforeAction]
       #
       def before(*actions, &block)
@@ -42,7 +42,7 @@ module Moonrope
         @controller.befores << before_action
         before_action
       end
-      
+
       #
       # Defines the access required for controller methods which do not
       # define their own access.
@@ -50,7 +50,7 @@ module Moonrope
       def access(value = nil, &block)
         @controller.access = block_given? ? block : value
       end
-      
+
       #
       # Defines a new helper for this controller.
       #
@@ -61,7 +61,7 @@ module Moonrope
         if @controller.base.helper(name, @controller)
           raise Moonrope::Errors::HelperAlreadyDefined, "Helper has already been defined with name `#{name}`"
         end
-        
+
         @controller.base.helpers << Moonrope::Helper.new(name, @controller, options, &block)
       end
     end

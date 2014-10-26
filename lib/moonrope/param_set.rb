@@ -1,6 +1,6 @@
 module Moonrope
   class ParamSet
-    
+
     #
     # Initialize a new ParamSet
     #
@@ -12,7 +12,7 @@ module Moonrope
     end
 
     #
-    # Return the value for the given key 
+    # Return the value for the given key
     #
     # @param key [String] the key to lookup
     # @return [Object] the value
@@ -25,10 +25,10 @@ module Moonrope
       # Return the value
       value
     end
-    
+
     alias_method :[], :_value_for
     alias_method :method_missing, :_value_for
-    
+
     #
     # Set the defaults for the param set
     #
@@ -39,7 +39,7 @@ module Moonrope
         @defaults = defaults
       end
     end
-    
+
     #
     # Does the specified key exist?
     #
@@ -49,6 +49,6 @@ module Moonrope
     def has?(key)
       @params.keys.include?(key.to_s) || @defaults.keys.include?(key.to_s)
     end
-    
+
   end
 end

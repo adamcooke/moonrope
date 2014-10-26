@@ -1,9 +1,9 @@
 module Moonrope
   class Controller
-    
+
     attr_accessor :name, :actions, :access, :befores
     attr_reader :base, :dsl
-    
+
     #
     # Initalize a new Moonrope::Controller
     #
@@ -20,7 +20,7 @@ module Moonrope
       @dsl = Moonrope::DSL::ControllerDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
-    
+
     #
     # Return an array of before actions which must be executed for
     # the given action.
@@ -33,7 +33,7 @@ module Moonrope
         b.actions.empty? || b.actions.include?(action)
       end
     end
-    
+
     #
     # Lookup and return an action in this controller by name.
     #
@@ -43,8 +43,8 @@ module Moonrope
     def action(action)
       actions[action.to_sym]
     end
-    
+
     alias_method :/, :action
-    
+
   end
 end
