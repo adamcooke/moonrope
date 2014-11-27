@@ -108,7 +108,13 @@ module Moonrope
     # @return [Moonrope::ParamSet]
     #
     def params
-      @params ||= Moonrope::ParamSet.new(rack_request.params['params'])
+      @params ||= begin
+        if @env['CONTENT_TYPE'] == 'application/json'
+          Moonrope::ParamSet.new(rack_request.body.read)
+        else
+          Moonrope::ParamSet.new(rack_request.params['params'])
+        end
+      end
     end
 
     #

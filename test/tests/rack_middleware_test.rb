@@ -24,6 +24,11 @@ class RackMiddlewareTest < Test::Unit::TestCase
             # return an empty array
             action { [] }
           end
+
+          action :echo do
+            param :name, :required => true
+            action { params.name }
+          end
         end
       end
       Moonrope::RackMiddleware.new(nil, base)
@@ -53,6 +58,14 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert response_json['data'].is_a?(Array)
     assert_equal 'application/json', last_response.headers['Content-Type']
     assert last_response.headers['Content-Length']
+  end
+
+  def test_params_in_body
+    post "/api/v1/users/echo", '{"name":"Adam"}', {'CONTENT_TYPE' => 'application/json'}
+    assert_equal 200, last_response.status
+    assert response_json = JSON.parse(last_response.body)
+    assert_equal 'success', response_json['status']
+    assert_equal 'Adam', response_json['data']
   end
 
   def test_passing_invalid_json_renders_a_bad_request
