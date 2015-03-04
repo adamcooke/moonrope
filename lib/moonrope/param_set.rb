@@ -12,6 +12,16 @@ module Moonrope
     end
 
     #
+    # Return the params as a ruby hash
+    #
+    def _as_hash
+      @defaults.merge(@params).inject({}) do |hash, (k, v)|
+        hash[k.to_s] = v
+        hash
+      end
+    end
+
+    #
     # Return the value for the given key
     #
     # @param key [String] the key to lookup
