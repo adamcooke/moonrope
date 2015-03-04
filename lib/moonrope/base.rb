@@ -181,5 +181,20 @@ module Moonrope
       self.external_errors[error_class] = block
     end
 
+    #
+    # Set a block which will be executed whenever an error occurs when running
+    # an API method
+    #
+    def register_request_error_callback(&block)
+      request_error_callbacks << block
+    end
+
+    #
+    # Return an array of request errors
+    #
+    def request_error_callbacks
+      @request_error_callbacks ||= []
+    end
+
   end
 end

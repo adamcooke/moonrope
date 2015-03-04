@@ -89,6 +89,11 @@ module Moonrope
 
           response = {:status => 'internal-server-error'}
 
+          # Call any request errors which have been registered on the base
+          @base.request_error_callbacks.each do |callback|
+            callback.call(request, e)
+          end
+
           # If in development, return more details about the exception which was raised.
           if @base.environment == 'development'
             response[:error] = e.class.to_s
