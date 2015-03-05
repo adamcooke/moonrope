@@ -10,6 +10,8 @@ your API actions & data structures and serve them out using Rack middleware.
 * [Documentation](http://rdoc.info/github/viaduct/moonrope/master/frames)
 * [Travis CI](https://travis-ci.org/viaduct/moonrope)
 
+[![Build Status](https://travis-ci.org/adamcooke/moonrope.svg?branch=master)](https://travis-ci.org/adamcooke/moonrope)
+
 ## The key components of a Moonrope API
 
 * **Controller** - a controller is a set of actions which can be executed by
