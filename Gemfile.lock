@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    moonrope (1.3.4)
+    moonrope (1.4.1)
       deep_merge (~> 1.0)
       json (~> 1.7)
       rack (~> 1.4)
