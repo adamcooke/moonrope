@@ -144,7 +144,7 @@ action do
 end
 ```
 
-These will eb reporting to the user as `error` in the request status. The body will
+These will be reported to the user as `error` in the request status. The body will
 contain a hash with the `code` and `message` plus any other attributes you specify
 when you raise the error.
 
