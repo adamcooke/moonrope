@@ -181,6 +181,29 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal nil, hash[:id2]
   end
 
+  def test_ifs_with_expansion
+    base = Moonrope::Base.new do
+      structure :animal do
+        #condition Proc.new { true } do
+          expansion :example do
+            {:hello => 'world'}
+          end
+        #end
+
+        condition Proc.new { false } do
+          expansion :example2 do
+            {:hello => 'land'}
+          end
+        end
+      end
+    end
+
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
+    hash = base.structure(:animal).hash(animal, :expansions => true)
+    assert_equal true, hash.keys.include?(:example)
+    assert_equal false, hash.keys.include?(:example2)
+  end
+
   def test_scopes
     base = Moonrope::Base.new do
       structure :animal do

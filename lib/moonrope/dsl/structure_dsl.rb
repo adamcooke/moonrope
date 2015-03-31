@@ -84,7 +84,7 @@ module Moonrope
 
       def expansion(name, *args, &block)
         if block_given?
-          @structure.expansions[name] = block
+          @structure.expansions[name] = {:block => block, :conditions => @conditions}
         else
           attribute(:expansion, name, *args)
         end

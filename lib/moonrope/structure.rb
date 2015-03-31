@@ -83,7 +83,8 @@ module Moonrope
         # Add the expansions
         expansions.each do |name, expansion|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          DeepMerge.deep_merge!({name.to_sym => environment.instance_eval(&expansion)}, hash)
+          next unless expansion[:conditions].all? { |condition| environment.instance_eval(&condition) }
+          DeepMerge.deep_merge!({name.to_sym => environment.instance_eval(&expansion[:block])}, hash)
         end
       end
 
