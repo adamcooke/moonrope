@@ -22,6 +22,16 @@ module Moonrope
       end
     end
 
+    class StructuredError < RequestError
+      def status
+        "error"
+      end
+
+      def data
+        @options
+      end
+    end
+
     class AccessDenied < RequestError
       def status
         'access-denied'

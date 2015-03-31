@@ -306,6 +306,43 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal({:message => "Something wasn't found"}, result.data)
   end
 
+  def test_actions_can_raise_structured_errors
+    action = Moonrope::Action.new(@controller, :list) do
+      action do
+        structured_error 'feature-disabled', "The feature you have requested is not currently available for this resource.", :number => 1000
+      end
+    end
+    assert result = action.execute
+    assert_equal "error", result.status
+    assert_equal("feature-disabled", result.data[:code])
+    assert_equal("The feature you have requested is not currently available for this resource.", result.data[:message])
+    assert_equal(1000, result.data[:number])
+  end
+
+  def test_actions_can_raise_structured_errors_through_the_error_method
+    action = Moonrope::Action.new(@controller, :list) do
+      action do
+        error :structured_error, 'feature-disabled', "The feature you have requested is not currently available for this resource."
+      end
+    end
+    assert result = action.execute
+    assert_equal "error", result.status
+    assert_equal("feature-disabled", result.data[:code])
+    assert_equal("The feature you have requested is not currently available for this resource.", result.data[:message])
+  end
+
+  def test_actions_can_raise_structured_errors_through_the_error_method_using_a_string
+    action = Moonrope::Action.new(@controller, :list) do
+      action do
+        error 'feature-disabled', "The feature you have requested is not currently available for this resource."
+      end
+    end
+    assert result = action.execute
+    assert_equal "error", result.status
+    assert_equal("feature-disabled", result.data[:code])
+    assert_equal("The feature you have requested is not currently available for this resource.", result.data[:message])
+  end
+
   class DummyError < StandardError; end
 
   def test_catching_external_errors
