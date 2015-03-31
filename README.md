@@ -129,6 +129,25 @@ Each of these will raise a different type of error.
 * You can also pass any other type of error however this will be reported as a
   `error` to the end user plus whatever message you specify.
 
+You can also raise structured errors. These are errors which will always return a
+code and a message plus any additional data you want to send. These are the preferred
+way of sending errors in Moonrope.
+
+```ruby
+action do
+  if application.suspended?
+    # You can call a structured error directly.
+    structured_error 'application-suspended', "The application has been suspended.", :app_name => app.name
+    # Also, any call to error which starts with a string will be considered a structured error
+    error 'application-suspended', "The application has been suspended.", :app_name => app.name
+  end
+end
+```
+
+These will eb reporting to the user as `error` in the request status. The body will
+contain a hash with the `code` and `message` plus any other attributes you specify
+when you raise the error.
+
 ### Flags
 
 Flags contain extra information which you wish to return with your request
