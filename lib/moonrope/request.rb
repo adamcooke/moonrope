@@ -144,6 +144,15 @@ module Moonrope
       !(authenticated_user.nil? || authenticated_user == false)
     end
 
+    #
+    # Return the remote IP
+    #
+    # @return [String]
+    #
+    def ip
+      rack_request.ip
+    end
+
     private
 
     #

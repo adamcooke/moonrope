@@ -129,4 +129,10 @@ class RequestTest < Test::Unit::TestCase
     assert_equal 'Hello', request.headers['X-Example-Header']
   end
 
+  def test_ip_is_accessible
+    base = Moonrope::Base.new
+    env = make_rack_env_hash('/api/v1/users/list')
+    request = base.request(env)
+    assert_equal '127.0.0.1', request.ip
+  end
 end
