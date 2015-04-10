@@ -413,3 +413,7 @@ If you're using Moonrope in a Rails application it will automatically be added
 to your Rack middleware stack. If not, you'll need to add it manually.
 
 By default, the API is exposed at `/api/v1/controller/action`.
+
+### Path Prefix
+
+The Path Prefix by default is set as `api`. This can be changed by setting the `Moonrope::Request.path_prefix` option.
