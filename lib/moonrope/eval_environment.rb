@@ -143,6 +143,18 @@ module Moonrope
         raise Moonrope::Errors::Error, "No structure found named '#{structure_name}'"
       end
 
+      if options[:expansions] == :from_params
+        options[:expansions] = request.params["_expansions"].map(&:to_sym)
+      elsif options[:expansions].is_a?(Hash)
+        if options[:expansions].first[0] == :from_params
+          whitelist = options[:expansions].first[1] || []
+          options[:expansions] = request.params["_expansions"].map(&:to_sym)
+          options[:expansions].reject! { |e| !whitelist.include?(e) }
+        else
+          options[:expansions] = nil
+        end
+      end
+
       structure.hash(object, options.merge(:request => @request))
     end
 

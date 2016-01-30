@@ -383,6 +383,10 @@ structure(:user, user, :full => true, :expansions => true)
 
 # Return the full information plus specified expansions
 structure(:user, user, :full => true, :expansions => [:projects, :financials])
+
+# You don't need to provide the name of the structure if it can
+# be auto-determined from the name of the class.
+structure(user, :full => true)
 ```
 
 Remember, these can be used in structures as well as actions. So, you may
@@ -405,6 +409,23 @@ else
   error :error, "Structure not found."
 end
 ```
+
+In some cases, you may wish for your consumers to decide which expansions
+should be returned. This can be achieved by passing `:from_params` when calling
+a `structure` from an action. For example:
+
+```ruby
+# Allow consumer to choose from any expansion registered on the structure.
+# (taking into account any conditions you specify).
+structure(user, :expansions => :from_params)
+
+# Allow consumer to choose from any expansions you list.
+structure(user, :expansions => {:from_params => [:server, :endpoint]})
+```
+
+To access these, users should send an `_expansions` param with their request which
+should contain an array containing the names of the expansions that should be
+included.
 
 ## Accessing your API
 
