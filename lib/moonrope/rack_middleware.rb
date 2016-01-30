@@ -79,7 +79,7 @@ module Moonrope
           result = request.execute
           json = result.to_json
           global_headers['Content-Length'] = json.bytesize.to_s
-          [200, global_headers.merge(result.headers), [result.to_json]]
+          [200, global_headers.merge(result.headers), [json]]
         rescue JSON::ParserError => e
           [400, global_headers, [{:status => 'invalid-json', :details => e.message}.to_json]]
         rescue => e
