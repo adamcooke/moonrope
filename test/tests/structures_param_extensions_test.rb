@@ -41,4 +41,25 @@ class StructuresParamExtensionsTest < Test::Unit::TestCase
     assert_equal nil, structure[:user]
   end
 
+  def test_choosing_to_return_all_expansions
+    request = FakeRequest.new(:params => {'_expansions' => true})
+    environment = Moonrope::EvalEnvironment.new(@base, request)
+    structure = environment.structure(:animal, @animal, :expansions => :from_params)
+    assert_equal Hash, structure[:user].class
+  end
+
+  def test_choosing_to_return_all_expansions_with_whitelist
+    request = FakeRequest.new(:params => {'_expansions' => true})
+    environment = Moonrope::EvalEnvironment.new(@base, request)
+    structure = environment.structure(:animal, @animal, :expansions => {:from_params => [:user]})
+    assert_equal Hash, structure[:user].class
+  end
+
+  def test_choosing_to_return_all_expansions_with_white_negative
+    request = FakeRequest.new(:params => {'_expansions' => true})
+    environment = Moonrope::EvalEnvironment.new(@base, request)
+    structure = environment.structure(:animal, @animal, :expansions => {:from_params => [:other]})
+    assert_equal nil, structure[:other]
+  end
+
 end
