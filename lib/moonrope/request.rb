@@ -3,10 +3,16 @@ module Moonrope
 
     class << self
       attr_accessor :path_regex
+      attr_accessor :path_prefix
 
       # @return [Regex] the regex which should be matched for all API requests
       def path_regex
-        @path_regex ||= /\A\/api\/([\w\/\-\.]+)?/
+        @path_regex ||= /\A\/#{path_prefix}([\w\/\-\.]+)?/
+      end
+
+      # @return [Regex] the initial path of the prefix to be matched
+      def path_prefix
+        @path_prefix ||= /api\//
       end
     end
 
