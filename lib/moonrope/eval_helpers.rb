@@ -7,7 +7,7 @@ module Moonrope
     # @param type [Symbol] the type of error to raise
     # @param message [String, Hash or Array] options to pass with the error (usually a message)
     #
-    def error(type, code_or_message, message = nil)
+    def error(type, code_or_message = nil, message = nil)
       case type
       when :not_found           then raise(Moonrope::Errors::NotFound, code_or_message)
       when :access_denied       then raise(Moonrope::Errors::AccessDenied, code_or_message)
