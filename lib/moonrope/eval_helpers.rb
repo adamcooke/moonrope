@@ -16,7 +16,11 @@ module Moonrope
       when :structured_error    then structured_error(code_or_message, message)
       else
         if type.is_a?(String)
-          structured_error(type, code_or_message, message.is_a?(Hash) ? message : {})
+          if code_or_message.is_a?(Hash)
+            structured_error(type, nil, code_or_message)
+          else
+            structured_error(type, code_or_message, message.is_a?(Hash) ? message : {})
+          end
         else
           raise Moonrope::Errors::RequestError, code_or_message
         end
@@ -31,6 +35,9 @@ module Moonrope
     # @param additional [Hash] additional data to return with the error
     #
     def structured_error(code, message, additional = {})
+      if error = action.errors[code]
+        message = error[:description].gsub(/\{(\w+)\}/) { additional[$1.to_sym] }
+      end
       raise Moonrope::Errors::StructuredError, additional.merge(:code => code, :message => message)
     end
 

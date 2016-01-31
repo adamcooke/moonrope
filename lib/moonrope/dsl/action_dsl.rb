@@ -43,6 +43,19 @@ module Moonrope
       end
 
       #
+      # Add a new error to the actions' errors
+      #
+      #   error "NoUnitFound", "The unit with given {{id}} could not be found"
+      #
+      # @param name [String] the name of the error
+      # @param description [String] a description of the error
+      # @return [void]
+      #
+      def error(name, description, options = {})
+        @action.errors[name] = options.merge(:description => description)
+      end
+
+      #
       # Set the access condition for the action.
       #
       #   access do

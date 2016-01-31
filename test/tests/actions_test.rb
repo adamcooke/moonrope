@@ -343,6 +343,20 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal("The feature you have requested is not currently available for this resource.", result.data[:message])
   end
 
+  def test_actions_can_raise_structured_errors_referencing_action_errors
+    action = Moonrope::Action.new(@controller, :list) do
+      error "NoWidgetsFound", "No widgets were found with level {widget_level}"
+      action do
+        error 'NoWidgetsFound', :widget_level => 42
+      end
+    end
+    assert result = action.execute
+    assert_equal "error", result.status
+    assert_equal "NoWidgetsFound", result.data[:code]
+    assert_equal "No widgets were found with level 42", result.data[:message]
+    assert_equal 42, result.data[:widget_level]
+  end
+
   class DummyError < StandardError; end
 
   def test_catching_external_errors

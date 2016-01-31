@@ -134,12 +134,12 @@ code and a message plus any additional data you want to send. These are the pref
 way of sending errors in Moonrope.
 
 ```ruby
-action do
-  if application.suspended?
-    # You can call a structured error directly.
-    structured_error 'application-suspended', "The application has been suspended.", :app_name => app.name
-    # Also, any call to error which starts with a string will be considered a structured error
-    error 'application-suspended', "The application has been suspended.", :app_name => app.name
+action :show do
+  error "ApplicationSuspended", "The application ({app_name}) you're trying to access is suspended.", :attributes => {:app_name => "The name of the application"}
+  action do
+    if application.suspended?
+      errror "ApplicationSuspended", :app_name => application.name
+    end
   end
 end
 ```

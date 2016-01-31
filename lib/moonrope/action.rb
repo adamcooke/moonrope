@@ -22,6 +22,9 @@ module Moonrope
     # @return [Proc] the action for the action
     attr_accessor :action
 
+    # @return [Hash] the errors which can be retuend by this action
+    attr_accessor :errors
+
     #
     # Initialize a new action
     #
@@ -33,6 +36,7 @@ module Moonrope
       @controller = controller
       @name = name
       @params = {}
+      @errors = {}
       @dsl = Moonrope::DSL::ActionDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
