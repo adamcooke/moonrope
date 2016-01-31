@@ -411,21 +411,44 @@ end
 ```
 
 In some cases, you may wish for your consumers to decide which expansions
-should be returned. This can be achieved by passing `:from_params` when calling
+should be returned. This can be achieved by passing `:paramable` when calling
 a `structure` from an action. For example:
 
 ```ruby
 # Allow consumer to choose from any expansion registered on the structure.
-# (taking into account any conditions you specify).
-structure(user, :expansions => :from_params)
+# (taking into account any conditions you specify) and choose whether or not
+# to include `full` attributes.
+structure(user, :paramable => true)
 
-# Allow consumer to choose from any expansions you list.
-structure(user, :expansions => {:from_params => [:server, :endpoint]})
+# Allow the consumer to choose any expansions but not allow control over whether
+# full attributes should be returned. Returns all expansions by default.
+structure(user, :paramable => {:expansions => true})
+
+# Allow the consumer to choose any expansions but not allow control over whether
+# full attributes should be returned. Returns no expansions by default.
+structure(user, :paramable => {:expansions => false})
+
+# Allow consumer to choose from any expansions you list. By default, the items
+# you list will be included in the response if the user does not request any
+# specific expansions.
+structure(user, :paramable => {:expansions => [:server, :endpoint]})
+
+# Allow the consumer to control whether or not full attributes should be returned
+# in the structure or not but do not allow any control of expansions.
+structure(user, :paramable => {:full => true})
+
+# Allow the consumer to control whether or not full attributes should be returned
+# but do not return them by default.
+structure(user, :paramable => {:full => false})
 ```
 
-To access these, users should send an `_expansions` param with their request which
+To access these, consumers should send an `_expansions` param with their request which
 should contain an array containing the names of the expansions that should be
-included.
+included. Consumers can also send `true` or `false` in this parameter to return
+all or no expansions.
+
+To control access to `full` attributes, consumers should pass `_full` parameter
+as true or false.
 
 ## Accessing your API
 

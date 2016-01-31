@@ -143,16 +143,44 @@ module Moonrope
         raise Moonrope::Errors::Error, "No structure found named '#{structure_name}'"
       end
 
-      has_expansions_from_params = options[:expansions] == :from_params || (options[:expansions].is_a?(Hash) && options[:expansions].first[0] == :from_params)
-      if has_expansions_from_params
-        param_extension_whitelist = options[:expansions].is_a?(Hash) && options[:expansions].first[1]
-        if request.params["_expansions"].is_a?(Array)
-          options[:expansions] = request.params["_expansions"].map(&:to_sym)
-          if param_extension_whitelist
-            options[:expansions].reject! { |e| !param_extension_whitelist.include?(e) }
+
+      if options[:paramable]
+        if options[:paramable].is_a?(Hash)
+          options[:expansions] = options[:paramable][:expansions]
+          options[:full] = options[:paramable][:full]
+        end
+
+        if options[:paramable] == true || options[:paramable].is_a?(Hash) && options[:paramable].has_key?(:expansions)
+          if request.params["_expansions"].is_a?(Array)
+            options[:expansions] = request.params["_expansions"].map(&:to_sym)
+            if options[:paramable].is_a?(Hash) && options[:paramable][:expansions].is_a?(Array)
+              whitelist = options[:paramable][:expansions]
+              options[:expansions].reject! { |e| !whitelist.include?(e) }
+            end
           end
-        elsif request.params["_expansions"] == true
-          options[:expansions] = param_extension_whitelist || true
+
+          if request.params["_expansions"] == true
+            if options[:paramable].is_a?(Hash)
+              if options[:paramable][:expansions].is_a?(Array)
+                options[:expansions] = options[:paramable][:expansions]
+              elsif options[:paramable].has_key?(:expansions)
+                options[:expansions] = true
+              end
+            else
+              options[:expansions] = true
+            end
+          end
+
+          if request.params["_expansions"] == false
+            options[:expansions] = nil
+          end
+
+        end
+
+        if request.params.has?("_full")
+          if options[:paramable] == true || (options[:paramable].is_a?(Hash) && options[:paramable].has_key?(:full))
+            options[:full] = !!request.params["_full"]
+          end
         end
       end
 
