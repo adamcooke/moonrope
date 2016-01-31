@@ -29,7 +29,7 @@ module Moonrope
     #
     def _value_for(key)
       # Get the value from the params and defaults
-      value = (@params[key.to_s] || @defaults[key.to_s])
+      value = @params.has_key?(key.to_s) ? @params[key.to_s] : @defaults[key.to_s]
       # Ensure that empty strings are actually nil.
       value = nil if value.is_a?(String) && value.length == 0
       # Return the value
