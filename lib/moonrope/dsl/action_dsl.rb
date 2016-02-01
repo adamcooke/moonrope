@@ -56,6 +56,20 @@ module Moonrope
       end
 
       #
+      # Sets the type of return value that is expected from a successful call
+      # to this API action.
+      #
+      #   returns :array, :structure => :user
+      #
+      # @param type [Symbol] the type of object that will be returend
+      # @param options [Hash] further options about the returned value
+      # @return [void]
+      #
+      def returns(type, options = {})
+        @action.returns = options.merge(:type => type)
+      end
+
+      #
       # Set the access condition for the action.
       #
       #   access do

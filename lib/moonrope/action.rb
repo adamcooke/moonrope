@@ -25,6 +25,9 @@ module Moonrope
     # @return [Hash] the errors which can be retuend by this action
     attr_accessor :errors
 
+    # @return [Hash] details of what will be returned on success
+    attr_accessor :returns
+
     #
     # Initialize a new action
     #

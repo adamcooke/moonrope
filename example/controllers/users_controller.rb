@@ -4,6 +4,7 @@ controller :users do
     description "Return a list of all users"
     param :page, "The page number", :default => 1, :type => Integer
     param :per_page, "The number of items to return per page", :default => 30, :type => Integer
+    returns :array, :structure => :user
     action do
       paginate(User.all) do |user|
         structure user
@@ -14,6 +15,7 @@ controller :users do
   action :show do
     description "Return information about a given user"
     param :username, "The user's username", :type => String, :required => true
+    returns :hash, :structure => :user
     error "UserNotFound", "No user was found matching the given username", :attributes => {:username => "The username which was looked up"}
     action do
       if user = User.find_by_username(params.username)
