@@ -15,6 +15,24 @@ module Moonrope
       attr_reader :controller
 
       #
+      # Set the friendly name for the controller
+      #
+      # @param name [String]
+      #
+      def friendly_name(string)
+        @controller.friendly_name = string
+      end
+
+      #
+      # Set the description for the controller
+      #
+      # @param description [String]
+      #
+      def description(description)
+        @controller.description = description
+      end
+
+      #
       # Defines a new action within the controller.
       #
       # @param name [Symbol]
