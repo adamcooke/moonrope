@@ -1,0 +1,9 @@
+<h1><%= controller.name %></h1>
+<ul>
+  <% for action in controller.actions.values %>
+  <li>
+    <a href='users/<%= action.name %>.html'><%= action.name %></a> - <%= action.description %>
+  </li>
+  <% end %>
+</ul>
+<p><a href='../index.html'>Back to list</a></p>

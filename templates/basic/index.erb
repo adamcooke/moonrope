@@ -1,0 +1,7 @@
+<h1>Choose a controller</h1>
+
+<ul>
+  <% for controller in base.controllers %>
+  <li><a href='controllers/<%= controller.name %>.html'><%= controller.name %></a></li>
+  <% end %>
+</ul>
