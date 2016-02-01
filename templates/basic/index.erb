@@ -1,7 +1,116 @@
-<h1>Choose a controller</h1>
+<h1>Welcome to our API documentation</h1>
+<p class='text'>
+  From here you can browse the full documentation for our HTTP
+  API. Our API is split into sections which you can browse using
+  the menu on the right. If you have any questions, you can
+  <a href='#'>contact our team</a> and we'll be happy to help out.
+</p>
+<p class='text'>
+  Before you get started, take a few minutes to review the
+  information below about how to interact with our API. It includes
+  information about how to send requests, what response data is
+  sent in and how to handle errors.
+</p>
 
-<ul>
-  <% for controller in base.controllers %>
-  <li><a href='controllers/<%= controller.name %>.html'><%= controller.name %></a></li>
-  <% end %>
+<h2>Making requests</h2>
+<p class='text'>
+  Our API works over the HTTP protocol with JSON. It is implemented
+  in an RPC-like manner and everything you can do with the API has
+  its own <em>action</em>.
+</p>
+<p class='text'>
+  All HTTP requests must be made over HTTPS to the URL shown on the
+  action's page in this documentation. All responses you receive from
+  the API will be returned in JSON. Requests should be made using the
+  <code>POST</code> method with any parameters encoded as JSON in the
+  body of the request.
+</p>
+
+<h2>Receiving responses</h2>
+<p class='text'>
+  All responses will be returned to you encoded as JSON. You will always
+  receive a hash as the response which will look like the JSON below:
+</p>
+<pre class='code'>
+{
+  <span class='jsonKey'>"status"</span>:"success",
+  <span class='jsonKey'>"time"</span>:0.123,
+  <span class='jsonKey'>"flags"</span>:{
+    <span class='jsonComment'>... additional information about the request ...</span>
+  },
+  <span class='jsonKey'>"data"</span>:{
+    <span class='jsonComment'>... the data returned from the action ...</span>
+  }
+}
+</pre>
+<p class='text'>
+  The <b>status</b> attribute will give you can indication about whether the
+  request was performed successfully or whether an error occurred. Values which
+  may be returned are shown below:
+</p>
+<ul class='standardList'>
+  <li>
+    <code>success</code> - this means that the request completed successfully
+    and returned the data that was expected.
+  </li>
+  <li>
+    <code>access-denied</code> - you have not provided valid authentication
+    data in order to verify your identity to the API.
+  </li>
+  <li>
+    <code>parameter-error</code> - the parameters provided for the action are
+    not valid and should be revised.
+  </li>
+  <li>
+    <code>error</code> - an error occurred that didn't fit into the above categories.
+    This will be accompanied with an error code, a descriptive message and further
+    attributes which may be useful. The actual potential errors for each action are
+    shown in the documentation.
+  </li>
+</ul>
+<p class='text'>
+  The <b>time</b> attribute shows how long the request took to complete on the
+  server side.
+</p>
+<p class='text'>
+  The <b>flags</b> attribute contains a hash of additional attributes
+  which are relevant to your request. For example, if you receive an array of data
+  it may be paginated and this pagination data will be returned in this
+  hash.
+</p>
+<p class='text'>
+  The <b>data</b> attribute contains the result of your request. Depending on the
+  status, this will either contain the data requested or details of any
+  error which has occurred.
+</p>
+<h3>A note about HTTP status code</h3>
+<p class='text'>
+  The API does not generally use HTTP status codes to return information
+  about the outcome of a request. There are two supported statuses with
+  the API:
+</p>
+<ul class='standardList'>
+  <li>
+    <code>200 OK</code> - This is the code you'll usually receive.
+    It indicates that the response was successfully delivered and
+    returned to our service (although does not nessesary mean that
+    the action you were expecting was successful). Further status
+    information will be provided in the <code>status</code> attribute
+    on your response body.
+  </li>
+  <li>
+    <code>301 Moved Permanently</code> or <code>308 Permanent Redirect</code> -
+    This means that the API request should be sent to an alternative
+    URL. This may just mean you need to send your request using <code>https</code>
+    rather than <code>http</code> as the protocol.
+  </li>
+  <li>
+    <code>500 Internal Server Error</code> - This will be returned
+    when an error occurred within the API itself. This was not
+    anticipated by us and should be reported to us.
+  </li>
+  <li>
+    <code>503 Service Unavailable</code> - This will be returned if
+    API is currently unavailable for maintenance or other issue.
+  </li>
 </ul>

@@ -1,0 +1,97 @@
+html {
+  font-family: Lato, Arial, sans-serif;
+  font-size:16px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.sidebarBackground {
+  background:#2f3e4d;
+  width:200px;
+  position:fixed;
+  top:0;
+  bottom:0;
+  z-index:1;
+}
+
+.sidebar {
+  width:200px;
+  color:#ccc;
+  float:left;
+  z-index:10;
+  position:absolute;
+  padding:10px;
+}
+
+.content {
+  margin-left:200px;
+  padding:40px;
+  padding-right:15%;
+}
+
+
+.content h1 {
+  font-size:32px;
+  font-weight:900;
+  margin-bottom:15px;
+}
+
+.content h2 {
+  font-size:24px;
+  font-weight:700;
+  color:#f65552;
+  margin-bottom:10px;
+  margin-top:30px;
+}
+
+.content h3 {
+  font-size:18px;
+  font-weight:700;
+  color:#888;
+  margin-bottom:10px;
+  margin-top:30px;
+}
+
+.content p.text {
+  line-height:1.5;
+  margin-bottom:15px;
+}
+
+
+.content .standardList {
+  margin-bottom:15px;
+  line-height:1.5;
+}
+
+.content .standardList li {
+  list-style:square;
+  margin-bottom:15px;
+  margin-left:35px;
+}
+
+.content code {
+  background:#efefef;
+  padding:1px 2px;
+  font-size:90%;
+  font-weight:bold;
+}
+
+.content pre.code {
+  white-space: pre;
+  background:#efefef;
+  border-left:3px solid #999;
+  padding:10px 10px 10px;
+  font-size:90%;
+  margin-bottom:15px;
+}
+
+.content pre.code span.jsonKey {
+  color:green;
+}
+
+.content pre.code span.jsonComment {
+  color:#888;
+  font-style:italic;
+}

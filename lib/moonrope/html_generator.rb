@@ -11,24 +11,26 @@ module Moonrope
     def generate(output_path)
       FileUtils.rm_r(output_path) if File.directory?(output_path)
       FileUtils.mkdir_p(output_path)
+      FileUtils.cp_r(File.join(@template_root_path, 'assets'), File.join(output_path, 'assets'))
       # Index
-      generate_file(File.join(output_path, "index.html"), "index")
+      generate_file(output_path, "index.html", "index")
       # Controllers
       @base.controllers.each do |controller|
-        FileUtils.mkdir_p(File.join(output_path, "controllers"))
-        generate_file(File.join(output_path, "controllers", "#{controller.name}.html"), "controller", {:controller => controller})
+        generate_file(output_path, File.join("controllers", "#{controller.name}.html"), "controller", {:controller => controller})
         controller.actions.each do |_, action|
-          FileUtils.mkdir_p(File.join(output_path, "controllers", controller.name.to_s))
-          generate_file(File.join(output_path, "controllers", controller.name.to_s, "#{action.name}.html"), "action", {:controller => controller, :action => action})
+          generate_file(output_path, File.join("controllers", controller.name.to_s, "#{action.name}.html"), "action", {:controller => controller, :action => action})
         end
       end
     end
 
     private
 
-    def generate_file(path, template_file, variables = {})
-      file = Erbable.new(variables.merge(:base => @base)).render(File.join(@template_root_path, "#{template_file}.erb"))
-      layout = Erbable.new(:base => @base, :body => file).render(File.join(@template_root_path, "layout.erb"))
+    def generate_file(root_dir, output_file, template_file, variables = {})
+      path = File.join(root_dir, output_file)
+      globals = {:base => @base, :output_file => output_file}
+      file = Erbable.new(variables.merge(globals)).render(File.join(@template_root_path, "#{template_file}.erb"))
+      layout = Erbable.new({:body => file}.merge(globals)).render(File.join(@template_root_path, "layout.erb"))
+      FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') { |f| f.write(layout) }
     end
 
@@ -36,12 +38,18 @@ module Moonrope
 
   class Erbable < OpenStruct
 
-    def hello_world
-      "<p>hello world</p>"
+    def asset_path(file)
+      path("assets/" + file)
+    end
+
+    def path(file)
+      depth = (output_file.split('/').size - 1).times.map { "../" }.join
+      depth + file
     end
 
     def render(template_file)
       ERB.new(File.read(template_file), nil, '-').result(binding)
     end
+
   end
 end
