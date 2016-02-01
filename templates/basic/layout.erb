@@ -12,10 +12,20 @@
     <section class="sidebar">
       <nav>
         <ul>
+          <li>
+            <a href='<%= path('index.html') %>'>
+              Home
+            </a>
+          </li>
+          <li>
+            <a href='<%= path('authentication.html') %>'>
+              Authentication
+            </a>
+          </li>
           <% for controller in base.controllers %>
           <li>
             <a href='<%= path("controllers/#{controller.name}.html") %>'>
-              <%= controller.name %>
+              <%= controller.friendly_name || controller.name %>
             </a>
           </li>
           <% end %>

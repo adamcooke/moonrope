@@ -27,7 +27,7 @@ module Moonrope
 
     def generate_file(root_dir, output_file, template_file, variables = {})
       path = File.join(root_dir, output_file)
-      globals = {:base => @base, :output_file => output_file}
+      globals = {:base => @base, :output_file => output_file, :host => ENV['MR_HOST'], :version => ENV['MR_VERSION'] || "v1", :prefix => ENV['MR_PREFIX'] || "api"}
       file = Erbable.new(variables.merge(globals)).render(File.join(@template_root_path, "#{template_file}.erb"))
       layout = Erbable.new({:body => file}.merge(globals)).render(File.join(@template_root_path, "layout.erb"))
       FileUtils.mkdir_p(File.dirname(path))
@@ -40,6 +40,10 @@ module Moonrope
 
     def asset_path(file)
       path("assets/" + file)
+    end
+
+    def full_prefix
+      "#{host}/#{prefix}/#{version}"
     end
 
     def path(file)

@@ -1,9 +1,17 @@
-<h1><%= controller.name %></h1>
-<ul>
+<h1><%= controller.friendly_name || controller.name %></h1>
+<% if controller.description %>
+  <p class='text'><%= controller.description %></p>
+<% end %>
+<h2>Action</h2>
+<p class='text'>
+  The following actions are available. Choose from the list below
+  to view full details of how to access them.
+</p>
+<ul class='standardList'>
   <% for action in controller.actions.values %>
   <li>
-    <a href='users/<%= action.name %>.html'><%= action.name %></a> - <%= action.description %>
+    <a class='link' href='users/<%= action.name %>.html'><%= action.description || action.name %></a>
+    <p class='apiURL'><span><%= full_prefix %>/</span><b><%= action.controller.name %>/<%= action.name %></b></p>
   </li>
   <% end %>
 </ul>
-<p><a href='../index.html'>Back to list</a></p>

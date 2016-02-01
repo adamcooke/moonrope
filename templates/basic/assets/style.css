@@ -81,17 +81,32 @@ a {
 .content pre.code {
   white-space: pre;
   background:#efefef;
-  border-left:3px solid #999;
   padding:10px 10px 10px;
   font-size:90%;
   margin-bottom:15px;
+  border-radius:7px 7px 7px 7px;
 }
 
 .content pre.code span.jsonKey {
-  color:green;
+  color:#7f55ad;
+  font-weight:bold;
+}
+
+.content pre.code span.jsonString {
+  color:#9eb503;
 }
 
 .content pre.code span.jsonComment {
-  color:#888;
+  color:#bbb;
   font-style:italic;
+}
+
+.content a.link {
+  color:#2d80c8;
+  font-weight:700;
+  border-bottom:1px solid #2d80c8;
+}
+
+.content p.apiURL span {
+  color:#aaa;
 }

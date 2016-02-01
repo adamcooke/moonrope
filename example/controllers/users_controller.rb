@@ -1,5 +1,11 @@
 controller :users do
 
+  friendly_name "Users API"
+  description <<-DESC
+    The Users API provides full access to manage the users
+    which exist on your account.
+  DESC
+
   action :list do
     description "Return a list of all users"
     param :page, "The page number", :default => 1, :type => Integer
