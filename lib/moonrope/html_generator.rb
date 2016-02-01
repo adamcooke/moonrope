@@ -9,7 +9,7 @@ module Moonrope
     end
 
     def generate(output_path)
-      FileUtils.rm_r(output_path)
+      FileUtils.rm_r(output_path) if File.directory?(output_path)
       FileUtils.mkdir_p(output_path)
       # Index
       generate_file(File.join(output_path, "index.html"), "index")
