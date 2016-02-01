@@ -1,2 +1,57 @@
 <h1><%= action.controller.name %> / <%= action.name %></h1>
+
+<h2>URL</h2>
+<pre>/api/v1/<%= action.controller.name %>/<%= action.name %></pre>
+
+<h2>Parameters</h2>
+<% if action.params.empty? %>
+  <p><em>This action doesn't support any parameters.</em></p>
+<% else %>
+  <ul>
+    <% for name, param in action.params %>
+    <li>
+      <b><code><%= name %></code></b> - <%= param[:description] || "no description" %>
+      <% if param[:required] %><br>Required<% end %>
+      <% if param[:type]%><br>Must be a <%= param[:type] %><% end %>
+      <% if param[:default]%><br>Defaults to <%= param[:default] %><% end %>
+    </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h2>Errors</h2>
+
+<% if action.errors.empty? %>
+  <p><em>There are no action-specific errors which can be raised.</em></p>
+<% else %>
+  <ul>
+    <% for name, options in action.errors %>
+    <li>
+      <b><code><%= name %></code></b> - <%= options[:description] || "no description provided" %>
+      <% if options[:attributes] %>
+      <p>The follow attributes are also provided with this error.</p>
+      <ul>
+        <% for name, description in options[:attributes] %>
+        <li><code><%= name %></code> - <%= description || "no description" %></li>
+        <% end %>
+      </ul>
+      <% end %>
+    </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if action.returns %>
+<h2>Result Value</h2>
+<% if action.returns[:structure] %>
+  <% if action.returns[:type] == :array %>
+    <p>This action will return an array of <%= action.returns[:structure] %> structures.</p>
+  <% else %>
+    <p>This action will return a <%= action.returns[:structure] %> structure.</p>
+  <% end %>
+<% else %>
+  <p>This action will return a <%= action.returns[:type] %>.</p>
+<% end %>
+<% end %>
+
 <p><a href='../<%= action.controller.name %>.html'>Back to action list</a></p>
