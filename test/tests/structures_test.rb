@@ -184,11 +184,11 @@ class StructuresTest < Test::Unit::TestCase
   def test_ifs_with_expansion
     base = Moonrope::Base.new do
       structure :animal do
-        #condition Proc.new { true } do
+        condition Proc.new { true } do
           expansion :example do
             {:hello => 'world'}
           end
-        #end
+        end
 
         condition Proc.new { false } do
           expansion :example2 do
