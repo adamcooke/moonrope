@@ -318,6 +318,14 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('hungry' => nil))
   end
 
+  def test_actions_params_can_have_symbols_as_types_which_do_nothing
+    action = Moonrope::Action.new(@controller, :list) do
+      param :created_at, "Timestamp", :type => :timestamp
+    end
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('created_at' => 'something'))
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('created_at' => nil))
+  end
+
   def test_actions_params_can_be_validated_for_regex_matches
     action = Moonrope::Action.new(@controller, :list) do
       param :username, "Username", :regex => /\A[a-z]+\z/

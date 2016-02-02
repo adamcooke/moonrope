@@ -205,6 +205,8 @@ module Moonrope
             else
               raise Moonrope::Errors::ParameterError, "`#{name}` should be a boolean value"
             end
+          elsif value[:type].is_a?(Symbol) || value[:type].is_a?(String)
+            # Value is a symbol, nothing to do.
           elsif !param_set[name].is_a?(value[:type])
             raise Moonrope::Errors::ParameterError, "`#{name}` should be a `#{value[:type]}` but is a `#{param_set[name].class}`"
           end
