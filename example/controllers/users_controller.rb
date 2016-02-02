@@ -40,6 +40,7 @@ controller :users do
     param :last_name, "The user's last name", :type => String, :set => true
     param :email_address, "The user's e-mail address", :type => String, :set => :create_only
     param :password, "The user's password", :type => String, :set => :update_only
+    param :admin, "Should this user be an admin?", :type => :boolean, :set => true
     returns :hash, :structure => :user, :structure_opts => {:full => true}
     error "ValidationError", "The details provided were not sufficient to save the user", :attributes => {:errors => "An array of errors for each field"}
     error "UserNotFound", "No existing user was found for the ID provider", :attributes => {:id => "The ID which was looked up"}

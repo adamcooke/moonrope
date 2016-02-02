@@ -16,7 +16,7 @@
         <p class='paramTable__description'><%= attribute.description %></p>
       <% end %>
     </td>
-    <td><%= attribute.friendly_value_type %></td>
+    <td><%= friendly_type(attribute.value_type) %></td>
     <td><%= attribute.example %></td>
   </tr>
   <% end %>

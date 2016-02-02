@@ -40,6 +40,16 @@ module Moonrope
     alias_method :method_missing, :_value_for
 
     #
+    # Set the value for a given param
+    #
+    # @param key [String]
+    # @param value [AnyObject]
+    #
+    def _set_value(name, value)
+      @params[name.to_s] = value
+    end
+
+    #
     # Set the defaults for the param set
     #
     # @param defaults [Hash]

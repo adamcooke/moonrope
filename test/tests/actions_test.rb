@@ -279,6 +279,45 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('page' => nil))
   end
 
+  def test_actions_params_can_be_validated_for_boolean_types
+    action = Moonrope::Action.new(@controller, :list) do
+      param :hungry, "Are you hungry", :type => :boolean
+    end
+
+    # request with a string valuee
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new('hungry' => 'randomstring'))
+    end
+
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new('hungry' => 2))
+    end
+
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new('hungry' => 123))
+    end
+
+    # request with an boolean value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('hungry' => true))
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('hungry' => false))
+
+    # request with string values
+    set = Moonrope::ParamSet.new('hungry' => 'true')
+    assert_equal true, action.validate_parameters(set)
+    assert_equal true, set.hungry
+
+    set = Moonrope::ParamSet.new('hungry' => 'false')
+    assert_equal true, action.validate_parameters(set)
+    assert_equal false, set.hungry
+
+    # request with an numeric values
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('hungry' => 1))
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('hungry' => 0))
+
+    # request with nil vlaues
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('hungry' => nil))
+  end
+
   def test_actions_params_can_be_validated_for_regex_matches
     action = Moonrope::Action.new(@controller, :list) do
       param :username, "Username", :regex => /\A[a-z]+\z/

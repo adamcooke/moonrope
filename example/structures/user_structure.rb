@@ -7,7 +7,7 @@ structure :user do
     basic :last, "The user's last name", :type => String, :eg => "Cooke", :source_attribute => :last_name
   end
 
-  full :admin, "Is this user an administrator?", :type => :boolean, :eg => false
+  full :admin, "Is this user an administrator?", :type => :boolean
   full :created_at, "The timestamp the user was created", :type => :timestamp
   full :updated_at, "The timestamp the user was updated", :type => :timestamp
 

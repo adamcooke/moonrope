@@ -96,5 +96,13 @@ module Moonrope
       erb.render(File.join(@generator.template_root_path, "_#{name}.erb"))
     end
 
+    def friendly_type(type)
+      if type.is_a?(Symbol)
+        type.to_s.capitalize
+      else
+        type.to_s
+      end
+    end
+
   end
 end

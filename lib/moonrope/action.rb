@@ -198,12 +198,24 @@ module Moonrope
           raise Moonrope::Errors::ParameterError, "`#{name}` parameter is invalid"
         end
 
-        if value[:type] && param_set[name] && !param_set[name].is_a?(value[:type])
-          raise Moonrope::Errors::ParameterError, "`#{name}` should be a `#{value[:type]}` but is a `#{param_set[name].class}`"
+        if value[:type] && param_set[name]
+          if value[:type] == :boolean
+            if BOOLEAN_VALUES.include?(param_set[name])
+              param_set._set_value(name, TRUE_LIKE_VALUES.include?(param_set[name]))
+            else
+              raise Moonrope::Errors::ParameterError, "`#{name}` should be a boolean value"
+            end
+          elsif !param_set[name].is_a?(value[:type])
+            raise Moonrope::Errors::ParameterError, "`#{name}` should be a `#{value[:type]}` but is a `#{param_set[name].class}`"
+          end
         end
       end
       true
     end
+
+    TRUE_LIKE_VALUES = ['true', '1', 1, true]
+    FALSE_LIKE_VALUES = ['false', '0', 0, false]
+    BOOLEAN_VALUES = TRUE_LIKE_VALUES + FALSE_LIKE_VALUES
 
   end
 end
