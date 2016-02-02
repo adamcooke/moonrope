@@ -1,0 +1,23 @@
+<table class='table paramTable'>
+  <thead>
+    <tr>
+      <th width="45%">Attribute</th>
+      <th width="20%">Type</th>
+      <th width="35%">Example</th>
+    </tr>
+  </thead>
+  <% for attribute in attributes %>
+  <tr>
+    <td>
+      <p>
+        <span class='paramTable__name'><%= attribute.name_with_groups %></span>
+      </p>
+      <% if attribute.description %>
+        <p class='paramTable__description'><%= attribute.description %></p>
+      <% end %>
+    </td>
+    <td><%= attribute.friendly_value_type %></td>
+    <td><%= attribute.example %></td>
+  </tr>
+  <% end %>
+</table>

@@ -5,7 +5,7 @@ class ExamplesTest < Test::Unit::TestCase
   end
 
   def test_examples_are_valid
-    assert_equal 1, @base.controllers.size
+    assert_equal 2, @base.controllers.size
   end
 
 end

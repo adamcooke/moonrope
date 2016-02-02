@@ -81,10 +81,10 @@
   <% if action.returns[:type] == :array %>
     <p>This action will return an array of <%= action.returns[:structure] %> structures.</p>
   <% else %>
-    <p>This action will return a <%= action.returns[:structure] %> structure.</p>
+    <p>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structure</a>.</p>
   <% end %>
 <% else %>
-  <p>This action will return a <%= action.returns[:type] %>.</p>
+  <p>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structure</a>.</p>
 <% end %>
 <% end %>
 
