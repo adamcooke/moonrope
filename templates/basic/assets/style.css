@@ -72,13 +72,14 @@ a {
 }
 
 .content code {
-  background:#efefef;
+  font-family:'Droid Sans Mono', fixed;
+  color:#f65552;
   padding:1px 2px;
   font-size:90%;
-  font-weight:bold;
 }
 
 .content pre.code {
+  font-family:'Droid Sans Mono', fixed;
   white-space: pre;
   background:#efefef;
   padding:10px 10px 10px;
@@ -109,4 +110,78 @@ a {
 
 .content p.apiURL span {
   color:#aaa;
+}
+
+.table {
+  width:100%;
+}
+
+.table th, .table td {
+  border-bottom:1px solid #ccc;
+  text-align: left;
+  padding:7px 0;
+}
+
+.table th {
+  border-bottom:2px solid #666;
+  font-size:90%;
+}
+
+.paramTable__req {
+  background:#ea4c89;
+  color:#fff;
+  font-weight:bold;
+  font-size:10px;
+  text-transform: uppercase;
+  padding:1px 3px;
+  border-radius: 2px;
+  vertical-align: 1px;
+  margin-left:5px;
+}
+
+.paramTable__description {
+  font-size:90%;
+  color:#999;
+  margin-top:3px;
+}
+
+.paramTable__name {
+  font-family:'Droid Sans Mono', fixed;
+  font-size:90%;
+}
+
+.paramTable__nil {
+  color:#ccc;
+  font-size:90%;
+}
+
+.apiURLFull {
+  font-size:110%;
+  font-weight:bold;
+}
+
+.apiURLFull span {
+  color:#aaaaaa;
+  font-weight:normal;
+}
+
+.errorAttributeList {
+  font-size:80%;
+}
+
+.errorAttributeList li {
+  margin-bottom:8px;
+  list-style:square;
+  margin-left:16px;
+}
+.errorAttributeList li:last-child {
+  margin-bottom:0;
+}
+
+.errorAttributeList__name {
+  font-family:'Droid Sans Mono', fixed;
+}
+
+.errorAttributeList__desc {
+  color:#999;
 }

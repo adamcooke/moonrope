@@ -10,7 +10,7 @@
 <ul class='standardList'>
   <% for action in controller.actions.values %>
   <li>
-    <a class='link' href='users/<%= action.name %>.html'><%= action.description || action.name %></a>
+    <a class='link' href='<%= action.controller.name %>/<%= action.name %>.html'><%= action.description || action.name %></a>
     <p class='apiURL'><span><%= full_prefix %>/</span><b><%= action.controller.name %>/<%= action.name %></b></p>
   </li>
   <% end %>

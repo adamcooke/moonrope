@@ -32,4 +32,33 @@ controller :users do
     end
   end
 
+  action :save do
+    description "Create or update a user"
+    param :id, "The ID of the existing user to be updated (do not send to create a new user)", :type => Integer
+    param :username, "The user's username", :type => String, :set => true
+    param :first_name, "The user's first name", :type => String, :set => true
+    param :last_name, "The user's last name", :type => String, :set => true
+    param :email_address, "The user's e-mail address", :type => String, :set => :create_only
+    param :password, "The user's password", :type => String, :set => :update_only
+    returns :hash, :structure => :user, :structure_opts => {:full => true}
+    error "ValidationError", "The details provided were not sufficient to save the user", :attributes => {:errors => "An array of errors for each field"}
+    error "UserNotFound", "No existing user was found for the ID provider", :attributes => {:id => "The ID which was looked up"}
+    action do
+      if params.id
+        user = User.find_by_id(params.id)
+        if user.nil?
+          error "UserNotFound", :id => params.id
+        end
+      else
+        user = User.new
+      end
+      auto_set_params_for user
+      if user.save
+        structure user, :full => true
+      else
+        error 'ValidationError', :errors => user.errors
+      end
+    end
+  end
+
 end
