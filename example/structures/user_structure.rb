@@ -11,4 +11,20 @@ structure :user do
   full :created_at, "The timestamp the user was created", :type => :timestamp
   full :updated_at, "The timestamp the user was updated", :type => :timestamp
 
+  expansion :pets, "All pets that belong to this user", :structure => :pet, :type => Array
+
+  expansion :balance, "The user's balance", :type => Float, :eg => 12.50 do
+    o.user.balance
+  end
+
+  expansion :hidden, "This is a hidden expansion", :doc => false do
+    o.user.hidden
+  end
+
+  condition Proc.new { auth.admin? } do
+    # This value will only be provided to users who are accesing the API with
+    # the permission to view
+    full :support_pin, "The PIN this user needs to use to access support", :type => String, :eg => "4953"
+  end
+
 end

@@ -84,7 +84,16 @@ module Moonrope
 
       def expansion(name, *args, &block)
         if block_given?
-          @structure.expansions[name] = {:block => block, :conditions => @conditions}
+          if args[0].is_a?(String)
+            attrs = args[1] || {}
+            attrs[:description] = args[0]
+          elsif args[0].is_a?(Hash)
+            attrs = atrs[0]
+          else
+            attrs = {}
+          end
+
+          @structure.expansions[name] = attrs.merge({:block => block, :conditions => @conditions})
         else
           attribute(:expansion, name, *args)
         end
