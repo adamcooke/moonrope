@@ -28,6 +28,9 @@ module Moonrope
     # @return [Hash] details of what will be returned on success
     attr_accessor :returns
 
+    # @return [Bool] whether or not the action should be documented
+    attr_accessor :doc
+
     #
     # Initialize a new action
     #

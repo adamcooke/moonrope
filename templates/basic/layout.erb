@@ -17,12 +17,7 @@
               Home
             </a>
           </li>
-          <li>
-            <a href='<%= path('authentication.html') %>'>
-              Authentication
-            </a>
-          </li>
-          <% for controller in base.controllers %>
+          <% for controller in base.controllers.select { |c| c.doc != false } %>
           <li>
             <a href='<%= path("controllers/#{controller.name}.html") %>'>
               <%= controller.friendly_name || controller.name %>

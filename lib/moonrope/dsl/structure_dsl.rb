@@ -26,6 +26,10 @@ module Moonrope
         @conditions = []
       end
 
+      def no_doc!
+        @structure.doc = false
+      end
+
       def scope(options = {}, &block)
         scope_dsl = self.class.new(@structure)
         scope_dsl.options = options

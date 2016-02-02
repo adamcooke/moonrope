@@ -18,14 +18,14 @@ module Moonrope
       # Index
       generate_file(output_path, "index.html", "index")
       # Controllers
-      @base.controllers.each do |controller|
+      @base.controllers.select { |c| c.doc != false }.each do |controller|
         generate_file(output_path, File.join("controllers", "#{controller.name}.html"), "controller", {:controller => controller})
-        controller.actions.each do |_, action|
+        controller.actions.select { |_,a| a.doc != false }.each do |_, action|
           generate_file(output_path, File.join("controllers", controller.name.to_s, "#{action.name}.html"), "action", {:controller => controller, :action => action})
         end
       end
       # Structures
-      @base.structures.each do |structure|
+      @base.structures.select { |s| s.doc != false }.each do |structure|
         generate_file(output_path, File.join("structures", "#{structure.name}.html"), "structure", {:structure => structure})
       end
     end

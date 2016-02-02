@@ -24,6 +24,13 @@ module Moonrope
       end
 
       #
+      # Set this action so that it isn't documented
+      #
+      def no_doc!
+        @action.doc = false
+      end
+
+      #
       # Add a new param to the action's param set.
       #
       #   param :page, "The page number", :default => 2

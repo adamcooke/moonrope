@@ -22,6 +22,9 @@ module Moonrope
     # @return [Hash] attributes which should be included in this structure
     attr_reader :attributes
 
+    # @return [Bool] should this structure be documented
+    attr_accessor :doc
+
     #
     # Initialize a new structure
     #

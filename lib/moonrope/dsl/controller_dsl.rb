@@ -15,6 +15,13 @@ module Moonrope
       attr_reader :controller
 
       #
+      # Stop this controller frmo being documented
+      #
+      def no_doc!
+        @controller.doc = false
+      end
+
+      #
       # Set the friendly name for the controller
       #
       # @param name [String]

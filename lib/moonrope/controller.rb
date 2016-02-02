@@ -1,7 +1,7 @@
 module Moonrope
   class Controller
 
-    attr_accessor :name, :actions, :access, :befores, :friendly_name, :description
+    attr_accessor :name, :actions, :access, :befores, :friendly_name, :description, :doc
     attr_reader :base, :dsl
 
     #
