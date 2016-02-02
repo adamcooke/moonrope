@@ -76,16 +76,74 @@
 <% end %>
 
 <% if action.returns %>
-<h2>Result Value</h2>
+<h2>Response Data</h2>
 <% if action.returns[:structure] %>
   <% if action.returns[:type] == :array %>
-    <p>This action will return an array of <%= action.returns[:structure] %> structures.</p>
+    <p class='text'>This action will return an array of <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structures</a>.</p>
   <% else %>
-    <p>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structure</a>.</p>
+    <p class='text'>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structure</a>.</p>
+  <% end %>
+
+  <% if opts = action.returns[:structure_opts] %>
+    <% if opts[:paramable] == true %>
+      <p class='text'>
+        You'll receive this structure in the most basic form, without extended data or
+        any expansions. You can choose to receive extended attributes by providing the <code>_full</code> parameter. You can
+        also choose to receive any expansions by providing an array in the <code>_expansions</code>
+        parameter. A full list of expansions can be found on the
+        <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'>structure page</a>.
+      </p>
+    <% elsif opts[:paramable].is_a?(Hash) %>
+      <p class='text'>
+        <% if opts[:paramable].has_key?(:full) %>
+          <% if opts[:paramable][:full] %>
+          You'll receive all extended data with this structure, by default.
+          <% else %>
+          You won't receive any extended data with this structure, by default.
+          <% end %>
+          You can change this behaviour by passing true or false in the <code>_full</code>
+          parameter on the request.
+        <% else %>
+        You will only receive basic data for this structure, no extended data is available.
+        <% end %>
+
+        <% if opts[:paramable].has_key?(:expansions) %>
+          <% if opts[:paramable][:expansions].is_a?(Array) %>
+          By default, you'll receive expansions for <b><%= opts[:paramable][:expansions].join(', ') %></b>.
+          You can change these by providing an array of expansion names in the <code>_expansions</code>
+          parameter on the request.
+          <% elsif opts[:paramable][:expansions] == true %>
+          By default, you'll receive all expansions for the structure. You remove any/all of them by
+          providing an array of new expansion names in the <code>_expansions</code> parameter on the
+          request.
+          <% elsif opts[:paramable][:expansions] == false %>
+          By default, you'll receive no expansions for the structure. You can add them by providing
+          an array of new expansion names in the <code>_expansions</code> parameter on the request.
+          You can send <code>true</code> rather than array to receive all expansions.
+          <% end %>
+        <% else %>
+        No expansions will be provided.
+        <% end %>
+      </p>
+    <% else %>
+      <% if opts[:full] %>
+      You'll receive all attributes for this structure (basic and extended attributes).
+      <% else %>
+      You'll only receive basic attributes for this structure.
+      <% end %>
+      <% if opts[:expansions].is_a?(Array) %>
+      You'll receive expansions for <b><%= opts[:expansions].join(', ') %></b>.
+      <% elsif opts[:expansions] == true %>
+      You'll receive all expansions for this stucture.
+      <% end %>
+    <% end %>
   <% end %>
 <% else %>
-  <p>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structure</a>.</p>
+  <p class='text'>
+    This action will return a <%= friendly_type(action.returns[:type]) %>.
+  </p>
+  <% if eg = (action.returns[:eg] || action.returns[:example]) %>
+  <pre class='code'><%= eg %></pre>
+  <% end %>
 <% end %>
 <% end %>
-
-<p class='text'><a class='link' href='<%= path("controllers/#{action.controller.name}.html") %>'>Back to action list</a></p>

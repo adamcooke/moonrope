@@ -28,6 +28,15 @@ class StructuresParamExtensionsTest < Test::Unit::TestCase
     assert_equal nil, structure[:user]
   end
 
+  def test_default_behaviour_when_paramable_is_only_option
+    request = FakeRequest.new(:params => {})
+    environment = Moonrope::EvalEnvironment.new(@base, request)
+    # From nil
+    structure = environment.structure(:animal, @animal, :paramable => true)
+    assert_equal nil, structure[:user]
+    assert_equal nil, structure[:color]
+  end
+
   def test_no_expansions_occur_by_default_with_true
     request = FakeRequest.new(:params => {'_expansions' => true})
     environment = Moonrope::EvalEnvironment.new(@base, request)

@@ -21,7 +21,7 @@ controller :users do
   action :show do
     description "Return information about a given user"
     param :username, "The user's username", :type => String, :required => true
-    returns :hash, :structure => :user
+    returns :hash, :structure => :user, :structure_opts => {:paramable => true}
     error "UserNotFound", "No user was found matching the given username", :attributes => {:username => "The username which was looked up"}
     action do
       if user = User.find_by_username(params.username)
