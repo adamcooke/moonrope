@@ -187,6 +187,28 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal 'adamcooke', result.data[:username]
   end
 
+  def test_structure_methods_can_be_called_with_opts_from_dsl
+    # Create a new structure to test with
+    user_structure = Moonrope::Structure.new(@base, :user) do
+      basic :id
+      full :username
+    end
+
+    # Create an action which uses this structure
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :user, :structure_opts => {:full => true}
+      action do
+        user = User.new(:id => 1, :username => 'adamcooke')
+        structure user_structure, user, :return => true
+      end
+    end
+
+    # Test the structure was returned
+    assert result = action.execute
+    assert_equal 1, result.data[:id]
+    assert_equal 'adamcooke', result.data[:username]
+  end
+
   def test_default_params
     action = Moonrope::Action.new(@controller, :default_params_test) do
       param :page, :default => 1234

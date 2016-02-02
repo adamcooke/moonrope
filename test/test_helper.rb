@@ -67,6 +67,10 @@ class FakeRequest
     @options[:authenticated_user]
   end
 
+  def action
+    nil
+  end
+
 end
 
 #

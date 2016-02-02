@@ -13,7 +13,7 @@ controller :users do
     returns :array, :structure => :user
     action do
       paginate(User.all) do |user|
-        structure user
+        structure user, :return => true
       end
     end
   end
@@ -25,7 +25,7 @@ controller :users do
     error "UserNotFound", "No user was found matching the given username", :attributes => {:username => "The username which was looked up"}
     action do
       if user = User.find_by_username(params.username)
-        structure user, :paramable => true
+        structure user, :return => true
       else
         error 'UserNotFound', :username => params.username
       end
@@ -55,7 +55,7 @@ controller :users do
       end
       auto_set_params_for user
       if user.save
-        structure user, :full => true
+        structure user, :return => true
       else
         error 'ValidationError', :errors => user.errors
       end
