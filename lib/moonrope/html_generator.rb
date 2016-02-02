@@ -44,6 +44,8 @@ module Moonrope
 
   class Erbable
 
+    attr_reader :vars
+
     def initialize(generator, output_file, vars = {})
       @generator = generator
       @output_file = output_file

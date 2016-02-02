@@ -204,6 +204,24 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal false, hash.keys.include?(:example2)
   end
 
+  def test_condition_with_description
+    base = Moonrope::Base.new do
+      structure :animal do
+        condition Proc.new { false }, "An example description" do
+          basic :id
+          expansion :example do
+            {:hello => 'land'}
+          end
+        end
+      end
+    end
+
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
+    hash = base.structure(:animal).hash(animal, :expansions => true)
+    assert_equal false, hash.keys.include?(:example)
+    assert_equal false, hash.keys.include?(:id)
+  end
+
   def test_scopes
     base = Moonrope::Base.new do
       structure :animal do

@@ -83,7 +83,7 @@ module Moonrope
         # Add the expansions
         expansions.each do |name, expansion|
           next if options[:expansions].is_a?(Array) && !options[:expansions].include?(name.to_sym)
-          next unless expansion[:conditions].all? { |condition| environment.instance_eval(&condition) }
+          next unless check_conditions(environment, expansion[:conditions])
           DeepMerge.deep_merge!({name.to_sym => environment.instance_eval(&expansion[:block])}, hash)
         end
       end
@@ -95,6 +95,19 @@ module Moonrope
     private
 
     #
+    # Call all conditions provided and return whether they pass or not
+    #
+    def check_conditions(environment, conditions)
+      conditions.each do |condition|
+        condition = condition.is_a?(Hash) ? condition[:block] : condition
+        unless environment.instance_eval(&condition)
+          return false
+        end
+      end
+      true
+    end
+
+    #
     # Return a returnable hash for a given set of structured fields.
     #
     def hash_for_attributes(attributes, object, environment)
@@ -103,14 +116,7 @@ module Moonrope
         attributes.each do |attribute|
 
           unless attribute.conditions.empty?
-            matched = false
-            attribute.conditions.each do |condition|
-              if !environment.instance_eval(&condition)
-                matched = true
-                break
-              end
-            end
-            if matched
+            unless check_conditions(environment, attribute.conditions)
               # Skip this item because a condition didn't evaluate
               # to true.
               next

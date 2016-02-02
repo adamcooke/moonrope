@@ -1,10 +1,13 @@
 <h1><%= structure.name.capitalize %> Structure</h1>
 
 <h2>Base Attributes</h2>
-<%= partial 'structure_attributes_list', :attributes => structure.attributes[:basic] %>
+<%= partial 'structure_attributes_list', :attributes => structure.attributes[:basic].select { |a| a.doc != false } %>
 
+<% full_attrs = structure.attributes[:full].select { |a| a.doc != false } %>
+<% unless full_attrs.empty? %>
 <h2>Further Attributes</h2>
-<%= partial 'structure_attributes_list', :attributes => structure.attributes[:full] %>
+<%= partial 'structure_attributes_list', :attributes => full_attrs %>
+<% end %>
 
 <h2>Expansions</h2>
 <p class='text'>
@@ -13,44 +16,4 @@
   action's documentation however some actions allow you to choose which expansions are
   returned.
 </p>
-<table class='table paramTable'>
-  <thead>
-    <tr>
-      <th width="45%">Attribute</th>
-      <th width="20%">Type</th>
-      <th width="35%">Example</th>
-    </tr>
-  </thead>
-  <% for attribute in structure.attributes[:expansion] %>
-  <tr>
-    <td>
-      <p>
-        <span class='paramTable__name'><%= attribute.name_with_groups %></span>
-      </p>
-      <% if attribute.description %>
-        <p class='paramTable__description'><%= attribute.description %></p>
-      <% end %>
-    </td>
-    <td><%= friendly_type(attribute.value_type) %></td>
-    <td>
-      <% if substructure = attribute.structure %>
-      <a class='link' href="<%= path("structures/#{substructure}.html")%>"><%= substructure.to_s.capitalize %> structure</a>
-      <% end %>
-    </td>
-  </tr>
-  <% end %>
-  <% for name, expansion in structure.expansions.select { |k,v| v[:doc] != false} %>
-  <tr>
-    <td>
-      <p>
-        <span class='paramTable__name'><%= name %></span>
-      </p>
-      <% if expansion[:description] %>
-        <p class='paramTable__description'><%= expansion[:description] %></p>
-      <% end %>
-    </td>
-    <td><%= friendly_type(expansion[:type]) %></td>
-    <td><%= expansion[:eg] || expansion[:example] %></td>
-  </tr>
-  <% end %>
-</table>
+<%= partial 'structure_attributes_list', :attributes => structure.attributes[:expansion], :expansions => structure.expansions.select { |k,v| v[:doc] != false} %>

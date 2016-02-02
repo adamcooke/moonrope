@@ -15,9 +15,41 @@
       <% if attribute.description %>
         <p class='paramTable__description'><%= attribute.description %></p>
       <% end %>
+
+      <% conditions = attribute.conditions.select { |c| c.is_a?(Hash) }.map { |c| c[:description] } %>
+      <% unless conditions.empty? %>
+        <ul class='paramTable__restrictedList'>
+          <% for condition in conditions %>
+          <li><%= condition %></li>
+          <% end %>
+        </ul>
+      <% end %>
     </td>
     <td><%= friendly_type(attribute.value_type) %></td>
-    <td><%= attribute.example %></td>
+    <td>
+      <% if substructure = attribute.structure %>
+        <a class='link' href="<%= path("structures/#{substructure}.html")%>"><%= substructure.to_s.capitalize %> structure</a>
+      <% else %>
+        <%= attribute.example %>
+      <% end %>
+    </td>
   </tr>
+  <% end %>
+
+  <% if vars[:expansions] && !vars[:expansions].empty? %>
+  <% for name, expansion in vars[:expansions] %>
+  <tr>
+    <td>
+      <p>
+        <span class='paramTable__name'><%= name %></span>
+      </p>
+      <% if expansion[:description] %>
+        <p class='paramTable__description'><%= expansion[:description] %></p>
+      <% end %>
+    </td>
+    <td><%= friendly_type(expansion[:type]) %></td>
+    <td><%= expansion[:eg] || expansion[:example] %></td>
+  </tr>
+  <% end %>
   <% end %>
 </table>

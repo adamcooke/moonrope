@@ -8,6 +8,7 @@ structure :user do
   end
 
   full :admin, "Is this user an administrator?", :type => :boolean
+  full :age, "The user's age", :type => Integer, :doc => false
   full :created_at, "The timestamp the user was created", :type => :timestamp
   full :updated_at, "The timestamp the user was updated", :type => :timestamp
 
@@ -21,7 +22,7 @@ structure :user do
     o.user.hidden
   end
 
-  condition Proc.new { auth.admin? } do
+  condition Proc.new { auth.admin? }, "Can only be accessed by API users with admin access" do
     # This value will only be provided to users who are accesing the API with
     # the permission to view
     full :support_pin, "The PIN this user needs to use to access support", :type => String, :eg => "4953"

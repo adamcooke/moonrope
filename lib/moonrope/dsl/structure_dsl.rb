@@ -38,8 +38,11 @@ module Moonrope
         scope_dsl.instance_eval(&block)
       end
 
-      def condition(condition, &block)
+      def condition(condition, description = nil, &block)
         scope_dsl = self.class.new(@structure)
+        if description
+          condition = {:block => condition, :description => description}
+        end
         scope_dsl.conditions = [@conditions, condition].flatten
         scope_dsl.instance_eval(&block)
       end
@@ -61,6 +64,7 @@ module Moonrope
         attribute.source_attribute  = options[:source_attribute]
         attribute.value             = options[:value]
         attribute.example           = options[:eg] || options[:example]
+        attribute.doc               = options[:doc]
         attribute.groups            = @groups
         attribute.conditions        = @conditions
         @structure.attributes[type] << attribute
