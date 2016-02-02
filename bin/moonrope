@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+require 'moonrope'
+require 'moonrope/html_generator'
+
+if ARGV.empty?
+  puts "usage: moonrope {path to api} {export dir}"
+  exit 1
+end
+
+api_root = ARGV[0]
+export_dir = ARGV[1]
+template_name = "basic"
+
+unless File.directory?(api_root)
+  $stderr.puts "No directory found at #{api_root}"
+  exit 1
+end
+
+if File.exists?(export_dir)
+  $stderr.puts "File already exists at #{export_dir}"
+  exit 1
+end
+
+base = Moonrope::Base.load(ARGV[0])
+generator = Moonrope::HtmlGenerator.new(base, File.expand_path("../../templates/#{template_name}", __FILE__))
+generator.generate(export_dir)
+puts "\e[32mMoonrope documentation generated and saved at #{export_dir}\e[0m"
