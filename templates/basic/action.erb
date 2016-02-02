@@ -1,6 +1,9 @@
-<% set_page_title "#{action.description || action.name} - #{action.controller.friendly_name || action.controller.name}" %>
+<% set_page_title "#{action.title || action.name} - #{action.controller.friendly_name || action.controller.name}" %>
 <% set_active_nav "controller-#{controller.name}" %>
-<h1><%= action.description || action.name %></h1>
+<h1><%= action.title || action.name %></h1>
+<% if action.description %>
+<p class='text'><%= action.description %></p>
+<% end %>
 <h2>URL</h2>
 <p class='apiURLFull'><span><%= full_prefix %>/</span><%= action.controller.name %>/<%= action.name %></p>
 

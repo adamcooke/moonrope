@@ -7,7 +7,8 @@ controller :users do
   DESC
 
   action :list do
-    description "Return a list of all users"
+    title "List all users"
+    description "This action will return a list of all users which the authenticated user has access to."
     param :page, "The page number", :default => 1, :type => Integer
     param :per_page, "The number of items to return per page", :default => 30, :type => Integer
     returns :array, :structure => :user
@@ -19,7 +20,7 @@ controller :users do
   end
 
   action :show do
-    description "Return information about a given user"
+    title "Get unit information"
     param :username, "The user's username", :type => String, :required => true
     returns :hash, :structure => :user, :structure_opts => {:paramable => true}
     error "UserNotFound", "No user was found matching the given username", :attributes => {:username => "The username which was looked up"}
@@ -33,7 +34,7 @@ controller :users do
   end
 
   action :save do
-    description "Create or update a user"
+    title "Create or update a user"
     param :id, "The ID of the existing user to be updated (do not send to create a new user)", :type => Integer
     param :username, "The user's username", :type => String, :set => true
     param :first_name, "The user's first name", :type => String, :set => true

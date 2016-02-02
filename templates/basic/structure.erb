@@ -9,6 +9,7 @@
 <%= partial 'structure_attributes_list', :attributes => full_attrs %>
 <% end %>
 
+<% if !structure.attributes[:expansion].empty? || !structure.expansions.empty? %>
 <h2>Expansions</h2>
 <p class='text'>
   Expansions are embedded structures of other objects that are related to the structure
@@ -17,3 +18,4 @@
   returned.
 </p>
 <%= partial 'structure_attributes_list', :attributes => structure.attributes[:expansion], :expansions => structure.expansions.select { |k,v| v[:doc] != false} %>
+<% end %>

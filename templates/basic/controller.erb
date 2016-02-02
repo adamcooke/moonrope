@@ -12,8 +12,9 @@
 <ul class='standardList'>
   <% for action in controller.actions.values.select { |a| a.doc != false } %>
   <li>
-    <a class='link' href='<%= action.controller.name %>/<%= action.name %>.html'><%= action.description || action.name %></a>
+    <a class='link' href='<%= action.controller.name %>/<%= action.name %>.html'><%= action.title || action.name %></a>
     <p class='apiURL'><span><%= full_prefix %>/</span><b><%= action.controller.name %>/<%= action.name %></b></p>
+    <% if action.description %><p class='meta'><%= action.description %></p><% end %>
   </li>
   <% end %>
 </ul>

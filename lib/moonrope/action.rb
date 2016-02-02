@@ -13,6 +13,9 @@ module Moonrope
     # @return [Hash] the params available for the action
     attr_reader :params
 
+    # @return [String] the title of the action
+    attr_accessor :title
+
     # @return [String] the description of the action
     attr_accessor :description
 

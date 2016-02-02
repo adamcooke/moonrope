@@ -12,6 +12,18 @@ module Moonrope
       end
 
       #
+      # Set the title for the action
+      #
+      #   title "List all users"
+      #
+      # @param value [String]
+      # @return [void]
+      #
+      def title(value)
+        @action.title = value
+      end
+
+      #
       # Set the description for the action
       #
       #   description "Returns all users which are configured"
@@ -22,6 +34,7 @@ module Moonrope
       def description(value)
         @action.description = value
       end
+
 
       #
       # Set this action so that it isn't documented
