@@ -11,7 +11,9 @@ Gem::Specification.new do |s|
   s.licenses    = ['MIT']
   s.summary     = "An API server DSL."
   s.description = "A full library allowing you to create sexy DSLs to define your RPC-like APIs."
-  s.files = Dir["{lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["**/*"]
+  s.bindir = "bin"
+  s.executables << 'moonrope'
   s.add_dependency "json", "~> 1.7"
   s.add_dependency "rack", "~> 1.4"
   s.add_dependency "deep_merge", "~> 1.0"
