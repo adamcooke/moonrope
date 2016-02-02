@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>API Docs</title>
+    <title><%= page_title %> - API Documentation</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="<%= asset_path('reset.css') %>">
@@ -13,13 +13,13 @@
       <nav>
         <ul>
           <li>
-            <a href='<%= path('index.html') %>'>
+            <a href='<%= path('index.html') %>' class="<%= active_nav == 'home' ? 'active' : '' %>">
               Home
             </a>
           </li>
           <% for controller in base.controllers.select { |c| c.doc != false } %>
           <li>
-            <a href='<%= path("controllers/#{controller.name}.html") %>'>
+            <a href='<%= path("controllers/#{controller.name}.html") %>' class="<%= active_nav == "controller-#{controller.name}" ? 'active' : '' %>">
               <%= controller.friendly_name || controller.name %>
             </a>
           </li>

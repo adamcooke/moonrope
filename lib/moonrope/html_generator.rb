@@ -33,8 +33,9 @@ module Moonrope
     private
 
     def generate_file(root_dir, output_file, template_file, variables = {})
-      file = Erbable.new(self, output_file, variables).render(File.join(@template_root_path, "#{template_file}.erb"))
-      layout = Erbable.new(self, output_file, {:body => file}).render(File.join(@template_root_path, "layout.erb"))
+      file = Erbable.new(self, output_file, variables)
+      file_string = file.render(File.join(@template_root_path, "#{template_file}.erb"))
+      layout = Erbable.new(self, output_file, {:page_title => file.vars[:page_title], :active_nav =>file.vars[:active_nav], :body => file_string}).render(File.join(@template_root_path, "layout.erb"))
       path = File.join(root_dir, output_file)
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') { |f| f.write(layout) }
@@ -50,6 +51,14 @@ module Moonrope
       @generator = generator
       @output_file = output_file
       @vars = vars
+    end
+
+    def set_page_title(title)
+      @vars[:page_title] = title
+    end
+
+    def set_active_nav(nav)
+      @vars[:active_nav] = nav
     end
 
     def base

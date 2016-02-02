@@ -18,11 +18,25 @@ a {
 
 .sidebar {
   width:200px;
-  color:#ccc;
   float:left;
   z-index:10;
   position:absolute;
-  padding:10px;
+}
+.sidebar a {
+  display:block;
+  padding:7px 15px;
+  border-bottom:1px solid #394959;
+  color:#889db1;
+  font-size:85%;
+}
+
+.sidebar a:hover {
+  background-color:#26323f;
+}
+
+.sidebar a.active {
+  background-color:#1d2630;
+  color:#fff;
 }
 
 .content {
