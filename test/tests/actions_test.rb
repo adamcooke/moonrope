@@ -33,6 +33,14 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal true, action.access.call
   end
 
+  def test_access_with_description
+    action = Moonrope::Action.new(@controller, :list) do
+      access "Some description", -> { true }
+    end
+    assert action.access.is_a?(Proc)
+    assert_equal true, action.access.call
+  end
+
   def test_action
     action = Moonrope::Action.new(@controller, :list) do
       action { true }

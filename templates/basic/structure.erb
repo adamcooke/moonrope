@@ -5,7 +5,7 @@
 
 <% full_attrs = structure.attributes[:full].select { |a| a.doc != false } %>
 <% unless full_attrs.empty? %>
-<h2>Further Attributes</h2>
+<h2>Extended Attributes</h2>
 <%= partial 'structure_attributes_list', :attributes => full_attrs %>
 <% end %>
 

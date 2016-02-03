@@ -22,6 +22,9 @@ module Moonrope
     # @return [Proc] the access check condition for the action
     attr_accessor :access
 
+    # @return [String] the access description
+    attr_accessor :access_description
+
     # @return [Proc] the action for the action
     attr_accessor :action
 
