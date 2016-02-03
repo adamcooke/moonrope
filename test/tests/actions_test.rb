@@ -364,6 +364,23 @@ class ActionsTest < Test::Unit::TestCase
     end
   end
 
+  def test_actions_params_can_be_validated_for_option_matches
+    action = Moonrope::Action.new(@controller, :list) do
+      param :sort_by, :options => ["name", "age"]
+    end
+    # request with a nil value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new)
+
+    # request with a matching value
+    assert_equal true, action.validate_parameters(Moonrope::ParamSet.new('sort_by' => 'name'))
+
+    # request with a string valuee
+    assert_raises Moonrope::Errors::ParameterError do
+      action.validate_parameters(Moonrope::ParamSet.new('sort_by' => 'somethingelse'))
+    end
+  end
+
+
   def test_actions_can_raise_errors
     action = Moonrope::Action.new(@controller, :list) do
       action do

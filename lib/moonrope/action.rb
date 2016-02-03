@@ -204,6 +204,10 @@ module Moonrope
           raise Moonrope::Errors::ParameterError, "`#{name}` parameter is invalid"
         end
 
+        if value[:options].is_a?(Array) && param_set[name] && !value[:options].include?(param_set[name])
+          raise Moonrope::Errors::ParameterError, "`#{name}` must be one of #{value[:options].inspect}"
+        end
+
         if value[:type] && param_set[name]
           if value[:type] == :boolean
             if BOOLEAN_VALUES.include?(param_set[name])
