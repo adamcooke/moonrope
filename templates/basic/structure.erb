@@ -1,4 +1,4 @@
-<h1><%= structure.name.capitalize %> Structure</h1>
+<h1><%= humanize(structure.name.capitalize) %> Structure</h1>
 
 <h2>Base Attributes</h2>
 <%= partial 'structure_attributes_list', :attributes => structure.attributes[:basic].select { |a| a.doc != false } %>

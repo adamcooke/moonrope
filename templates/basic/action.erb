@@ -24,7 +24,7 @@
       <td>
         <p>
           <span class='paramTable__name'><%= name %></span>
-          <% if param[:required] %><span class='paramTable__req'>Required</span><% end %>
+          <% if param[:required] && param[:default].nil? %><span class='paramTable__req'>Required</span><% end %>
         </p>
         <% if param[:description] %>
           <p class='paramTable__description'><%= param[:description] %></p>
@@ -66,6 +66,7 @@
         </p>
       </td>
       <td>
+        <% if error[:attributes].is_a?(Hash) %>
         <ul class='errorAttributeList'>
           <% for name, description in error[:attributes] %>
           <li>
@@ -74,6 +75,7 @@
           </li>
           <% end %>
         </ul>
+        <% end %>
       </td>
     </tr>
     <% end %>
@@ -84,9 +86,9 @@
 <h2>Response Data</h2>
 <% if action.returns[:structure] %>
   <% if action.returns[:type] == :array %>
-    <p class='text'>This action will return an array of <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structures</a>.</p>
+    <p class='text'>This action will return an array of <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= humanize(action.returns[:structure]) %> structures</a>.</p>
   <% else %>
-    <p class='text'>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= action.returns[:structure] %> structure</a>.</p>
+    <p class='text'>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= humanize(action.returns[:structure]) %> structure</a>.</p>
   <% end %>
 
   <% if opts = action.returns[:structure_opts] %>

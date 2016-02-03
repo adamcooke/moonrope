@@ -120,5 +120,9 @@ module Moonrope
       end
     end
 
+    def humanize(string)
+      string.to_s.gsub(/\_/, ' ')
+    end
+
   end
 end
