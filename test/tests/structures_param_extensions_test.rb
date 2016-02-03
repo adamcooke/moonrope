@@ -128,6 +128,13 @@ class StructuresParamExtensionsTest < Test::Unit::TestCase
     assert_equal nil, structure[:user]
   end
 
+  def test_returning_full_data_by_default
+    request = FakeRequest.new()
+    environment = Moonrope::EvalEnvironment.new(@base, request)
+    structure = environment.structure(:animal, @animal, :paramable => {:full => true, :expansions => false})
+    assert_equal String, structure[:color].class
+  end
+
   def test_full_value_provides_full_access
     request = FakeRequest.new(:params => {'_full' => true})
     environment = Moonrope::EvalEnvironment.new(@base, request)
