@@ -86,6 +86,10 @@ module Moonrope
       end
     end
 
+    def git_version
+      `git rev-parse HEAD`.strip rescue nil
+    end
+
     def asset_path(file)
       path("assets/" + file)
     end

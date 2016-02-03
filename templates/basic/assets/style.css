@@ -39,6 +39,14 @@ a {
   color:#fff;
 }
 
+.footer {
+  margin-left:200px;
+  border-top:3px solid #efefef;
+  padding:20px 40px 100px 40px;
+  font-size:90%;
+  color:#999;
+}
+
 .content {
   margin-left:200px;
   padding:40px;
