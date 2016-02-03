@@ -54,5 +54,14 @@ module Moonrope
       end
     end
 
+    #
+    # Return information sorted by appropriate values from parameters
+    #
+    def sort(collection, &block)
+      collection = collection.order(params.sort_by => params.order)
+      set_flag :sorted, {:by => params.sort_by, :order => params.order}
+      block.call(collection)
+    end
+
   end
 end

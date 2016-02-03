@@ -34,6 +34,9 @@ module Moonrope
     # @return [Bool] whether or not the action should be documented
     attr_accessor :doc
 
+    # @return [Bool] additional traits that have been applied to this action
+    attr_reader :traits
+
     #
     # Initialize a new action
     #
@@ -46,6 +49,7 @@ module Moonrope
       @name = name
       @params = {}
       @errors = {}
+      @traits = []
       @dsl = Moonrope::DSL::ActionDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
@@ -205,7 +209,7 @@ module Moonrope
         end
 
         if value[:options].is_a?(Array) && param_set[name] && !value[:options].include?(param_set[name])
-          raise Moonrope::Errors::ParameterError, "`#{name}` must be one of #{value[:options].inspect}"
+          raise Moonrope::Errors::ParameterError, "`#{name}` must be one of #{value[:options].join(', ')}"
         end
 
         if value[:type] && param_set[name]

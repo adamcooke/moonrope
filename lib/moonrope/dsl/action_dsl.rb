@@ -117,6 +117,29 @@ module Moonrope
         @action.action = block
       end
 
+      #
+      # Specify that this action will be returning paginated data. Sets up the
+      # parameters for the action as appropriate.
+      #
+      def paginated(options = {})
+        @action.traits << :paginated
+        param :page, "The page number", :type => Integer, :required => true, :default => options[:page] || 1
+        param :per_page, "The number of items to return per page", :type => Integer, :required => true, :default => options[:per_page] || 30
+      end
+
+      #
+      # Specify that this action will return data sorted by user provided data.
+      #
+      def sortable(*fields)
+        if fields.empty?
+          raise Moonrope::Error, "You must specify at least one field when calling 'sortable'"
+        else
+          @action.traits << :sortable
+          param :sort_by, "The field to sort by", :type => String, :required => true, :default => fields[0].to_s, :options => fields.map(&:to_s)
+          param :order, "The direction to order units by", :type => String, :required => true, :default => "asc", :options => ["asc", "desc"]
+        end
+      end
+
     end
   end
 end
