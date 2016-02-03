@@ -39,6 +39,7 @@ module Moonrope
       def group(name, &block)
         scope_dsl = self.class.new(@structure)
         scope_dsl.groups = [@groups, name].flatten
+        scope_dsl.conditions = @conditions
         scope_dsl.instance_eval(&block)
       end
 
@@ -48,6 +49,7 @@ module Moonrope
           condition = {:block => condition, :description => description}
         end
         scope_dsl.conditions = [@conditions, condition].flatten
+        scope_dsl.groups = @groups
         scope_dsl.instance_eval(&block)
       end
 
