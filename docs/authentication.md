@@ -1,99 +1,110 @@
 # Authentication
 
-**Note: this is all incorrect. It needs re-writing for 2.0**
+Authentication consumers to your API is a key part of developing it. Moonrope's
+authentication layer provides you with fine grained control of how your authentication
+works while still maintaining documentability.
 
-Deciding whether or not to permit access to your API is a fundamental part
-of any API. The **authenticator** uses information avaiable in the request
-and returns an object of the "authenticated object". In many cases this
-authenticated object will be an instance of your user class but it can be
-anything you decide.
+## Getting Started
 
-An authenticator is defined at the same level as controllers & structures.
-Best practice dictates it should be placed into its own `authenticator.rb`
-file.
-
-In this example, we are going to look at the contents of HTTP headers to
-get the provided username & password and resolve this to a local User object.
-If no user object is found, we will raise an access denied error.
+To begin, you need to define an `authenticator`. An authenticator's role is to
+extract an "identity" from an API request. In this example, we'll be authenticating
+our consumers using a token that will be unique to each user. The example below
+demonstrates a very simple authenticator.
 
 ```ruby
-authenticator do
-  user = User.authenticate(request.headers['X-Auth-Username'], request.headers['X-Auth-Password])
-  if user.is_a?(User)
-    user
-  else
-    error :access_denied, "Invalid user credentials provided"
+authenticator :default do
+
+  header "X-Auth-Token", "The user's unique API token.", :example => 'f29a45f0-b6da-44ae-a029-d4e1744ebaee'
+
+  error 'InvalidAPIToken', "The API token provided in X-Auth-Token was not valid.", :attributes => {:token => "The token that was looked up"}
+
+  lookup do
+    if token = request.headers['X-Auth-Token']
+      if user = User.find_by_api_token(token)
+        user
+      else
+        error 'InvalidAPIToken', :token => token
+      end
+    end
   end
-end
-```
 
-## Accessing the authenticated user in actions
-
-In order to access this authenticated user object, you can use the `auth`
-method in your actions. For example:
-
-```ruby
-action do
-  if auth.has_access_to?(:users)
-    user.destroy
-  else
-    # Raise an error
+  rule :default, "AccessDenied", "Must be authenticated as a user." do
+    identity.is_a?(User)
   end
-end
-```
 
-## Restricting access to actions
-
-As well as using the `auth` object to make decisions within an action, you can
-also define a default rule which applies to all actions, access control for all
-actions on a controller or per action.
-
-The `default_access` block can be defined with your authenticator and, in
-this example, will require that all users have API access.
-
-```ruby
-default_access do
-  auth.has_api_access?
-end
-```
-
-However, if you want to vary this on a per-action basis, you can override
-it as follows by specifying the `access` block when you define your action.
-
-```ruby
-action :list do
-  description "List all users"
-  access { auth.has_access_to?(:users) }
-  action do
-    # return users here
+  rule :anonymous, "MustBeAnonymous", "Must be anonymous." do
+    identity.nil?
   end
+
 end
 ```
 
-You can also do this on a controller to override the access control on a whole
-controller.
+Let's break that down:
+
+* The first line sets the name of the authenticator. In most cases you'll only
+  ever have one which should be named `:default`. This will apply to all actions
+  in your API.
+
+* Next, we define a that the authenticator uses the `X-Auth-Token` header. We
+
+  provide a description and example for documentation purposes.
+* Next, we define that a `InvalidAPIToken` error may be raised when trying to
+  lookup the identity for the request. We include a description plus a hash of
+  attributes that should be returned with the error.
+
+* Next, we define a `lookup` block which specifies how to lookup your identity
+  object from the request. This is executed in the same scope that would be used
+  for any action in the API. This block will either return the identity object,
+  raise an error or return nothing. If it returns something, that will be used
+  as the identity object and the request will continue. If it raises an error,
+  the error will be returned to the user and the request will stop. It if returns
+  nothing, the request will continue however there will be no identity.
+
+* Next, we set a default access rule which is executed on every request to
+  verify that the identity has access to the requested action. The `default` rule
+  will apply to all actions however you can create others which can be chosen
+  for specific actions or controllers. The block for this rule must return a true
+  or false value depending on whether the identity satisfies the access condition.
+  The second argument is the error code which will be returned if this condition
+  is not satified for the request. The third argument is the description of the
+  actual condition (for documentation).
+
+* Finally, we define an anonymous rule which can be used for any actions where there
+  should not be any identity provided.
+
+## Choosing authenticators & access rules
+
+When you create actions you can choose which authenticator & access rule should
+be applied when the action is requested.  It's probably easiest to demonstrate
+this with some code:
 
 ```ruby
-controller :admin do
-  access { auth.is_administrator? }
+controller :users do
+
+  action :list do
+    # By default, this action will use the 'default' authenticator and the
+    # 'default' access rule.
+  end
+
+  action :colors do
+    # This action will use the 'default' authenticator's anonymous rule.
+    access_rule :anonymous
+  end
+
+  action :create do
+    # This action will use the 'default' access rule on the 'two_factor
+    # authenticator.
+    authenticator :two_factor
+  end
+
+  action :destroy do
+    # This action will use the 'admin' access rule on the 'two_factor'
+    # authenticator.
+    access_rule :two_factor => :admin
+  end
+
 end
 ```
 
-In addition to passing a block to the `access` or `default_access` methods
-you can also use any of the following:
-
-```ruby
-# Ensure that the authenticated object responds to can_delete_animals? and that
-# this method returns a truthy value.
-access :can_delete_animals?
-
-# Ensure that the authenticated object is a User.
-access :must_be => User
-
-# Ensure that the authenticated object is a User, responds to has_api_access?
-# and that method returns a truthy value.
-access :must_be => User, :with => :has_api_access?
-
-# Ensure that the authenticated object is present. Its value is not important.
-access true
-```
+These different actions all use different rules & authenticators. The generated
+documentation will reflect these as appropriate.
