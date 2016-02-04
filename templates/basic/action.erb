@@ -7,11 +7,6 @@
 <h2>URL</h2>
 <p class='apiURLFull'><span><%= full_prefix %>/</span><%= action.controller.name %>/<%= action.name %></p>
 
-<% if desc = action.access_description %>
-<h2>Access</h2>
-<p class='text'><%= desc %></p>
-<% end %>
-
 <h2>Parameters</h2>
 <% if action.params.empty? %>
   <p><em>This action doesn't support any parameters.</em></p>

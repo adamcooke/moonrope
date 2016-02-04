@@ -113,42 +113,6 @@ module Moonrope
       end
 
       #
-      # Set the access condition for the action.
-      #
-      #   access do
-      #     auth.is_a?(User)
-      #   end
-      #
-      # @yield the contents of the yield will be saved as the access condition
-      # @return [void]
-      #
-      def access(value = nil, proc = nil, &block)
-        if block_given?
-          # A block is given, the first value should be a string for the
-          # description of the access condition.
-          @action.access = block
-          if value.is_a?(String)
-            @action.access_description = value
-          end
-        elsif value.is_a?(String) && proc
-          # The first value is the description, the second value is a proc to
-          # execute as the access condition.
-          @action.access = proc
-          @action.access_description = value
-        elsif value.is_a?(String) && proc.nil?
-          # The only value is a description. No actual condition is set.
-          @action.access_description = value
-        else
-          # The first value is the access condition. If it's a hash the
-          # description is removed from the hash.
-          if value.is_a?(Hash)
-            @action.access_description = value.delete(:description)
-          end
-          @action.access = value
-        end
-      end
-
-      #
       # Set the action to execute when this action is invoked.
       #
       #   action do
