@@ -81,6 +81,13 @@ module Moonrope
         helper_instance
       end
 
+      #
+      # Define a new authentication block
+      #
+      def authentication(name, &block)
+        @base.authenticators[name] = block
+      end
+
     end
   end
 end
