@@ -92,8 +92,8 @@ module Moonrope
     end
 
     def git_version
-      (`git rev-parse HEAD`.strip rescue nil) ||
-      ENV["VDT_VERSION"]
+      ENV["VDT_VERSION"] ||
+      (`git rev-parse HEAD`.strip rescue nil)
     end
 
     def asset_path(file)
