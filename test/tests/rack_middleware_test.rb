@@ -5,6 +5,20 @@ class RackMiddlewareTest < Test::Unit::TestCase
   def app
     @app ||= begin
       base = Moonrope::Base.new do
+        authenticator :default do
+          error "Denied", "No suitable credentials were provided."
+          lookup do
+            # if there is a x-moonrope-username header, check the auth
+            # or raise access denied.
+            if request.headers['X-Moonrope-Username']
+              if request.headers['X-Moonrope-Username'] == 'user' && request.headers['X-Moonrope-Password'] == 'password'
+                User.new(:admin => true)
+              else
+                error "Denied"
+              end
+            end
+          end
+        end
         controller :users do
           action :list do
             # return an empty array
@@ -61,16 +75,17 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert_equal 'invalid-json', response_json['status']
   end
 
-  # def test_authenticated_api_methods
-  #   # correct credential
-  #   get "/api/v1/users/list", {}, auth_headers('user', 'password')
-  #   assert response_json = JSON.parse(last_response.body)
-  #   assert_equal 'success', response_json['status']
-  #   # invalid password
-  #   get "/api/v1/users/list", {}, auth_headers('user-invalid', 'password-invalid')
-  #   assert response_json = JSON.parse(last_response.body)
-  #   assert_equal 'access-denied', response_json['status']
-  # end
+  def test_authenticated_api_methods
+    # correct credential
+    get "/api/v1/users/list", {}, auth_headers('user', 'password')
+    assert response_json = JSON.parse(last_response.body)
+    assert_equal 'success', response_json['status']
+    # invalid password
+    get "/api/v1/users/list", {}, auth_headers('user-invalid', 'password-invalid')
+    assert response_json = JSON.parse(last_response.body)
+    assert_equal 'error', response_json['status']
+    assert_equal 'Denied', response_json['data']['code']
+  end
 
   def test_request_callback_is_invoked
     request_count = 0
