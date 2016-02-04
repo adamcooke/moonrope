@@ -47,8 +47,8 @@ module Moonrope
     #
     # @return [Object] the authenticated object
     #
-    def auth
-      request ? request.authenticated_user : nil
+    def identity
+      request ? request.identity : nil
     end
 
     #

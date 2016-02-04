@@ -63,8 +63,8 @@ class FakeRequest
     @options[:version]
   end
 
-  def authenticated_user
-    @options[:authenticated_user]
+  def identity
+    @options[:identity]
   end
 
   def action

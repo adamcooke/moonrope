@@ -2,7 +2,7 @@ class EvalEnvironmentTest < Test::Unit::TestCase
 
   def setup
     @auth_user = User.new(:name => 'Admin User')
-    @request = FakeRequest.new(:params => {'page' => '1'}, :version => 2, :authenticated_user => @auth_user)
+    @request = FakeRequest.new(:params => {'page' => '1'}, :version => 2, :identity => @auth_user)
     @environment = Moonrope::EvalEnvironment.new(Moonrope::Base.new, @request, nil, :accessor1 => 'Hello')
   end
 
@@ -19,8 +19,8 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert_equal 'Hello', @environment.accessor1
   end
 
-  def test_authenticated_user_access
-    assert_equal @auth_user, @environment.auth
+  def test_identity_access
+    assert_equal @auth_user, @environment.identity
   end
 
   def test_setting_headers

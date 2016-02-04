@@ -31,22 +31,20 @@ authenticator :default do
         end
 
         api_token
-      else
-        :anonymous
       end
     end
   end
 
   rule :default, "NotAuthenticated", "Must be authenticated with a valid user API token." do
-    auth.is_a?(APIToken) && auth.user
+    identity.is_a?(APIToken) && identity.user
   end
 
   rule :must_be_admin, "MustBeAdmin", "Must be authenticated as a valid admin user." do
-    auth.is_a?(APIToken) && auth.user && auth.user.admin?
+    identity.is_a?(APIToken) && identity.user && identity.user.admin?
   end
 
   rule :anonymous, "MustBeAnonymous", "Must not be authenticated (no auth headers provided)." do
-    auth == :anonymous
+    identity == :anonymous
   end
 
 end

@@ -23,7 +23,7 @@ module Moonrope
     # @return [String] the name of the action which was requested
     attr_reader :action_name
     # @return [Object] the authenticated user
-    attr_reader :authenticated_user
+    attr_reader :identity
 
     #
     # Initialize a new Moonrope::Request
@@ -91,7 +91,7 @@ module Moonrope
       if action.authenticator_to_use.is_a?(Moonrope::Authenticator)
         result = action.convert_errors_to_action_result do
           if block = action.authenticator_to_use.lookup
-            @authenticated_user = eval_env.instance_eval(&block)
+            @identity = eval_env.instance_eval(&block)
           end
 
           unless action.check_access(eval_env) == true
@@ -143,7 +143,7 @@ module Moonrope
     # @return [Boolean]
     #
     def anonymous?
-      authenticated_user.nil?
+      identity.nil?
     end
 
     #
@@ -152,7 +152,7 @@ module Moonrope
     # @return [Boolean]
     #
     def authenticated?
-      !(authenticated_user.nil? || authenticated_user == false)
+      !(identity.nil? || identity == false)
     end
 
     #

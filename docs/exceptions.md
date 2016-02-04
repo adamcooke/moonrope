@@ -19,7 +19,7 @@ Rails.application.config.moonrope.register_request_error_callback do |request, e
   context = {
     'controller'          => request.controller.try(:name).to_s,
     'action'              => request.action.try(:name).to_s,
-    'authenticated_user'  => request.authenticated_user.is_a?(ActiveRecord::Base) ? "#{request.authenticated_user.class}##{request.authenticated_user.id}" : request.authenticated_user.to_s,
+    'identity'            => request.identity.is_a?(ActiveRecord::Base) ? "#{request.identity.class}##{request.identity.id}" : request.identity.to_s,
     'params'              => request.params._as_hash
   }
   Raven.capture_exception(error, :tags => tags, :extra => context)

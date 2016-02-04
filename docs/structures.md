@@ -101,7 +101,7 @@ You can specify a condition on any attribute or expansion. This can be done by p
 a block to the `:if` option when defining an attribute.
 
 ```ruby
-condition Proc.new { auth.is_super_special_admin? } do
+condition Proc.new { identity.is_super_special_admin? } do
   basic :pin
 end
 ```

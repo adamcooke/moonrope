@@ -96,7 +96,7 @@ class RequestTest < Test::Unit::TestCase
     # authenticated
     request = base.request(make_rack_env_hash('/api/v1/users/list'))
     assert result = request.execute
-    assert_equal User, request.authenticated_user.class
+    assert_equal User, request.identity.class
     assert_equal false, request.anonymous?
     assert_equal true, request.authenticated?
   end
@@ -118,7 +118,7 @@ class RequestTest < Test::Unit::TestCase
     request = base.request(make_rack_env_hash('/api/v1/users/list'))
     assert result = request.execute
     assert_equal "access-denied", result.status
-    assert_equal nil, request.authenticated_user
+    assert_equal nil, request.identity
     assert_equal true, request.anonymous?
     assert_equal false, request.authenticated?
   end
@@ -137,7 +137,7 @@ class RequestTest < Test::Unit::TestCase
     request = base.request(make_rack_env_hash('/api/v1/users/list'))
     assert result = request.execute
     assert_equal "success", result.status
-    assert_equal nil, request.authenticated_user
+    assert_equal nil, request.identity
     assert_equal true, request.anonymous?
     assert_equal false, request.authenticated?
   end
@@ -190,7 +190,7 @@ class RequestTest < Test::Unit::TestCase
       authenticator :default do
         lookup { :admin }
         rule :default, "CustomError", "Must be authenticated as admin user" do
-          auth == :anonymous
+          identity == :anonymous
         end
       end
       controller :users do
@@ -212,7 +212,7 @@ class RequestTest < Test::Unit::TestCase
         lookup { :admin }
         error "CustomError", "Some custom error message override"
         rule :default, "CustomError", "Must be authenticated as admin user" do
-          auth == :anonymous
+          identity == :anonymous
         end
       end
       controller :users do

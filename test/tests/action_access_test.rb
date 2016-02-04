@@ -4,11 +4,11 @@ class ActionAccessTest < Test::Unit::TestCase
     @base = Moonrope::Base.new do
       authenticator :default do
         rule :default, "AccessDenied" do
-          auth == :admin
+          identity == :admin
         end
 
         rule :anonymous, "MustBeAnonymous" do
-          auth.nil?
+          identity.nil?
         end
       end
     end
@@ -20,10 +20,10 @@ class ActionAccessTest < Test::Unit::TestCase
     # no authentication has been provided
     assert_equal false, action.check_access
     # authentication which is not correct
-    authenticated_request = FakeRequest.new(:authenticated_user => :dave)
+    authenticated_request = FakeRequest.new(:identity => :dave)
     assert_equal false, action.check_access(authenticated_request)
     # authentication which is correct
-    authenticated_request = FakeRequest.new(:authenticated_user => :admin)
+    authenticated_request = FakeRequest.new(:identity => :admin)
     assert_equal true, action.check_access(authenticated_request)
   end
 
@@ -35,7 +35,7 @@ class ActionAccessTest < Test::Unit::TestCase
     # anonymous is ok
     assert_equal true, action.check_access
     # with a user is not
-    authenticated_request = FakeRequest.new(:authenticated_user => :dave)
+    authenticated_request = FakeRequest.new(:identity => :dave)
     assert_equal false, action.check_access(authenticated_request)
   end
 
@@ -46,7 +46,7 @@ class ActionAccessTest < Test::Unit::TestCase
     # anonymous is ok
     assert_equal true, action.check_access
     # with a user is not
-    authenticated_request = FakeRequest.new(:authenticated_user => :dave)
+    authenticated_request = FakeRequest.new(:identity => :dave)
     assert_equal false, action.check_access(authenticated_request)
   end
 

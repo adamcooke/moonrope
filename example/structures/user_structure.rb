@@ -22,7 +22,7 @@ structure :user do
     o.user.hidden
   end
 
-  condition Proc.new { auth.admin? }, "Can only be accessed by API users with admin access" do
+  condition Proc.new { identity.admin? }, "Can only be accessed by API users with admin access" do
     # This value will only be provided to users who are accesing the API with
     # the permission to view
     full :support_pin, "The PIN this user needs to use to access support", :type => String, :eg => "4953"
