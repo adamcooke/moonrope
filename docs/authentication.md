@@ -108,3 +108,7 @@ end
 
 These different actions all use different rules & authenticators. The generated
 documentation will reflect these as appropriate.
+
+It's worth noting that the `authenticator` and `access_rule` methods which are
+shown here on an action, can also be applied at the controller level and they'll
+apply to any actions that don't override them.
