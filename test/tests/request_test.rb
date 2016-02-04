@@ -185,4 +185,25 @@ class RequestTest < Test::Unit::TestCase
     assert_equal "Token provided is invalid", result.data[:message]
   end
 
+  def test_appropriate_error_is_returned_from_access_checks
+    base = Moonrope::Base.new do
+      authenticator :default do
+        lookup { :admin }
+        rule :default, "CustomError", "Must be authenticated as admin user" do
+          auth == :anonymous
+        end
+      end
+      controller :users do
+        action :list do
+          action { true }
+        end
+      end
+    end
+    request = base.request(make_rack_env_hash('/api/v1/users/list', {}, {"HTTP_X_EXAMPLE_HEADER" => "1234567"}))
+    assert result = request.execute
+    assert_equal "error", result.status
+    assert_equal "CustomError", result.data[:code]
+    assert_equal "Must be authenticated as admin user", result.data[:message]
+  end
+
 end

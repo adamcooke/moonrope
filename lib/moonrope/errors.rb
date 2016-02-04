@@ -40,12 +40,6 @@ module Moonrope
       end
     end
 
-    class NotPermitted < RequestError
-      def status
-        'not-permitted'
-      end
-    end
-
     class NotFound < RequestError
       def status
         'not-found'

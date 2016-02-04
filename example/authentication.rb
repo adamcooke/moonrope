@@ -37,15 +37,15 @@ authenticator :default do
     end
   end
 
-  rule :default, "Must be authenticated with a valid user API token" do
+  rule :default, "NotAuthenticated", "Must be authenticated with a valid user API token" do
     auth.is_a?(APIToken) && auth.user
   end
 
-  rule :must_be_admin, "Must be authenticated as a valid admin user" do
+  rule :must_be_admin, "MustBeAdmin", "Must be authenticated as a valid admin user" do
     auth.is_a?(APIToken) && auth.user && auth.user.admin?
   end
 
-  rule :anonymous, "Must not be authenticated (no auth headers provided)" do
+  rule :anonymous, "MustBeAnonymous", "Must not be authenticated (no auth headers provided)" do
     auth == :anonymous
   end
 

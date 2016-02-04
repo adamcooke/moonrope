@@ -3,11 +3,11 @@ class ActionAccessTest < Test::Unit::TestCase
   def setup
     @base = Moonrope::Base.new do
       authenticator :default do
-        rule :default do
+        rule :default, "AccessDenied" do
           auth == :admin
         end
 
-        rule :anonymous do
+        rule :anonymous, "MustBeAnonymous" do
           auth.nil?
         end
       end

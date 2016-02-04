@@ -189,7 +189,7 @@ module Moonrope
 
       if authenticator_to_use.is_a?(Moonrope::Authenticator)
         if rule = authenticator_to_use.rules[access_rule_to_use]
-          eval_environment.instance_exec(self, &rule[:block])
+          eval_environment.instance_exec(self, &rule[:block]) == true
         else
           if access_rule_to_use == :default
             # The default rule on any authenticator will allow everything so we

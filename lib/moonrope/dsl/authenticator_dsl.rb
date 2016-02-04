@@ -22,8 +22,8 @@ module Moonrope
         @authenticator.lookup = block
       end
 
-      def rule(name, description = nil, &block)
-        @authenticator.rules[name] = {:name => name, :description => description, :block => block}
+      def rule(name, error_code, description = nil, &block)
+        @authenticator.rules[name] = {:name => name, :error_code => error_code, :description => description, :block => block}
       end
 
     end
