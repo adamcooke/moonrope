@@ -97,9 +97,9 @@ module Moonrope
           if authenticated?
             unless action.check_access(eval_env) == true
               if rule = action.authenticator_to_use.rules[action.access_rule_to_use]
-                raise Moonrope::Errors::StructuredError, :code => rule[:error_code], :message => rule[:description]
+                eval_env.structured_error(rule[:error_code], rule[:description], :action => action.name, :controller => controller.name)
               else
-                raise Moonrope::Errors::StructuredError, :code => "NotPermitted", :message => "You are not permitted to access this resource"
+                eval_env.structured_error("NotPermitted", "You are not permitted to access #{controller.name}/#{action.name}", :action => action.name, :controller => controller.name)
               end
             end
           end
