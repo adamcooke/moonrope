@@ -29,6 +29,11 @@ module Moonrope
       @base.structures.select { |s| s.doc != false }.each do |structure|
         generate_file(output_path, File.join("structures", "#{structure.name}.html"), "structure", {:structure => structure})
       end
+      # Authenticators
+      @base.authenticators.values.select { |s| s.doc != false }.each do |authenticator|
+        generate_file(output_path, File.join("authenticators", "#{authenticator.name}.html"), "authenticator", {:authenticator => authenticator})
+      end
+
     end
 
     private
@@ -87,7 +92,8 @@ module Moonrope
     end
 
     def git_version
-      `git rev-parse HEAD`.strip rescue nil
+      (`git rev-parse HEAD`.strip rescue nil) ||
+      ENV["VDT_VERSION"]
     end
 
     def asset_path(file)

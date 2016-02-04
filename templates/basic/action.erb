@@ -7,6 +7,24 @@
 <h2>URL</h2>
 <p class='apiURLFull'><span><%= full_prefix %>/</span><%= action.controller.name %>/<%= action.name %></p>
 
+<% if action.authenticator_to_use.is_a?(Moonrope::Authenticator) %>
+<% if rule = action.authenticator_to_use.rules[action.access_rule_to_use] %>
+<% if rule[:description] %>
+  <h2>Access</h2>
+  <p class='text'>
+    <%= rule[:description] %>
+    <% if rule[:error_code] %>
+    If not authorised, a <code><%= rule[:error_code] %></code> error will be returned.
+    <% end %>
+    <a class='link' href='<%= path("authenticators/#{action.authenticator_to_use.name}.html") %>'>
+      Read more
+    </a>
+  </p>
+<% end %>
+<% end %>
+<% end %>
+
+
 <h2>Parameters</h2>
 <% if action.params.empty? %>
   <p><em>This action doesn't support any parameters.</em></p>

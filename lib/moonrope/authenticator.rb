@@ -30,5 +30,8 @@ module Moonrope
     # @return [Hash] the rules this authenticator provides
     attr_reader :rules
 
+    # @return [Bool] whether or not the action should be documented
+    attr_accessor :doc
+
   end
 end
