@@ -66,62 +66,6 @@ class RequestTest < Test::Unit::TestCase
     assert result.is_a?(Moonrope::ActionResult), "request.action does not return an ActionResult, was a #{result.class}"
   end
 
-  def test_authenticated_requests
-    base = Moonrope::Base.new do
-      authenticator do
-        User.new(:admin => true)
-      end
-      controller :users do
-        action :list do
-          action { true }
-        end
-      end
-    end
-    # authenticated
-    request = base.request(make_rack_env_hash('/api/v1/users/list'))
-    assert result = request.execute
-    assert_equal User, request.authenticated_user.class
-    assert_equal false, request.anonymous?
-    assert_equal true, request.authenticated?
-  end
-
-  def test_authentication_failures
-    base = Moonrope::Base.new do
-      authenticator do
-        error :access_denied, "Not permitted"
-      end
-
-      controller :users do
-        action :list do
-          action { true}
-        end
-      end
-    end
-    request = base.request(make_rack_env_hash('/api/v1/users/list'))
-    assert result = request.execute
-    assert_equal "access-denied", result.status
-    assert_equal nil, request.authenticated_user
-    assert_equal true, request.anonymous?
-    assert_equal false, request.authenticated?
-  end
-
-  def test_requests_which_authenticator_says_are_anonymous
-    base = Moonrope::Base.new do
-      authenticator { nil }
-      controller :users do
-        action :list do
-          action { true }
-        end
-      end
-    end
-    request = base.request(make_rack_env_hash('/api/v1/users/list'))
-    assert result = request.execute
-    assert_equal "success", result.status
-    assert_equal nil, request.authenticated_user
-    assert_equal true, request.anonymous?
-    assert_equal false, request.authenticated?
-  end
-
   def test_headers_are_accessible
     base = Moonrope::Base.new
     env = make_rack_env_hash('/api/v1/users/list', {}, {'HTTP_X_EXAMPLE_HEADER' => 'Hello'})

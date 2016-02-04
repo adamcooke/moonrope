@@ -69,14 +69,6 @@ module Moonrope
       end
 
       #
-      # Defines the access required for controller methods which do not
-      # define their own access.
-      #
-      def access(value = nil, &block)
-        @controller.access = block_given? ? block : value
-      end
-
-      #
       # Defines a new helper for this controller.
       #
       # @param name [Symbol] the name of the helper

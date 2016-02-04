@@ -48,24 +48,6 @@ module Moonrope
       end
 
       #
-      # Set the authenticator for the API.
-      #
-      # @yield stores the block as the authenticator
-      #
-      def authenticator(&block)
-        @base.authenticator = block
-      end
-
-      #
-      # Set the default access check block.
-      #
-      # @yield stores the block as the access check
-      #
-      def default_access(value = nil, &block)
-        @base.default_access = block_given? ? block : value
-      end
-
-      #
       # Define a new helper in the global namespace
       #
       # @param name [Symbol] the name of the helper

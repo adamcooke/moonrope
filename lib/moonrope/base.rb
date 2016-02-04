@@ -26,14 +26,8 @@ module Moonrope
     # @return [Moonrope::DSL::BaseDSL] the base DSL
     attr_accessor :dsl
 
-    # @return [Proc] the authentictor
-    attr_accessor :authenticator
-
     # @return [Hash] authenticators
     attr_accessor :authenticators
-
-    # @return [Proc] the default access condition
-    attr_accessor :default_access
 
     # @return [Array] the array of directories to load from  (if relevant)
     attr_accessor :load_directories
@@ -64,7 +58,6 @@ module Moonrope
       @structures = []
       @controllers = []
       @helpers = @helpers.is_a?(Array) ? @helpers.select { |h| h.options[:unloadable] == false } : []
-      @authenticator = nil
       @authenticators = {}
       @default_access = nil
     end

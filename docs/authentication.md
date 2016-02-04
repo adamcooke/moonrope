@@ -1,5 +1,7 @@
 # Authentication
 
+**Note: this is all incorrect. It needs re-writing for 2.0**
+
 Deciding whether or not to permit access to your API is a fundamental part
 of any API. The **authenticator** uses information avaiable in the request
 and returns an object of the "authenticated object". In many cases this

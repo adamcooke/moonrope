@@ -19,12 +19,6 @@ module Moonrope
     # @return [String] the description of the action
     attr_accessor :description
 
-    # @return [Proc] the access check condition for the action
-    attr_accessor :access
-
-    # @return [String] the access description
-    attr_accessor :access_description
-
     # @return [Proc] the action for the action
     attr_accessor :action
 
@@ -167,32 +161,8 @@ module Moonrope
         eval_environment = EvalEnvironment.new(@controller.base, request)
       end
 
-      access_condition = self.access || @controller.access || @controller.base.default_access
-
-      if eval_environment.auth
-        # If there's no authentication object, access is permitted otherwise
-        # we'll do the normal testing.
-        if access_condition.is_a?(Proc)
-          !!eval_environment.instance_exec(self, &access_condition)
-        elsif access_condition.is_a?(Symbol)
-          !!(eval_environment.auth.respond_to?(access_condition) && eval_environment.auth.send(access_condition))
-        elsif access_condition.is_a?(Hash) && access_condition[:must_be] && access_condition[:with]
-          !!(eval_environment.auth.is_a?(access_condition[:must_be]) &&
-              eval_environment.auth.respond_to?(access_condition[:with]) &&
-              eval_environment.auth.send(access_condition[:with])
-            )
-        elsif access_condition.is_a?(Hash) && access_condition[:must_be]
-          !!(eval_environment.auth.is_a?(access_condition[:must_be]))
-        elsif access_condition == true
-          true
-        else
-          false
-        end
-      else
-        # No authentication object is available to test with. The result here
-        # depends on whether or not an access condition has been defined or not.
-        !access_condition
-      end
+      # TODO: add access checking
+      true
     end
 
     #
