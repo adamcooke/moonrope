@@ -54,6 +54,15 @@ module Moonrope
       end
 
       #
+      # Set the name of the authenticator to use for all actions in this controller
+      #
+      # @param name [Symbol]
+      #
+      def authenticator(name)
+        @controller.authenticator = name
+      end
+
+      #
       # Defines a new before action within the controller.
       #
       # @param actions [Symbol] the names of the actions to apply to (none for all)

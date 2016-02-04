@@ -1,4 +1,4 @@
-authentication :default do
+authenticator :default do
 
   description <<-DESCRIPTION
     To authenticate to the API, you need to pass an appropriate API token with your

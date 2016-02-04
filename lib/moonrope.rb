@@ -11,7 +11,8 @@ require 'moonrope/dsl/base_dsl'
 require 'moonrope/dsl/action_dsl'
 require 'moonrope/dsl/controller_dsl'
 require 'moonrope/dsl/structure_dsl'
-
+require 'moonrope/dsl/authenticator_dsl'
+require 'moonrope/authenticator'
 require 'moonrope/errors'
 require 'moonrope/eval_helpers'
 require 'moonrope/eval_environment'
@@ -26,13 +27,13 @@ require 'moonrope/version'
 require 'moonrope/railtie' if defined?(Rails)
 
 module Moonrope
-  
+
   class << self
     attr_accessor :logger
-    
+
     def logger
       @logger ||= Logger.new(STDOUT)
     end
   end
-    
+
 end

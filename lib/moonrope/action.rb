@@ -22,6 +22,9 @@ module Moonrope
     # @return [Proc] the action for the action
     attr_accessor :action
 
+    # @return [Symbol] the name of the authenticator for this action
+    attr_accessor :authenticator
+
     # @return [Hash] the errors which can be retuend by this action
     attr_accessor :errors
 
@@ -60,6 +63,21 @@ module Moonrope
       @params.inject({}) do |h,(k,v)|
         h[k.to_s] = v[:default] if v[:default]
         h
+      end
+    end
+
+    #
+    # Return the authenticator that should be used when executing this action
+    #
+    # @return [Moonrope::Authenticator]
+    #
+    def authenticator_to_use
+      if @authenticator
+        @controller.base.authenticators[@authenticator]
+      elsif @controller.authenticator
+        @controller.base.authenticators[@controller.authenticator]
+      else
+        @controller.base.authenticators[:default]
       end
     end
 

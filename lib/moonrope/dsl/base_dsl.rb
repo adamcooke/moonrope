@@ -64,10 +64,13 @@ module Moonrope
       end
 
       #
-      # Define a new authentication block
+      # Define a new authenticator
       #
-      def authentication(name, &block)
-        @base.authenticators[name] = block
+      def authenticator(name, &block)
+        authenticator = Moonrope::Authenticator.new(name)
+        dsl = Moonrope::DSL::AuthenticatorDSL.new(authenticator)
+        dsl.instance_eval(&block) if block_given?
+        @base.authenticators[name] = authenticator
       end
 
     end

@@ -90,6 +90,15 @@ module Moonrope
       end
 
       #
+      # Sets the name of the authenticator to use for this action
+      #
+      # @param name [Symbol] the name of the authenticator
+      #
+      def authenticator(name)
+        @action.authenticator = name
+      end
+
+      #
       # Set the access condition for the action.
       #
       #   access do
