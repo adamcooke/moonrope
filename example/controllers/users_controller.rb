@@ -33,28 +33,27 @@ controller :users do
     end
   end
 
-  action :save do
-    title "Create or update a user"
-    param :id, "The ID of the existing user to be updated (do not send to create a new user)", :type => Integer
-    param :username, "The user's username", :type => String, :set => true
-    param :first_name, "The user's first name", :type => String, :set => true
-    param :last_name, "The user's last name", :type => String, :set => true
-    param :email_address, "The user's e-mail address", :type => String, :set => :create_only
-    param :password, "The user's password", :type => String, :set => :update_only
-    param :admin, "Should this user be an admin?", :type => :boolean, :set => true
+  action :create do
+    title "Create a new user"
+    description <<-DESCRIPTION
+      This action will create a new user with the properties which have been provided.
+    DESCRIPTION
+    param :username, "The user's username", :type => String, :required => true
+    param :first_name, "The user's first name", :type => String, :required => true
+    param :last_name, "The user's last name", :type => String, :required => true
+    param :email_address, "The user's e-mail address", :type => String, :required => true
+    param :password, "The user's password", :type => String, :required => true
+    param :admin, "Should this user be an admin?", :type => :boolean
     returns :hash, :structure => :user, :structure_opts => {:full => true}
     error "ValidationError", "The details provided were not sufficient to save the user", :attributes => {:errors => "An array of errors for each field"}
-    error "UserNotFound", "No existing user was found for the ID provider", :attributes => {:id => "The ID which was looked up"}
     action do
-      if params.id
-        user = User.find_by_id(params.id)
-        if user.nil?
-          error "UserNotFound", :id => params.id
-        end
-      else
-        user = User.new
-      end
-      auto_set_params_for user
+      user = User.new
+      user.username = params.username
+      user.first_name = params.first_name
+      user.last_name = params.last_name
+      user.email_address = params.email_address
+      user.password = params.password
+      user.admin = params.admin
       if user.save
         structure user, :return => true
       else

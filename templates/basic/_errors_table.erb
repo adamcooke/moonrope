@@ -1,0 +1,32 @@
+<table class='table errorsTable'>
+  <thead>
+    <tr>
+      <th width="60%">Error</th>
+      <th width="40%">Attributes</th>
+    </tr>
+  </thead>
+  <% for name, error in errors %>
+  <tr>
+    <td>
+      <p>
+        <span class='paramTable__name'><%= name %></span>
+        <% if error[:description] %>
+          <p class='paramTable__description'><%= error[:description] %></p>
+        <% end %>
+      </p>
+    </td>
+    <td>
+      <% if error[:attributes].is_a?(Hash) %>
+      <ul class='errorAttributeList'>
+        <% for name, description in error[:attributes] %>
+        <li>
+          <p class='errorAttributeList__name'><%= name %></p>
+          <p class='errorAttributeList__desc'><%= description %></p>
+        </li>
+        <% end %>
+      </ul>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+</table>

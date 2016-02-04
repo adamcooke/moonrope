@@ -17,6 +17,13 @@
               Home
             </a>
           </li>
+          <% if base.authenticators[:default] %>
+          <li>
+            <a href='<%= path('authenticators/default.html') %>' class="<%= active_nav == 'authenticator-default' ? 'active' : '' %>">
+              Authentication
+            </a>
+          </li>
+          <% end %>
           <% for controller in base.controllers.select { |c| c.doc != false } %>
           <li>
             <a href='<%= path("controllers/#{controller.name}.html") %>' class="<%= active_nav == "controller-#{controller.name}" ? 'active' : '' %>">

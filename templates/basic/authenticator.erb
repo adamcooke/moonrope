@@ -1,1 +1,51 @@
-authenticator
+
+<% if authenticator.name == :default %>
+<% set_page_title "Authentication" %>
+<% set_active_nav "authenticator-default" %>
+<h1>Authentication</h1>
+<% else %>
+<% set_page_title "#{humanize(authenticator.name.to_s.capitalize)} Authenticator" %>
+<h1><%= humanize(authenticator.name.to_s.capitalize) %> Authenticator</h1>
+<% end %>
+
+<p class='text'>
+  <%= authenticator.description %>
+</p>
+
+<h2>Authentication Headers</h2>
+<p class='text'>
+  The following headers are used to identify yourself to the API client. These should be
+  sent as standard HTTP headers with any API request.
+</p>
+<table class='table paramTable'>
+  <thead>
+    <tr>
+      <th width="60%">Header</th>
+      <th width="40%">Example</th>
+    </tr>
+  </thead>
+  <% for name, options in authenticator.headers %>
+  <tr>
+    <td>
+      <p>
+        <span class='paramTable__name'><%= name %></span>
+      </p>
+      <% if options[:description] %>
+        <p class='paramTable__description'><%= options[:description] %></p>
+      <% end %>
+    </td>
+    <td><%= options[:eg] || options[:example] %> </td>
+  </tr>
+  <% end %>
+</table>
+
+<h2>Errors</h2>
+<p class='text'>
+  The errors listed below may be raised if any issues occur when verifying your
+  identity with the API.
+</p>
+<% if authenticator.errors.empty? %>
+  <p><em>There are no errors which can be raised.</em></p>
+<% else %>
+  <%= partial "errors_table", :errors => authenticator.errors %>
+<% end %>
