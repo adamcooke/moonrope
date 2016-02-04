@@ -99,6 +99,20 @@ module Moonrope
       end
 
       #
+      # Sets the name of the access rule to use for this action
+      #
+      # @param name [Symbol] the name of the authenticator
+      #
+      def access_rule(name)
+        if name.is_a?(Hash)
+          authenticator name.first[0]
+          access_rule name.first[1]
+        else
+          @action.access_rule = name
+        end
+      end
+
+      #
       # Set the access condition for the action.
       #
       #   access do

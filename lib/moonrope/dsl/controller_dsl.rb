@@ -63,6 +63,20 @@ module Moonrope
       end
 
       #
+      # Set the name of the access rule to use for all actions in this controller
+      #
+      # @param name [Symbol]
+      #
+      def access_rule(name)
+        if name.is_a?(Hash)
+          authenticator name.first[0]
+          access_rule name.first[1]
+        else
+          @controller.access_rule = name
+        end
+      end
+
+      #
       # Defines a new before action within the controller.
       #
       # @param actions [Symbol] the names of the actions to apply to (none for all)

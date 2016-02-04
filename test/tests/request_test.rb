@@ -79,4 +79,110 @@ class RequestTest < Test::Unit::TestCase
     request = base.request(env)
     assert_equal '127.0.0.1', request.ip
   end
+
+  def test_authenticated_requests
+    base = Moonrope::Base.new do
+      authenticator :default do
+        lookup do
+          User.new(:admin => true)
+        end
+      end
+      controller :users do
+        action :list do
+          action { true }
+        end
+      end
+    end
+    # authenticated
+    request = base.request(make_rack_env_hash('/api/v1/users/list'))
+    assert result = request.execute
+    assert_equal User, request.authenticated_user.class
+    assert_equal false, request.anonymous?
+    assert_equal true, request.authenticated?
+  end
+
+  def test_authentication_failures
+    base = Moonrope::Base.new do
+      authenticator :default do
+        lookup do
+          error :access_denied, "Not permitted"
+        end
+      end
+
+      controller :users do
+        action :list do
+          action { true}
+        end
+      end
+    end
+    request = base.request(make_rack_env_hash('/api/v1/users/list'))
+    assert result = request.execute
+    assert_equal "access-denied", result.status
+    assert_equal nil, request.authenticated_user
+    assert_equal true, request.anonymous?
+    assert_equal false, request.authenticated?
+  end
+
+  def test_requests_which_authenticator_says_are_anonymous
+    base = Moonrope::Base.new do
+      authenticator :default do
+        lookup { nil }
+      end
+      controller :users do
+        action :list do
+          action { true }
+        end
+      end
+    end
+    request = base.request(make_rack_env_hash('/api/v1/users/list'))
+    assert result = request.execute
+    assert_equal "success", result.status
+    assert_equal nil, request.authenticated_user
+    assert_equal true, request.anonymous?
+    assert_equal false, request.authenticated?
+  end
+
+  def test_trying_to_use_invalid_authenticator_raises_error
+    base = Moonrope::Base.new do
+      authenticator :default do
+        lookup do
+          User.new(:admin => true)
+        end
+      end
+      controller :users do
+        action :list do
+          authenticator :blah
+          action { true }
+        end
+      end
+    end
+
+    request = base.request(make_rack_env_hash('/api/v1/users/list'))
+    assert_raises Moonrope::Errors::MissingAuthenticator do
+      request.execute
+    end
+  end
+
+  def test_raising_errors_from_the_authenticator_lookup
+    base = Moonrope::Base.new do
+      authenticator :default do
+        error 'InvalidToken', 'Token provided is invalid', :attributes => {:token => 'The token looked up'}
+        lookup do
+          error 'InvalidToken', :token => request.headers['X-Example-Header']
+        end
+      end
+      controller :users do
+        action :list do
+          action { true }
+        end
+      end
+    end
+    request = base.request(make_rack_env_hash('/api/v1/users/list', {}, {"HTTP_X_EXAMPLE_HEADER" => "1234567"}))
+    assert result = request.execute
+    assert_equal "error", result.status
+    assert_equal "InvalidToken", result.data[:code]
+    assert_equal "1234567", result.data[:token]
+    assert_equal "Token provided is invalid", result.data[:message]
+  end
+
 end

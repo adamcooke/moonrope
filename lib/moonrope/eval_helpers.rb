@@ -35,8 +35,15 @@ module Moonrope
     # @param additional [Hash] additional data to return with the error
     #
     def structured_error(code, message, additional = {})
-      if action && error = action.errors[code]
-        message = error[:description].gsub(/\{(\w+)\}/) { additional[$1.to_sym] }
+      if action
+        if action.authenticator_to_use.is_a?(Moonrope::Authenticator)
+          errors = action.authenticator_to_use.errors.merge(action.errors)
+        else
+          errors = action.errors
+        end
+        if error = errors[code]
+          message = error[:description].gsub(/\{(\w+)\}/) { additional[$1.to_sym] }
+        end
       end
       raise Moonrope::Errors::StructuredError, additional.merge(:code => code, :message => message)
     end

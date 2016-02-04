@@ -5,6 +5,8 @@ module Moonrope
     end
 
     class HelperAlreadyDefined < Error; end
+    class MissingAuthenticator < Error; end
+    class MissingAccessRule < Error; end
 
     class RequestError < Error
       attr_reader :options
@@ -35,6 +37,12 @@ module Moonrope
     class AccessDenied < RequestError
       def status
         'access-denied'
+      end
+    end
+
+    class NotPermitted < RequestError
+      def status
+        'not-permitted'
       end
     end
 

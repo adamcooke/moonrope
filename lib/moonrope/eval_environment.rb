@@ -28,9 +28,10 @@ module Moonrope
     # @param request [Moonrope::Request]
     # @param accessors [Hash] additional variables which can be made available
     #
-    def initialize(base, request, accessors = {})
+    def initialize(base, request, action = nil, accessors = {})
       @base = base
       @request = request
+      @action = action
       @accessors = accessors
       @default_params = {}
       reset

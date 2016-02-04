@@ -86,7 +86,28 @@ module Moonrope
     # @return [Moonrope::ActionResult]
     #
     def execute
-      eval_env = EvalEnvironment.new(@base, self)
+      eval_env = EvalEnvironment.new(@base, self, action)
+
+      if action.authenticator_to_use.is_a?(Moonrope::Authenticator)
+        result = action.convert_errors_to_action_result do
+          if block = action.authenticator_to_use.lookup
+            @authenticated_user = eval_env.instance_eval(&block)
+          end
+
+          if authenticated?
+            unless action.check_access(eval_env) == true
+              raise Moonrope::Errors::NotPermitted, "Access to #{controller.name}/#{action.name} is not permitted."
+            end
+          end
+        end
+
+        if result.is_a?(Moonrope::ActionResult)
+          return result
+        end
+      elsif action.authenticator_to_use == :not_found
+        raise Moonrope::Errors::MissingAuthenticator, "Wanted to use authenticator that was not defined."
+      end
+
       action.execute(eval_env)
     end
 

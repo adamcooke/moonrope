@@ -25,6 +25,9 @@ module Moonrope
     # @return [Symbol] the name of the authenticator for this action
     attr_accessor :authenticator
 
+    # @return [Symbol] the name of the access rule for this action
+    attr_accessor :access_rule
+
     # @return [Hash] the errors which can be retuend by this action
     attr_accessor :errors
 
@@ -72,13 +75,24 @@ module Moonrope
     # @return [Moonrope::Authenticator]
     #
     def authenticator_to_use
-      if @authenticator
-        @controller.base.authenticators[@authenticator]
-      elsif @controller.authenticator
-        @controller.base.authenticators[@controller.authenticator]
-      else
-        @controller.base.authenticators[:default]
+      @authenticator_to_use ||= begin
+        if @authenticator
+          @controller.base.authenticators[@authenticator] || :not_found
+        elsif @controller.authenticator
+          @controller.base.authenticators[@controller.authenticator] || :not_found
+        else
+          @controller.base.authenticators[:default] || :none
+        end
       end
+    end
+
+    #
+    # Return the access rule to use for this action#
+    #
+    # @return [Symbol]
+    #
+    def access_rule_to_use
+      @access_rule_to_use ||= access_rule || @controller.access_rule || :default
     end
 
     #
@@ -118,7 +132,7 @@ module Moonrope
       if request.is_a?(EvalEnvironment)
         eval_environment = request
       else
-        eval_environment = EvalEnvironment.new(@controller.base, request)
+        eval_environment = EvalEnvironment.new(@controller.base, request, self)
       end
 
       #
@@ -126,12 +140,6 @@ module Moonrope
       # it has access to them.
       #
       eval_environment.default_params = self.default_params
-
-      #
-      # Set the current action to the eval environment so it knows what action
-      # invoked this.
-      #
-      eval_environment.action = self
 
       convert_errors_to_action_result do
         #
@@ -176,11 +184,26 @@ module Moonrope
       if request.is_a?(EvalEnvironment)
         eval_environment = request
       else
-        eval_environment = EvalEnvironment.new(@controller.base, request)
+        eval_environment = EvalEnvironment.new(@controller.base, request, self)
       end
 
-      # TODO: add access checking
-      true
+      if authenticator_to_use.is_a?(Moonrope::Authenticator)
+        if rule = authenticator_to_use.rules[access_rule_to_use]
+          eval_environment.instance_exec(self, &rule[:block])
+        else
+          if access_rule_to_use == :default
+            # The default rule on any authenticator will allow everything so we
+            # don't need to worry about this not being defined.
+            true
+          else
+            # If an access rule that doesn't exist has been requested, we will
+            # raise an internal error.
+            raise Moonrope::Errors::MissingAccessRule, "The rule '#{access_rule_to_use}' was not found on '#{authenticator_to_use.name}' authenticator"
+          end
+        end
+      else
+        true
+      end
     end
 
     #

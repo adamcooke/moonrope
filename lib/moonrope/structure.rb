@@ -49,7 +49,7 @@ module Moonrope
     #
     def hash(object, options = {})
       # Set up an environment
-      environment = EvalEnvironment.new(base, options[:request], :o => object)
+      environment = EvalEnvironment.new(base, options[:request], options[:request] ? options[:request].action : nil, :o => object)
 
       # Set a new hash
       hash = Hash.new

@@ -3,7 +3,7 @@ class EvalEnvironmentTest < Test::Unit::TestCase
   def setup
     @auth_user = User.new(:name => 'Admin User')
     @request = FakeRequest.new(:params => {'page' => '1'}, :version => 2, :authenticated_user => @auth_user)
-    @environment = Moonrope::EvalEnvironment.new(Moonrope::Base.new, @request, :accessor1 => 'Hello')
+    @environment = Moonrope::EvalEnvironment.new(Moonrope::Base.new, @request, nil, :accessor1 => 'Hello')
   end
 
   def test_version
