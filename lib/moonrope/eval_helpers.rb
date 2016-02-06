@@ -45,7 +45,7 @@ module Moonrope
           message = error[:description].gsub(/\{(\w+)\}/) { additional[$1.to_sym] }
         end
       end
-      raise Moonrope::Errors::StructuredError, additional.merge(:code => code, :message => message)
+      raise Moonrope::Errors::StructuredError, {:code => code, :message => message}.merge(additional)
     end
 
     #
