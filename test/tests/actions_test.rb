@@ -379,6 +379,33 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal(false, action.can_change_full?)
   end
 
+  def test_includes_full_attributes
+    #not included by default
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal
+    end
+    assert_equal(false, action.includes_full_attributes?)
+
+    # not included when paramable is just true
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => true}
+    end
+    assert_equal(false, action.includes_full_attributes?)
+
+    # included when paramable sets the default to true
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {:full => true}}
+    end
+    assert_equal(true, action.includes_full_attributes?)
+
+    # included when it's full anyway
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:full => true}
+    end
+    assert_equal(true, action.includes_full_attributes?)
+  end
+
+
   def test_can_change_expansions_attribute
     # can't change when no ops
     action = Moonrope::Action.new(@controller, :list) do
@@ -403,6 +430,46 @@ class ActionsTest < Test::Unit::TestCase
       returns :hash, :structure => :animal, :structure_opts => {:paramable => {}}
     end
     assert_equal(false, action.can_change_expansions?)
+  end
+
+  def test_includes_expansion
+    #not included by default
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal
+    end
+    assert_equal(false, action.includes_expansion?(:blah))
+
+    # not included when paramable is just true
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => true}
+    end
+    assert_equal(false, action.includes_expansion?(:blah))
+
+    # included when paramable sets the default to true
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {:expansions => true}}
+    end
+    assert_equal(true, action.includes_expansion?(:blah))
+
+    # included when it's expansions anyway
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:expansions => true}
+    end
+    assert_equal(true, action.includes_expansion?(:blah))
+
+    # included when expansions is an array
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:expansions => [:blah]}
+    end
+    assert_equal(true, action.includes_expansion?(:blah))
+    assert_equal(false, action.includes_expansion?(:another))
+
+    # included when paramable expansions is an array
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {:expansions => [:blah]}}
+    end
+    assert_equal(true, action.includes_expansion?(:blah))
+    assert_equal(false, action.includes_expansion?(:another))
   end
 
   def test_available_expansions_array_on_actions

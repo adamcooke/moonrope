@@ -34,6 +34,38 @@
   </table>
   <% end %>
 
+  <% if action.can_change_full? || action.can_change_expansions? %>
+  <p class='tryForm__heading'>Structures</p>
+  <table class='tryForm__table'>
+    <% if action.can_change_full? %>
+    <tr>
+      <td width="50%">Include extended attributes?</td>
+      <td width="50%">
+        <div class='tryForm__checkbox'>
+          <input type='checkbox' class='tryForm__fullAttrs' name='full' id="full_attrs" <% if action.includes_full_attributes? %>checked='checked'<%end%>>
+          <label for="full_attrs">Yes - include extended attributes</label>
+        </div>
+      </td>
+    </tr>
+    <% end %>
+    <% if action.can_change_expansions? %>
+    <tr>
+      <td width="50%">Include expansions?</td>
+      <td width="50%">
+        <% for expansion in action.available_expansions %>
+          <div class='tryForm__checkbox'>
+            <input type='checkbox' class='tryForm__expansions' name='<%= expansion%>' id="expan_<%= expansion %>" <% if action.includes_expansion?(expansion) %>checked='checked'<%end%>>
+            <label for="expan_<%= expansion %>"><%= expansion %></label>
+          </div>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+
+  </table>
+
+  <% end %>
+
   <p class='tryForm__button'>
     <button class='tryForm__buttonLink' type='submit'>Make this request</button>
     <button class='tryForm__buttonLink tryFormCancel' type='button'>Cancel</button>

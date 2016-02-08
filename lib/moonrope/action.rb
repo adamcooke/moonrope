@@ -261,6 +261,18 @@ module Moonrope
     end
 
     #
+    # Does this action include full attributes by default?
+    #
+    def includes_full_attributes?
+      if opts = returns[:structure_opts]
+        (opts[:paramable].is_a?(Hash) && opts[:paramable][:full] == true) ||
+        opts[:full] == true
+      else
+        false
+      end
+    end
+
+    #
     # Does this action allow the user to include/exclude expansions when calling
     # this action?
     #
@@ -274,12 +286,25 @@ module Moonrope
     end
 
     #
+    # Does this action include full attributes by default?
+    #
+    def includes_expansion?(expansion)
+      if opts = returns[:structure_opts]
+        (opts[:paramable].is_a?(Hash) && opts[:paramable][:expansions] == true) ||
+        opts[:expansions] == true ||
+        (opts[:paramable].is_a?(Hash) && opts[:paramable][:expansions].is_a?(Array) && opts[:paramable][:expansions].include?(expansion)) ||
+        (opts[:expansions].is_a?(Array) && opts[:expansions].include?(expansion))
+      else
+        false
+      end
+    end
+
+    #
     # Which expansions is the user permitted to include/exclude when calling this
     # action.
     #
     def available_expansions
       if (structure = returns[:structure]) && can_change_expansions?
-        puts returns.inspect
         if returns[:structure_opts][:paramable][:expansions].is_a?(Array)
           returns[:structure_opts][:paramable][:expansions]
         else
@@ -288,7 +313,6 @@ module Moonrope
       else
         []
       end
-
     end
 
   end

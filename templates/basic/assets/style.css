@@ -303,7 +303,7 @@ a {
   background:#f8f8f8;
 }
 
-.tryForm__table input {
+.tryForm__tableField {
   border:0;
   background:none;
   border-bottom:1px solid #ccc;
@@ -315,7 +315,7 @@ a {
   font-weight:700;
 }
 
-.tryForm__table input:focus {
+.tryForm__tableField:focus {
   border-color:#7f55ad;
 }
 
@@ -336,4 +336,16 @@ a {
   padding:6px 12px 6px 30px;
   font-size:12px;
   font-weight:700;
+}
+
+.tryForm__checkbox {
+  margin-bottom:4px;
+}
+.tryForm__checkbox:last-child {
+  margin-bottom:0;
+}
+.tryForm__checkbox input {
+  float:left;
+  margin-right:4px;
+  margin-top:4px;
 }
