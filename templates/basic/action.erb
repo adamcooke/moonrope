@@ -16,9 +16,6 @@
     <% if rule[:error_code] %>
     If not authorised, a <code><%= rule[:error_code] %></code> error will be returned.
     <% end %>
-    <a class='link' href='<%= path("authenticators/#{action.authenticator_to_use.name}.html") %>'>
-      Read more
-    </a>
   </p>
 <% end %>
 <% end %>
