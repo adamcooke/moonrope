@@ -95,6 +95,13 @@ module Moonrope
       hash
     end
 
+    #
+    # Return an array of all expansions which are available on this structure
+    #
+    def all_expansions
+      @attributes[:expansion].map(&:name) + expansions.keys
+    end
+
     private
 
     #

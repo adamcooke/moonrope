@@ -247,5 +247,49 @@ module Moonrope
     FALSE_LIKE_VALUES = ['false', '0', 0, false]
     BOOLEAN_VALUES = TRUE_LIKE_VALUES + FALSE_LIKE_VALUES
 
+    #
+    # Does this action allow the user to include/exclude full attributes when
+    # calling this action?
+    #
+    def can_change_full?
+      if opts = returns[:structure_opts]
+        opts[:paramable] == true ||
+        (opts[:paramable].is_a?(Hash) && opts[:paramable].has_key?(:full))
+      else
+        false
+      end
+    end
+
+    #
+    # Does this action allow the user to include/exclude expansions when calling
+    # this action?
+    #
+    def can_change_expansions?
+      if opts = returns[:structure_opts]
+        opts[:paramable] == true ||
+        (opts[:paramable].is_a?(Hash) && opts[:paramable].has_key?(:expansions))
+      else
+        false
+      end
+    end
+
+    #
+    # Which expansions is the user permitted to include/exclude when calling this
+    # action.
+    #
+    def available_expansions
+      if (structure = returns[:structure]) && can_change_expansions?
+        puts returns.inspect
+        if returns[:structure_opts][:paramable][:expansions].is_a?(Array)
+          returns[:structure_opts][:paramable][:expansions]
+        else
+          @controller.base.structure(structure).all_expansions
+        end
+      else
+        []
+      end
+
+    end
+
   end
 end

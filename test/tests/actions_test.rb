@@ -353,4 +353,65 @@ class ActionsTest < Test::Unit::TestCase
     assert_raises(DummyError2) { action.execute }
   end
 
+  def test_can_change_full_attribute
+    # can't change when no ops
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal
+    end
+    assert_equal(false, action.can_change_full?)
+
+    # can change when paramable is true
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => true}
+    end
+    assert_equal(true, action.can_change_full?)
+
+    # can change when specified
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {:full => true}}
+    end
+    assert_equal(true, action.can_change_full?)
+
+    # can't change when not specified
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {}}
+    end
+    assert_equal(false, action.can_change_full?)
+  end
+
+  def test_can_change_expansions_attribute
+    # can't change when no ops
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal
+    end
+    assert_equal(false, action.can_change_expansions?)
+
+    # can change when paramable is true
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => true}
+    end
+    assert_equal(true, action.can_change_expansions?)
+
+    # can change when specified
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {:expansions => true}}
+    end
+    assert_equal(true, action.can_change_expansions?)
+
+    # can't change when not specified
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {}}
+    end
+    assert_equal(false, action.can_change_expansions?)
+  end
+
+  def test_available_expansions_array_on_actions
+    # if an array is provided, it should return the items in the array
+    action = Moonrope::Action.new(@controller, :list) do
+      returns :hash, :structure => :animal, :structure_opts => {:paramable => {:expansions => [:user]}}
+    end
+    assert_equal([:user], action.available_expansions)
+  end
+
+
 end
