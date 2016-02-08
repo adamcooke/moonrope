@@ -161,6 +161,14 @@ a {
   margin-left:5px;
 }
 
+.paramTable__field {
+  width:100%;
+  border:0;
+  padding:0;
+  font:inherit;
+  color:#7f55ad;
+}
+
 .paramTable__description {
   font-size:90%;
   color:#999;
@@ -215,4 +223,117 @@ a {
 
 .errorAttributeList__desc {
   color:#999;
+}
+
+/* Try Action Form */
+
+.tryForm {
+  display:none;
+  border:2px solid #ccc;
+  background:#f7f7f7;
+  border-radius:7px;
+  overflow: hidden;
+}
+
+.tryForm__header {
+  background:#ddd;
+  padding:15px 25px;
+  font-weight:700;
+  color:#999;
+
+}
+
+.tryForm__header input {
+  background:none;
+  border:0;
+  padding:0;
+  vertical-align:0px;
+  border-bottom:1px solid #ccc;
+  padding-bottom:2px;
+  font:inherit;
+  font-weight:700;
+  color:#000;
+
+}
+
+.tryForm__header input.v {
+  width:40px;
+  text-align: center;
+}
+
+.tryForm__output {
+  display:none;
+  background:#111;
+  color:#fff;
+  padding:15px;
+  font-family:'Droid Sans Mono', fixed;
+  white-space: pre;
+  font-size:90%;
+}
+
+.tryForm__output--success {
+  border-top:7px solid #68be28;
+}
+
+.tryForm__output--error {
+  border-top:7px solid #d4172e;
+}
+
+.tryForm__heading {
+  border-bottom:1px solid #ddd;
+  border-top:4px solid #aaa;
+  margin-bottom:15px;
+  padding:8px 25px;
+  background:#efefef;
+  font-weight:700;
+  font-size:80%;
+  text-transform: uppercase;
+  color:#888;
+}
+
+.tryForm__table {
+  font-size:90%;
+  width:calc(100% - 50px);
+  margin:0 25px;
+  margin-bottom:15px;
+}
+
+.tryForm__table td {
+  padding:5px 0;
+  background:#f8f8f8;
+}
+
+.tryForm__table input {
+  border:0;
+  background:none;
+  border-bottom:1px solid #ccc;
+  padding:0;
+  padding-bottom:4px;
+  width:100%;
+  font:inherit;
+  color:#7f55ad;
+  font-weight:700;
+}
+
+.tryForm__table input:focus {
+  border-color:#7f55ad;
+}
+
+.tryForm__button {
+  margin:15px 25px;
+  text-align: right;
+}
+
+.tryFormActivate {
+  margin:20px 0;
+}
+.tryFormActivate__button {
+  background:url(tool.svg) #fffce0 no-repeat 12px 7px;
+  background-size:12px;
+  border:1px solid #dad7bb;
+  color:#6c6a55;
+  border-radius:4px;
+  padding:6px 12px 6px 30px;
+  font-size:12px;
+  font-weight:700;
 }

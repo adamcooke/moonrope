@@ -1,0 +1,45 @@
+<p class='tryFormActivate'><a class='tryFormActivate__button' href='#'>Try this request in your browser</a></p>
+<form class='tryForm'>
+  <input type='hidden' name='controller' value='<%= controller.name %>'>
+  <input type='hidden' name='action' value='<%= action.name %>'>
+  <div class='tryForm__header'>
+    <input type='text' id='host' name='host' value='<%= host %>'>
+    /api/
+    <input type='text' id='version' name='version' value='v1' class='v'>
+    /<%= controller.name %>/<%= action.name %>
+  </div>
+
+  <% if action.authenticator_to_use.is_a?(Moonrope::Authenticator) %>
+  <p class='tryForm__heading'>Headers</p>
+  <table class='tryForm__table'>
+    <% for name, options in action.authenticator_to_use.headers %>
+    <tr>
+      <td width="50%"><code><%= name %></code></td>
+      <td width="50%"><input type='text' class='tryForm__tableField headerField' name='<%= name %>'></td>
+    </tr>
+    <% end %>
+  </table>
+  <% end %>
+
+  <% unless action.params.empty? %>
+  <p class='tryForm__heading'>Parameters</p>
+  <table class='tryForm__table'>
+    <% for name, param in action.params %>
+    <tr>
+      <td width="30%"><code><%= name %></code></td>
+      <td width="20%"><%= friendly_type param[:type] %></td>
+      <td width="50%"><input type='text' class='tryForm__tableField paramField' name='<%= name %>' placeholder='<%= param[:default] %>' data-type='<%= param[:type] %>'></td>
+    </tr>
+    <% end %>
+  </table>
+  <% end %>
+
+  <p class='tryForm__button'>
+    <button class='tryForm__buttonLink' type='submit'>Make this request</button>
+    <button class='tryForm__buttonLink tryFormCancel' type='button'>Cancel</button>
+  </p>
+
+  <pre class='tryForm__output'>The request output will be shown here...</pre>
+</form>
+
+

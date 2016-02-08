@@ -23,7 +23,6 @@ module Moonrope
         generate_file(output_path, File.join("controllers", "#{controller.name}.html"), "controller", {:controller => controller})
         controller.actions.select { |_,a| a.doc != false }.each do |_, action|
           generate_file(output_path, File.join("controllers", controller.name.to_s, "#{action.name}.html"), "action", {:controller => controller, :action => action})
-          generate_file(output_path, File.join("controllers", controller.name.to_s, "#{action.name}.form.html"), "action_form", {:controller => controller, :action => action})
         end
       end
       # Structures
