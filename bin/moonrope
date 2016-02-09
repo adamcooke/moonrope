@@ -17,8 +17,8 @@ unless File.directory?(api_root)
   exit 1
 end
 
-if File.exists?(export_dir)
-  $stderr.puts "File already exists at #{export_dir}. Delete and try again."
+if File.exists?(export_dir) && Dir[File.join(export_dir, '*')].size > 0
+  $stderr.puts "File already exists and is not empty at #{export_dir}. Delete and try again."
   exit 1
 end
 

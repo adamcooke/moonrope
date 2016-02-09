@@ -13,9 +13,9 @@ module Moonrope
     attr_reader :template_root_path
 
     def generate(output_path)
-      FileUtils.rm_r(output_path) if File.directory?(output_path)
       FileUtils.mkdir_p(output_path)
       FileUtils.cp_r(File.join(@template_root_path, 'assets'), File.join(output_path, 'assets'))
+      FileUtils.touch(File.join(output_path, 'moonrope.txt'))
       # Index
       generate_file(output_path, "index.html", "index")
       # Controllers
