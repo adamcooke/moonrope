@@ -28,4 +28,8 @@ structure :user do
     full :support_pin, "The PIN this user needs to use to access support", :type => String, :eg => "4953"
   end
 
+  condition :default => :anonymous do
+    full :mask, "The unique mask that represents this user", :type => String, :eg => 'abc123abc123'
+  end
+
 end

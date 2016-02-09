@@ -102,6 +102,21 @@ module Moonrope
       @attributes[:expansion].map(&:name) + expansions.keys
     end
 
+    #
+    # Return the description for a given condition hash
+    #
+    def description_for_condition(condition)
+      if condition[:authenticator] && condition[:access_rule]
+        if authenticator = base.authenticators[condition[:authenticator]]
+          if access_rule = authenticator.rules[condition[:access_rule]]
+            access_rule[:description]
+          end
+        end
+      else
+        condition[:description]
+      end
+    end
+
     private
 
     #
@@ -109,9 +124,25 @@ module Moonrope
     #
     def check_conditions(environment, conditions)
       conditions.each do |condition|
-        condition = condition.is_a?(Hash) ? condition[:block] : condition
-        unless environment.instance_eval(&condition)
-          return false
+        if condition[:block]
+          unless environment.instance_eval(&condition[:block])
+            return false
+          end
+        elsif condition[:authenticator] && condition[:access_rule]
+          if authenticator = base.authenticators[condition[:authenticator]]
+            if access_rule = authenticator.rules[condition[:access_rule]]
+              # If we have an authenticator and access rule, use the access rule
+              # block with this environment to determine if we should include the
+              # given block or not.
+              unless environment.instance_exec(self, &access_rule[:block])
+                return false
+              end
+            else
+              raise Moonrope::Errors::MissingAccessRule, "The rule '#{condition[:access_rule]}' was not found on '#{authenticator.name}' authenticator"
+            end
+          else
+            raise Moonrope::Errors::MissingAuthenticator, "The authentication '#{condition[:authenticator]}' was not found"
+          end
         end
       end
       true

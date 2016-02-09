@@ -222,6 +222,30 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal false, hash.keys.include?(:id)
   end
 
+  def test_condition_with_access_rule
+    base = Moonrope::Base.new do
+      authenticator :default do
+        lookup { true }
+        rule(:default, "NotPermitted") { true }
+        rule(:false_rule, "MustNotBeFalse") { false }
+      end
+      structure :animal do
+        condition :default => :false_rule do
+          basic :id
+        end
+
+        condition :default => :default do
+          basic :name
+        end
+      end
+    end
+
+    animal = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger')
+    hash = base.structure(:animal).hash(animal, :expansions => true)
+    assert_equal false, hash.keys.include?(:id)
+    assert_equal true, hash.keys.include?(:name)
+  end
+
   def test_scopes
     base = Moonrope::Base.new do
       structure :animal do

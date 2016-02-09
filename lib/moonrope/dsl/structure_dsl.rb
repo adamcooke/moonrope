@@ -45,7 +45,9 @@ module Moonrope
 
       def condition(condition, description = nil, &block)
         scope_dsl = self.class.new(@structure)
-        if description
+        if condition.is_a?(Hash) && condition.size == 1
+          condition = {:authenticator => condition.first[0], :access_rule => condition.first[1]}
+        else
           condition = {:block => condition, :description => description}
         end
         scope_dsl.conditions = [@conditions, condition].flatten

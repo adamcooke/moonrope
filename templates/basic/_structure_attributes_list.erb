@@ -16,7 +16,7 @@
         <p class='paramTable__description'><%= attribute.description %></p>
       <% end %>
 
-      <% conditions = attribute.conditions.select { |c| c.is_a?(Hash) }.map { |c| c[:description] } %>
+      <% conditions = attribute.conditions.map { |c| structure.description_for_condition(c) }.compact %>
       <% unless conditions.empty? %>
         <ul class='paramTable__restrictedList'>
           <% for condition in conditions %>
