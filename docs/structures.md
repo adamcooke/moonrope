@@ -101,10 +101,22 @@ You can specify a condition on any attribute or expansion. This can be done by p
 a block to the `:if` option when defining an attribute.
 
 ```ruby
-condition Proc.new { identity.is_super_special_admin? } do
+condition Proc.new { identity.is_super_special_admin? }, "Only available to special admins" do
   basic :pin
 end
 ```
+
+As well as specifying inline blocks, you can also reference access rules from any
+of your authenticators.
+
+```ruby
+condition :default => :admins do
+  basic :pin
+end
+```
+
+This will use the `admins` rule on the `default` authenticator to verify whether
+or not the `pin` attribute will be displayed.
 
 ## Accessing structures from actions
 
