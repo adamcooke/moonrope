@@ -268,7 +268,9 @@ a {
   padding:15px;
   font-family:'Droid Sans Mono', fixed;
   white-space: pre;
+  word-wrap:normal;
   font-size:90%;
+  overflow-x:auto;
 }
 
 .tryForm__output--success {
@@ -341,9 +343,11 @@ a {
 .tryForm__checkbox {
   margin-bottom:4px;
 }
+
 .tryForm__checkbox:last-child {
   margin-bottom:0;
 }
+
 .tryForm__checkbox input {
   float:left;
   margin-right:4px;
