@@ -218,5 +218,12 @@ module Moonrope
       self.structure_for(structure_name).is_a?(Moonrope::Structure)
     end
 
+    #
+    # Return an array of parameters which are supported by this action.
+    #
+    def supported_parameters(param_set = nil)
+      action ? action.supported_parameters(param_set) : []
+    end
+
   end
 end

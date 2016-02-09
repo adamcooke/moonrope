@@ -52,7 +52,7 @@ controller :users do
     error "ValidationError", "The details provided were not sufficient to save the user", :attributes => {:errors => "An array of errors for each field"}
     action do
       user = User.new
-      params.copy_to(user, :username, :first_name, :last_name, :email_address, :password, :admin)
+      params.copy_to(user, *supported_parameters(:properties))
       if user.save
         structure user, :return => true
       else
@@ -71,7 +71,7 @@ controller :users do
     error "ValidationError", "The details provided were not sufficient to save the user", :attributes => {:errors => "An array of errors for each field"}
     action do
       user = User.find_by_id(params.id) || error('UserNotFound', :id => params.id)
-      params.copy_to(user, :username, :first_name, :last_name, :email_address, :password, :admin)
+      params.copy_to(user, *supported_parameters(:properties))
       if user.save
         structure user, :return => true
       else

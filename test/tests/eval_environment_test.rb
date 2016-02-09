@@ -69,5 +69,29 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert_equal true, @environment.has_structure_for?(:user)
   end
 
+  def test_provides_access_to_parameter_lists
+    base = Moonrope::Base.new
+    controller = Moonrope::Controller.new(base, :users) do
+      action :create do
+        param :id
+        param :username
+      end
+    end
+    environment = Moonrope::EvalEnvironment.new(base, nil, controller/:create, :accessor1 => 'Hello')
+    assert_equal([:id, :username], environment.supported_parameters)
+  end
+
+  def test_provides_access_to_parameter_lists_for_set
+    base = Moonrope::Base.new
+    controller = Moonrope::Controller.new(base, :users) do
+      action :create do
+        param :id
+        param :username
+      end
+    end
+    environment = Moonrope::EvalEnvironment.new(base, nil, controller/:create, :accessor1 => 'Hello')
+    assert_equal([:id, :username], environment.supported_parameters)
+  end
+
 end
 

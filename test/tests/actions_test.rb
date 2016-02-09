@@ -510,5 +510,30 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal([:user], action.available_expansions)
   end
 
+  def test_provides_access_to_parameter_lists
+    action = Moonrope::Action.new(@controller, :list) do
+      param :id
+      param :username
+    end
+    assert_equal([:id, :username], action.supported_parameters)
+  end
+
+  def test_provides_access_to_parameter_lists_for_set
+    base = Moonrope::Base.new
+    controller = Moonrope::Controller.new(base, :users) do
+      param_set :props do
+        param :first_name
+        param :last_name
+      end
+
+      action :create do
+        param :id
+        param :username
+      end
+    end
+    assert_equal([:first_name, :last_name], (controller/:create).supported_parameters(:props))
+    assert_equal([], (controller/:create).supported_parameters(:invalid_name2))
+  end
+
 
 end
