@@ -47,6 +47,8 @@ module Moonrope
         scope_dsl = self.class.new(@structure)
         if condition.is_a?(Hash) && condition.size == 1
           condition = {:authenticator => condition.first[0], :access_rule => condition.first[1]}
+        elsif condition.is_a?(Symbol)
+          condition = {:authenticator => :default, :access_rule => condition}
         else
           condition = {:block => condition, :description => description}
         end
