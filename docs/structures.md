@@ -118,6 +118,15 @@ end
 This will use the `admins` rule on the `default` authenticator to verify whether
 or not the `pin` attribute will be displayed.
 
+If you're only using your default authenticator, you can omit the authenticator
+name in this call. For example:
+
+```ruby
+condition :admins do
+  basic :pin
+end
+```
+
 ## Accessing structures from actions
 
 Now... how do you include structures from within an action I hear you ask.
