@@ -1,9 +1,24 @@
 $(document).ready(function() {
 
+  $form = $('form.tryForm')
+
+  // Get all fields which will be added as headers
+  var headerFields = $('input.headerField', $form)
+
+  // Add stored values to header fields
+  if(typeof(Storage) !== "undefined") {
+    headerFields.each(function() {
+      $field = $(this)
+      $field.val(localStorage.getItem("header__" + $(this).attr('name')))
+    })
+
+  }
+
+
   //
   // Form submission
   //
-  $('form.tryForm').on('submit', function() {
+  $form.on('submit', function() {
 
     // Gets values used to make up the URL which should be
     // requested for this request.
@@ -12,8 +27,6 @@ $(document).ready(function() {
     var controller = $("input[name=controller]", $(this)).val()
     var action = $("input[name=action]", $(this)).val()
     var url = host + "/api/" + version + "/" + controller + "/" + action
-    // Get all fields which will be added as headers
-    var headerFields = $('input.headerField', $(this))
     // Get the output box ready for use
     var outputBox = $('.tryForm__output', $(this))
     // Create a hash fo all parameters which will be submitted
@@ -61,9 +74,13 @@ $(document).ready(function() {
         // Add any headers which have been added
         headerFields.each(function() {
           $field = $(this)
+          name = $field.attr('name')
           value = $field.val()
+          if(typeof(Storage) !== "undefined") {
+            localStorage.setItem("header__" + name, value)
+          }
           if(value.length) {
-            xhr.setRequestHeader($field.attr('name'), $field.val())
+            xhr.setRequestHeader(name, $field.val())
           }
         })
       },
