@@ -70,5 +70,25 @@ module Moonrope
       @params.keys.include?(key.to_s) || @defaults.keys.include?(key.to_s)
     end
 
+    #
+    # Copy the given parameters to the given object (assuming the object responds
+    # to an appropriate setter method). If no parameters are given, it will return
+    # parameter named `copy_to`.
+    #
+    def copy_to(object = nil, *attributes)
+      if object
+        attributes.each do |attr|
+          if object.respond_to?("#{attr}=") && has?(attr)
+            object.send("#{attr}=", _value_for(attr))
+          end
+        end
+      else
+        # This ensures that if someone has a parameter called copy_to it
+        # can still be accessed using standard . notation.
+        _value_for(:copy_to)
+      end
+    end
+
+
   end
 end

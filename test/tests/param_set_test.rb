@@ -1,5 +1,6 @@
-class ParamSetTest < Test::Unit::TestCase
+require 'ostruct'
 
+class ParamSetTest < Test::Unit::TestCase
 
   def test_param_set
     set = Moonrope::ParamSet.new('fruit' => 'Banana')
@@ -34,6 +35,26 @@ class ParamSetTest < Test::Unit::TestCase
     assert_equal true, set.has?(:fruit)
     assert_equal true, set.has?(:meat)
     assert_equal false, set.has?(:vegetable)
+  end
+
+  class ParamSetCopyTestThing
+    attr_accessor :fruit, :vegetable
+  end
+
+  def test_copy_to
+    set = Moonrope::ParamSet.new('fruit' => 'Apple', 'other' => 'blah')
+    thing = ParamSetCopyTestThing.new
+    thing.vegetable = 'Potato'
+    set.copy_to(thing, :fruit, :vegetable, :other)
+    # it should set params for items it can and are included
+    assert_equal('Apple', thing.fruit)
+    # it shouldn't override params which aren't provided
+    assert_equal('Potato', thing.vegetable)
+  end
+
+  def test_copy_to_still_returns_param
+    set = Moonrope::ParamSet.new('copy_to' => 'Testing')
+    assert_equal('Testing', set.copy_to)
   end
 
 end
