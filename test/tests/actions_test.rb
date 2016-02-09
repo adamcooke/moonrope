@@ -25,6 +25,36 @@ class ActionsTest < Test::Unit::TestCase
     assert action.params.values.all? { |p| p.is_a?(Hash) }
   end
 
+  def test_using_param_sets
+    controller = Moonrope::Controller.new(@base, :users) do
+      param_set :user_properties do
+        param :username, "Blah"
+        param :first_name
+      end
+
+      action :create do
+        param_set :user_properties, :required => [:username]
+      end
+
+      action :update do
+        param :id
+        param_set :user_properties
+      end
+    end
+
+    action = controller / :create
+    assert_equal(Hash, action.params.class)
+    assert_equal(Hash, action.params[:username].class)
+    assert_equal("Blah", action.params[:username][:description])
+    assert_equal(true, action.params[:username][:required])
+
+    action = controller / :update
+    assert_equal(Hash, action.params.class)
+    assert_equal(Hash, action.params[:username].class)
+    assert_equal(Hash, action.params[:id].class)
+    assert_equal(false, !!action.params[:username][:required])
+  end
+
   def test_action
     action = Moonrope::Action.new(@controller, :list) do
       action { true }

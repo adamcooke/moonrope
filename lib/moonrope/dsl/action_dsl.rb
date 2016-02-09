@@ -63,6 +63,27 @@ module Moonrope
       end
 
       #
+      # Copy over any parameters from the controller's param set that
+      # is specified.
+      #
+      #   param_set :user_properties
+      #
+      # @param name [Symbol]
+      # @return [void]
+      #
+      def param_set(name, options = {})
+        if params = @action.controller.param_sets[name]
+          params.each do |key, value|
+            value = value.dup
+            if options[:required].is_a?(Array) && options[:required].include?(key)
+              value[:required] = true
+            end
+            @action.params[key] = value
+          end
+        end
+      end
+
+      #
       # Add a new error to the actions' errors
       #
       #   error "NoUnitFound", "The unit with given {{id}} could not be found"

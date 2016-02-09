@@ -1,7 +1,7 @@
 module Moonrope
   class Controller
 
-    attr_accessor :name, :actions, :befores, :friendly_name, :description, :doc, :authenticator, :access_rule
+    attr_accessor :name, :actions, :befores, :friendly_name, :description, :doc, :authenticator, :access_rule, :param_sets
     attr_reader :base, :dsl
 
     #
@@ -15,6 +15,7 @@ module Moonrope
       @base = base
       @name = name
       @actions = {}
+      @param_sets = {}
       @befores = []
       @dsl = Moonrope::DSL::ControllerDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
