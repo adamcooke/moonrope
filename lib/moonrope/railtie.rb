@@ -45,16 +45,6 @@ module Moonrope
           errors = exception.record.errors.respond_to?(:to_api_hash) ? exception.record.errors.to_api_hash : exception.record.errors
           result.data = {:code => "ValidationError", :message => "Object could not be saved due to a validation error", :errors => errors}
         end
-
-        # Add a helper for auto setting parameters
-        app.config.moonrope.dsl.instance_eval do
-          helper :auto_set_params_for, :unloadable => false do |object|
-            current_action = object.new_record? ? :create_only : :update_only
-            request.action.params.select { |k,v| v[:set] == true || v[:set] == current_action }.keys.each do |param|
-              object.send("#{param}=", params[param])  if params.has?(param)
-            end
-          end
-        end
       end
 
       # Insert the Moonrope middleware into the application's middleware
