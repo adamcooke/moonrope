@@ -30,6 +30,26 @@ $(document).ready(function() {
         }
       }
     });
+
+    // Include/exclude full attributes as needed
+    var fullAttrsCheckbox = $('#full_attrs')
+    if(fullAttrsCheckbox.length) {
+      parameters['_full'] = !!fullAttrsCheckbox.prop('checked')
+    }
+
+    // Include/exclude expansions
+    var expansionCheckboxes = $('.tryForm__expansions')
+    if(expansionCheckboxes.length) {
+      parameters['_expansions'] = []
+      expansionCheckboxes.each(function() {
+        $this = $(this)
+        name = $(this).attr('name')
+        if($(this).prop('checked')) {
+          parameters['_expansions'].push(name)
+        }
+      })
+    }
+
     // Make the AJAX request
     $.ajax({
       url: url,
