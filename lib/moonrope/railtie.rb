@@ -22,11 +22,28 @@ module Moonrope
         Moonrope::Request.path_regex = app.config.moonrope_request_path_regex
       end
 
-      # Catch ActiveRecord::RecordNotFound exception as a standard not-found error
       if defined?(ActiveRecord)
+
+        # Catch ActiveRecord::RecordNotFound exception as a standard not-found error
         app.config.moonrope.register_external_error ActiveRecord::RecordNotFound do |exception, result|
           result.status = 'not-found'
           result.data = {:message => exception.message}
+        end
+
+        # Catch ActiveRecord::DeleteRestrictionError and raise an a DeleteRestrictionError
+        app.config.moonrope.register_external_error ActiveRecord::DeleteRestrictionError do |exception, result|
+          result.status = 'error'
+          result.data = {:code => "DeleteRestrictionError", :message => "Object could not be deleted due to dependency"}
+          if exception.message =~ /([\w\-]+)\z/
+            result.data[:dependency] = $1
+          end
+        end
+
+        # Catch ActiveRecord::RecordInvalid and raise an a ValidationError
+        app.config.moonrope.register_external_error ActiveRecord::RecordInvalid do |exception, result|
+          result.status = 'error'
+          errors = exception.record.errors.respond_to?(:to_api_hash) ? exception.record.errors.to_api_hash : exception.record.errors
+          result.data = {:code => "ValidationError", :message => "Object could not be saved due to a validation error", :errors => errors}
         end
 
         # Add a helper for auto setting parameters
