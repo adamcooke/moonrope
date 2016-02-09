@@ -1,8 +1,9 @@
 $(document).ready(function() {
+
   //
   // Form submission
   //
-  $('form').on('submit', function() {
+  $('form.tryForm').on('submit', function() {
 
     // Gets values used to make up the URL which should be
     // requested for this request.
@@ -109,4 +110,23 @@ $(document).ready(function() {
     $parent.show()
     return false
   });
+
+  // http://stackoverflow.com/questions/8100770/auto-scaling-inputtype-text-to-width-of-value
+  // http://jsfiddle.net/MqM76/217/
+  $.fn.textWidth = function(text, font) {
+      if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl =      $('<span>').hide().appendTo(document.body);
+      $.fn.textWidth.fakeEl.text(text || this.val() || this.text()).css('font', font || this.css('font'));
+      return $.fn.textWidth.fakeEl.width();
+  };
+
+  // Automatically ensure that the size for the header inputs is
+  // correct
+  function resizeInput() {
+    $this = $(this)
+    $this.css('width', $this.textWidth() + "px")
+    $this.attr('size', $this.val().length)
+  }
+
+  $('form.tryForm .tryForm__header input').on('input', resizeInput).trigger('input')
+
 });

@@ -248,17 +248,10 @@ a {
   border:0;
   padding:0;
   vertical-align:0px;
-  border-bottom:1px solid #ccc;
-  padding-bottom:2px;
   font:inherit;
   font-weight:700;
   color:#000;
-
-}
-
-.tryForm__header input.v {
-  width:40px;
-  text-align: center;
+  width:auto;
 }
 
 .tryForm__output {
