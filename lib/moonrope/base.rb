@@ -14,6 +14,11 @@ module Moonrope
       api
     end
 
+    class << self
+      # @return [Moonrope::Base] return a global instance
+      attr_accessor :instance
+    end
+
     # @return [Array] the array of defined structures
     attr_reader :structures
 
