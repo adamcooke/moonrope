@@ -94,7 +94,16 @@ module Moonrope
     #
     def load_directory(directory)
       if File.exist?(directory)
-        Dir["#{directory}/**/*.rb"].each do |filename|
+        @loaded_files = []
+        Dir[
+          "#{directory}/structures/**/*.rb",
+          "#{directory}/controllers/**/*.rb",
+          "#{directory}/helpers/**/*.rb",
+          "#{directory}/authenticators/**/*.rb",
+          "#{directory}/*.rb",
+        ].each do |filename|
+          next if @loaded_files.include?(filename)
+          @loaded_files << filename
           self.dsl.instance_eval(File.read(filename), filename)
         end
         true
