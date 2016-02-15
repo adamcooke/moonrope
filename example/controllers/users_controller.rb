@@ -39,7 +39,11 @@ controller :users do
     param :last_name, "The user's last name", :type => String
     param :email_address, "The user's e-mail address", :type => String
     param :password, "The user's password", :type => String
-    param :admin, "Should this user be an admin?", :type => :boolean
+    param :admin, "Should this user be an admin?", :type => :boolean do |object, value|
+      if identity.admin?
+        object.admin = value
+      end
+    end
   end
 
   action :create do

@@ -16,12 +16,13 @@ module Moonrope
       # @param options_if_description [Hash] a hash of additional options if a description was provided
       # @return [void]
       #
-      def param(name, description_or_options = {}, options_if_description = {})
+      def param(name, description_or_options = {}, options_if_description = {}, &block)
         if description_or_options.is_a?(String)
           options = options_if_description.merge(:description => description_or_options)
         else
           options = description_or_options
         end
+        options[:apply] = block
         @params_hash[name] = options
       end
 
