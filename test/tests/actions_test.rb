@@ -65,6 +65,7 @@ class ActionsTest < Test::Unit::TestCase
 
       action :create do
         use :user_properties
+        param :last_name
       end
     end
 

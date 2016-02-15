@@ -53,7 +53,7 @@ module Moonrope
       # @param options_if_description [Hash] a hash of additional options if a description was provided
       # @return [void]
       #
-      def param(name, description_or_options = {}, options_if_description = {})
+      def param(name, description_or_options = {}, options_if_description = {}, &block)
         if description_or_options.is_a?(String)
           options = options_if_description.merge(:description => description_or_options)
         else
@@ -69,6 +69,8 @@ module Moonrope
           end
         end
 
+        options[:apply] = block if block_given?
+        options[:from_share] = @within_share if @within_share
         @action.params[name] = options
       end
 
@@ -103,7 +105,7 @@ module Moonrope
       # @return [void]
       #
       def error(name, description, options = {})
-        @action.errors[name] = options.merge(:description => description)
+        @action.errors[name] = options.merge(:description => description, :from_share => @within_share)
       end
 
       #
@@ -185,10 +187,13 @@ module Moonrope
       #
       def use(share_name)
         if block = @action.controller.shares[share_name]
+          @within_share = share_name
           self.instance_eval(&block)
         else
           raise Moonrope::Errors::Error, "Invalid share name #{share_name}"
         end
+      ensure
+        @within_share = nil
       end
 
     end
