@@ -55,6 +55,26 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal(false, !!action.params[:username][:required])
   end
 
+  def test_using_shares
+    controller = Moonrope::Controller.new(@base, :users) do
+      share :user_properties do
+        error 'InvalidUsername', "Some description"
+        param :username, "Blah"
+        param :first_name
+      end
+
+      action :create do
+        use :user_properties
+      end
+    end
+
+    action = controller / :create
+    assert_equal(Hash, action.params.class)
+    assert_equal(Hash, action.params[:username].class)
+    assert_equal("Blah", action.params[:username][:description])
+    assert_equal(Hash, action.errors['InvalidUsername'].class)
+  end
+
   def test_action
     action = Moonrope::Action.new(@controller, :list) do
       action { true }

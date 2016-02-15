@@ -180,6 +180,17 @@ module Moonrope
         end
       end
 
+      #
+      # Include any block from the controller shares
+      #
+      def use(share_name)
+        if block = @action.controller.shares[share_name]
+          self.instance_eval(&block)
+        else
+          raise Moonrope::Errors::Error, "Invalid share name #{share_name}"
+        end
+      end
+
     end
   end
 end

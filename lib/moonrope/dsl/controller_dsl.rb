@@ -117,6 +117,15 @@ module Moonrope
         dsl.instance_eval(&block)
         @controller.param_sets[name] = set
       end
+
+      #
+      # Define a shared block which can be used by any action
+      #
+      # @param name[Symbol] the name of the share
+      #
+      def share(name, &block)
+        @controller.shares[name] = block
+      end
     end
   end
 end
