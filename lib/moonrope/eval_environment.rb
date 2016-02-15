@@ -222,6 +222,14 @@ module Moonrope
     # Copy the list of parameters onto the given objectr
     #
     def copy_params_to(object, *params_to_copy)
+      if params_to_copy.first.is_a?(Hash)
+        options = params_to_copy.shift
+        if options[:from]
+          all_params = action.params.select { |_,p| p[:from_share] == options[:from] }
+          params_to_copy = params_to_copy + all_params.keys
+        end
+      end
+
       params_to_copy.each do |param_name|
         if param_definition = action.params[param_name]
           if params.has?(param_name)
