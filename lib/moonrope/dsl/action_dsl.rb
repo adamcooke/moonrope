@@ -59,6 +59,16 @@ module Moonrope
         else
           options = description_or_options
         end
+
+        if structure = options[:from_structure]
+          if @action.controller && structure = @action.controller.base.structure(structure)
+            if attribute = structure.attribute(name)
+              options[:description] ||= attribute.description
+              options[:type] ||= attribute.value_type
+            end
+          end
+        end
+
         @action.params[name] = options
       end
 
@@ -78,7 +88,7 @@ module Moonrope
             if options[:required].is_a?(Array) && options[:required].include?(key)
               value[:required] = true
             end
-            @action.params[key] = value
+            param(key, value)
           end
         end
       end

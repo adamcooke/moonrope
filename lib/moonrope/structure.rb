@@ -41,6 +41,15 @@ module Moonrope
     end
 
     #
+    # Return details for the given attribute
+    #
+    def attribute(name)
+      @attributes[:basic].select { |p| p.name == name }.first ||
+      @attributes[:full].select { |p| p.name == name }.first ||
+      @attributes[:expansion].select { |p| p.name == name }.first
+    end
+
+    #
     # Return a hash for this struture
     #
     # @param object [Object] the object

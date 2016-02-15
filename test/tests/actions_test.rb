@@ -535,5 +535,26 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal([], (controller/:create).supported_parameters(:invalid_name2))
   end
 
+  def test_that_param_can_copy_data_from_structures
+    base = Moonrope::Base.new do
+      structure :user do
+        basic :username, "The username for the user", :type => String, :eg => 123
+      end
+
+      controller :users do
+        param_set :props do
+          param :id
+        end
+        action :save do
+          param :username, :from_structure => :user
+        end
+      end
+    end
+
+    action = base/:users/:save
+    assert_equal "The username for the user", action.params[:username][:description]
+    assert_equal String, action.params[:username][:type]
+  end
+
 
 end
