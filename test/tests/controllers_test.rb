@@ -32,20 +32,6 @@ class ControllersTest < Test::Unit::TestCase
     assert_equal 1, controller.before_actions_for(:show).size
   end
 
-
-  def test_defining_param_sets
-    controller = Moonrope::Controller.new(@base, :users) do
-      param_set :user_properties do
-        param :username
-        param :first_name
-      end
-    end
-
-    assert_equal(Hash, controller.param_sets.class)
-    assert_equal(Hash, controller.param_sets[:user_properties].class)
-    assert_equal(Hash, controller.param_sets[:user_properties][:username].class)
-  end
-
   def test_definining_shared_params
     controller = Moonrope::Controller.new(@base, :users) do
       share :crud do

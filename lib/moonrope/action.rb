@@ -315,17 +315,5 @@ module Moonrope
       end
     end
 
-    #
-    # Return an array of supported parameters for this action
-    #
-    def supported_parameters(param_set = nil)
-      if param_set
-        controller.param_sets[param_set] ? controller.param_sets[param_set].keys : []
-      else
-        params.keys
-      end
-    end
-
-
   end
 end

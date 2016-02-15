@@ -1,5 +1,3 @@
-require 'moonrope/dsl/controller_param_set_dsl'
-
 module Moonrope
   module DSL
     class ControllerDSL
@@ -104,18 +102,6 @@ module Moonrope
           raise Moonrope::Errors::HelperAlreadyDefined, "Helper has already been defined with name `#{name}`"
         end
         @controller.base.helpers << Moonrope::Helper.new(name, @controller, options, &block)
-      end
-
-      #
-      # Defines a param set for this controller
-      #
-      # @param name [Symbol] the name for the param set
-      #
-      def param_set(name, &block)
-        set = {}
-        dsl = Moonrope::DSL::ControllerParamSetDSL.new(set)
-        dsl.instance_eval(&block)
-        @controller.param_sets[name] = set
       end
 
       #

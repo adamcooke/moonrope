@@ -218,31 +218,5 @@ module Moonrope
       self.structure_for(structure_name).is_a?(Moonrope::Structure)
     end
 
-    #
-    # Return an array of parameters which are supported by this action.
-    #
-    def supported_parameters(param_set = nil)
-      action ? action.supported_parameters(param_set) : []
-    end
-
-    #
-    # Apply the given param set to the provided object
-    #
-    def apply_param_set(param_set, object)
-      if param_set = action.controller.param_sets[param_set]
-        param_set.each do |name, options|
-          if params.has?(name)
-            if options[:apply]
-              # Use the block to apply this
-              self.instance_exec(object, params[name], &options[:apply])
-            elsif object.respond_to?("#{name}=")
-              # If the object can be set and no block is provided, set away
-              object.send("#{name}=", params[name])
-            end
-          end
-        end
-      end
-    end
-
   end
 end

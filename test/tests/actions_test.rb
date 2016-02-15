@@ -25,36 +25,6 @@ class ActionsTest < Test::Unit::TestCase
     assert action.params.values.all? { |p| p.is_a?(Hash) }
   end
 
-  def test_using_param_sets
-    controller = Moonrope::Controller.new(@base, :users) do
-      param_set :user_properties do
-        param :username, "Blah"
-        param :first_name
-      end
-
-      action :create do
-        param_set :user_properties, :required => [:username]
-      end
-
-      action :update do
-        param :id
-        param_set :user_properties
-      end
-    end
-
-    action = controller / :create
-    assert_equal(Hash, action.params.class)
-    assert_equal(Hash, action.params[:username].class)
-    assert_equal("Blah", action.params[:username][:description])
-    assert_equal(true, action.params[:username][:required])
-
-    action = controller / :update
-    assert_equal(Hash, action.params.class)
-    assert_equal(Hash, action.params[:username].class)
-    assert_equal(Hash, action.params[:id].class)
-    assert_equal(false, !!action.params[:username][:required])
-  end
-
   def test_using_shares
     controller = Moonrope::Controller.new(@base, :users) do
       share :user_properties do
@@ -531,31 +501,6 @@ class ActionsTest < Test::Unit::TestCase
     assert_equal([:user], action.available_expansions)
   end
 
-  def test_provides_access_to_parameter_lists
-    action = Moonrope::Action.new(@controller, :list) do
-      param :id
-      param :username
-    end
-    assert_equal([:id, :username], action.supported_parameters)
-  end
-
-  def test_provides_access_to_parameter_lists_for_set
-    base = Moonrope::Base.new
-    controller = Moonrope::Controller.new(base, :users) do
-      param_set :props do
-        param :first_name
-        param :last_name
-      end
-
-      action :create do
-        param :id
-        param :username
-      end
-    end
-    assert_equal([:first_name, :last_name], (controller/:create).supported_parameters(:props))
-    assert_equal([], (controller/:create).supported_parameters(:invalid_name2))
-  end
-
   def test_that_param_can_copy_data_from_structures
     base = Moonrope::Base.new do
       structure :user do
@@ -563,9 +508,6 @@ class ActionsTest < Test::Unit::TestCase
       end
 
       controller :users do
-        param_set :props do
-          param :id
-        end
         action :save do
           param :username, :from_structure => :user
         end
