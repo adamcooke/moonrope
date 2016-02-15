@@ -218,5 +218,24 @@ module Moonrope
       self.structure_for(structure_name).is_a?(Moonrope::Structure)
     end
 
+    #
+    # Copy the list of parameters onto the given objectr
+    #
+    def copy_params_to(object, *params_to_copy)
+      params_to_copy.each do |param_name|
+        if param_definition = action.params[param_name]
+          if params.has?(param_name)
+            if param_definition[:apply]
+              instance_exec(object, params[param_name], &param_definition[:apply])
+            elsif object.respond_to?("#{param_name}=")
+              object.send("#{param_name}=", params[param_name])
+            end
+          end
+        else
+          raise Moonrope::Errors::Error, "Attempted to copy parameter #{parameter} to object but no definition exists"
+        end
+      end
+    end
+
   end
 end

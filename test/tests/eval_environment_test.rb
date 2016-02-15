@@ -69,6 +69,24 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert_equal true, @environment.has_structure_for?(:user)
   end
 
+  def test_copy_attributes_from_param_set_to_an_object
+    base = Moonrope::Base.new
+    controller = Moonrope::Controller.new(base, :users) do
+      action :save do
+        param :username do |object, value|
+          object.username = "#{value}!"
+        end
+        param :id
+      end
+    end
 
+    request = FakeRequest.new(:params => {'id' => 123, 'username' => 'adam'})
+    env = Moonrope::EvalEnvironment.new(base, request, controller/:save)
+    user = User.new
+    env.copy_params_to user, :username, :id
+    assert_equal user.id, 123
+    assert_equal user.username, "adam!"
+
+  end
 end
 
