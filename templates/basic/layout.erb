@@ -24,7 +24,7 @@
             </a>
           </li>
           <% end %>
-          <% for controller in base.controllers.select { |c| c.doc != false } %>
+          <% for controller in base.controllers.select { |c| c.doc != false }.sort_by { |c| c.name.to_s } %>
           <li>
             <a href='<%= path("controllers/#{controller.name}.html") %>' class="<%= active_nav == "controller-#{controller.name}" ? 'active' : '' %>">
               <%= controller.friendly_name || controller.name %>
