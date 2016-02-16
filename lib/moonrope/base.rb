@@ -1,3 +1,5 @@
+require 'moonrope/dsl/base_dsl'
+
 module Moonrope
   class Base
 

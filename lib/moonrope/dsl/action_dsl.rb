@@ -1,3 +1,5 @@
+require 'moonrope/errors'
+
 module Moonrope
   module DSL
     class ActionDSL
@@ -169,7 +171,7 @@ module Moonrope
           @within_share = share_name
           self.instance_eval(&block)
         else
-          raise Moonrope::Errors::Error, "Invalid share name #{share_name}"
+          raise Moonrope::Errors::InvalidControllerShare, "Invalid share name #{share_name}"
         end
       ensure
         @within_share = nil

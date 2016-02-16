@@ -1,3 +1,7 @@
+require 'moonrope/structure'
+require 'moonrope/controller'
+require 'moonrope/authenticator'
+
 module Moonrope
   module DSL
     class BaseDSL

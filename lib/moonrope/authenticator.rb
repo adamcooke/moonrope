@@ -1,3 +1,5 @@
+require 'moonrope/dsl/authenticator_dsl'
+
 module Moonrope
   class Authenticator
 

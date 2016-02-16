@@ -1,3 +1,5 @@
+require 'moonrope/dsl/structure_dsl'
+
 module Moonrope
   class Structure
 

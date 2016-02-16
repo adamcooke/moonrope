@@ -1,3 +1,6 @@
+require 'moonrope/dsl/action_dsl'
+require 'moonrope/action_result'
+
 module Moonrope
   class Action
 
@@ -304,7 +307,7 @@ module Moonrope
     # action.
     #
     def available_expansions
-      if (structure = returns[:structure]) && can_change_expansions?
+      if returns && (structure = returns[:structure]) && can_change_expansions?
         if returns[:structure_opts][:paramable].is_a?(Hash) && returns[:structure_opts][:paramable][:expansions].is_a?(Array)
           returns[:structure_opts][:paramable][:expansions]
         else

@@ -18,7 +18,4 @@ Gem::Specification.new do |s|
   s.add_dependency "rack", "~> 1.4"
   s.add_dependency "deep_merge", "~> 1.0"
   s.add_development_dependency "rake", '~> 10.3'
-  s.add_development_dependency "test-unit", '~> 2.5'
-  s.add_development_dependency 'yard', '~> 0.8'
-  s.add_development_dependency "rack-test", '~> 0'
 end

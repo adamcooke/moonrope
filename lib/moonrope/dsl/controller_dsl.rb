@@ -1,3 +1,6 @@
+require 'moonrope/action'
+require 'moonrope/before_action'
+
 module Moonrope
   module DSL
     class ControllerDSL

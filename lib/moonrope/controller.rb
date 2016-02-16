@@ -1,3 +1,5 @@
+require 'moonrope/dsl/controller_dsl'
+
 module Moonrope
   class Controller
 

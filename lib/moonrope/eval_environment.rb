@@ -1,3 +1,5 @@
+require 'moonrope/eval_helpers'
+
 module Moonrope
   class EvalEnvironment
 

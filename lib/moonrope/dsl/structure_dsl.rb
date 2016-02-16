@@ -1,3 +1,5 @@
+require 'moonrope/structure_attribute'
+
 module Moonrope
   module DSL
     class StructureDSL
