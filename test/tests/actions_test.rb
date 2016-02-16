@@ -50,8 +50,9 @@ class ActionsTest < Test::Unit::TestCase
     action = Moonrope::Action.new(@controller, :list) do
       action { true }
     end
-    assert action.action.is_a?(Proc)
-    assert_equal true, action.action.call
+    assert action.actions.is_a?(Array)
+    assert action.actions.first.is_a?(Proc)
+    assert_equal true, action.actions.first.call
   end
 
   def test_calling_actions

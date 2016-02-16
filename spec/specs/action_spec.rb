@@ -52,9 +52,10 @@ describe Moonrope::Action do
       expect { action.dsl.use :crud }.to raise_error(Moonrope::Errors::InvalidControllerShare)
     end
 
-    it "should have an action block" do
+    it "should have a action blocks" do
       action.dsl.action { true }
-      expect(action.action).to be_a(Proc)
+      expect(action.actions).to be_a(Array)
+      expect(action.actions.first).to be_a(Proc)
     end
   end
 

@@ -22,8 +22,8 @@ module Moonrope
     # @return [String] the description of the action
     attr_accessor :description
 
-    # @return [Proc] the action for the action
-    attr_accessor :action
+    # @return [Array] the actual action blocks for the action
+    attr_accessor :actions
 
     # @return [Symbol] the name of the authenticator for this action
     attr_accessor :authenticator
@@ -56,6 +56,7 @@ module Moonrope
       @params = {}
       @errors = {}
       @traits = []
+      @actions = []
       @dsl = Moonrope::DSL::ActionDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
@@ -158,7 +159,10 @@ module Moonrope
         end
 
         # Run the actual action
-        response = eval_environment.instance_eval(&action)
+        response = nil
+        actions.each do |action|
+          response = eval_environment.instance_exec(response, &action)
+        end
 
         # Calculate the length of time this request takes
         time_to_run = Time.now - start_time

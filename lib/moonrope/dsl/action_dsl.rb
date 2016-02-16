@@ -62,6 +62,8 @@ module Moonrope
           options = description_or_options
         end
 
+        options[:from_structure] ||= @from_structure if @from_structure
+
         if structure = options[:from_structure]
           if @action.controller && structure = @action.controller.base.structure(structure)
             if attribute = structure.attribute(name)
@@ -73,7 +75,6 @@ module Moonrope
 
         options[:apply] = block if block_given?
         options[:from_share] = @within_share if @within_share
-        options[:from_structure] ||= @from_structure if @from_structure
         @action.params[name] = options
       end
 
@@ -155,7 +156,7 @@ module Moonrope
       # @return [void]
       #
       def action(&block)
-        @action.action = block
+        @action.actions << block
       end
 
       #
