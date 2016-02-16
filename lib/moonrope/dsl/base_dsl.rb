@@ -77,6 +77,13 @@ module Moonrope
         @base.authenticators[name] = authenticator
       end
 
+      #
+      # Define a new global shared action
+      #
+      def shared_action(name, &block)
+        @base.shared_actions[name] = block
+      end
+
     end
   end
 end

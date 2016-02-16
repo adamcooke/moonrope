@@ -36,6 +36,9 @@ module Moonrope
     # @return [Hash] authenticators
     attr_accessor :authenticators
 
+    # @return [Hash] global shared actions
+    attr_accessor :shared_actions
+
     # @return [Array] the array of directories to load from  (if relevant)
     attr_accessor :load_directories
 
@@ -66,6 +69,7 @@ module Moonrope
       @controllers = []
       @helpers = @helpers.is_a?(Array) ? @helpers.select { |h| h.options[:unloadable] == false } : []
       @authenticators = {}
+      @shared_actions = {}
       @default_access = nil
     end
 

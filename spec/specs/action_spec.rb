@@ -40,8 +40,8 @@ describe Moonrope::Action do
       expect(action.errors.size).to eq 1
     end
 
-    it "should be able to use shares from the controller" do
-      controller.dsl.share :crud do
+    it "should be able to use shared actions from the controller" do
+      controller.dsl.shared_action :crud do
         param :username
       end
       action.dsl.use :crud
@@ -49,7 +49,15 @@ describe Moonrope::Action do
     end
 
     it "shuold raise an error if tries to use a share that doesn't exist" do
-      expect { action.dsl.use :crud }.to raise_error(Moonrope::Errors::InvalidControllerShare)
+      expect { action.dsl.use :crud }.to raise_error(Moonrope::Errors::InvalidSharedAction)
+    end
+
+    it "should be able to use shared actions from the base" do
+      base.dsl.shared_action :some_base_thing do
+        param :username
+      end
+      action.dsl.use :some_base_thing
+      expect(action.params.size).to eq 1
     end
 
     it "should have a action blocks" do

@@ -19,13 +19,13 @@ describe Moonrope::Controller do
       expect(controller.befores.first).to be_a(Moonrope::BeforeAction)
     end
 
-    it "should be able to define & return a share block" do
+    it "should be able to define & return a shared action" do
       controller = Moonrope::Controller.new(Moonrope::Base.new, :users) do
-        share :example do
+        shared_action :example do
         end
       end
-      expect(controller.shares.size).to eq(1)
-      expect(controller.shares[:example]).to be_a(Proc)
+      expect(controller.shared_actions.size).to eq(1)
+      expect(controller.shared_actions[:example]).to be_a(Proc)
     end
   end
 end

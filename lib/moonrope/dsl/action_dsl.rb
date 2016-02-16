@@ -186,7 +186,7 @@ module Moonrope
       # Include any block from the controller shares
       #
       def use(name)
-        if block = @action.controller.shared_actions[name]
+        if block = (@action.controller.shared_actions[name] || @action.controller.base.shared_actions[name])
           @within_shared_action = name
           self.instance_eval(&block)
         else
