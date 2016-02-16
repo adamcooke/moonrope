@@ -73,7 +73,25 @@ module Moonrope
 
         options[:apply] = block if block_given?
         options[:from_share] = @within_share if @within_share
+        options[:from_structure] ||= @from_structure if @from_structure
         @action.params[name] = options
+      end
+
+      #
+      # Specifies that all params within this block should be marked as being from
+      # a given structure
+      #
+      #    from_structure :user do
+      #      param :username
+      #    end
+      #
+      # @param name [Symbol] the name of the structure
+      #
+      def from_structure(name, &block)
+        @from_structure = name
+        self.instance_eval(&block)
+      ensure
+        @from_structure = nil
       end
 
       #
