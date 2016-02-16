@@ -103,6 +103,7 @@ module Moonrope
         @loaded_files = []
         Dir[
           "#{directory}/structures/**/*.rb",
+          "#{directory}/shared_actions/**/*.rb",
           "#{directory}/controllers/**/*.rb",
           "#{directory}/helpers/**/*.rb",
           "#{directory}/authenticators/**/*.rb",
