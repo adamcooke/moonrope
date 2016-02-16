@@ -3,7 +3,7 @@ require 'moonrope/dsl/controller_dsl'
 module Moonrope
   class Controller
 
-    attr_accessor :name, :actions, :befores, :friendly_name, :description, :doc, :authenticator, :access_rule, :shares
+    attr_accessor :name, :actions, :befores, :friendly_name, :description, :doc, :authenticator, :access_rule, :shared_actions
     attr_reader :base, :dsl
 
     #
@@ -17,7 +17,7 @@ module Moonrope
       @base = base
       @name = name
       @actions = {}
-      @shares = {}
+      @shared_actions = {}
       @befores = []
       @dsl = Moonrope::DSL::ControllerDSL.new(self)
       @dsl.instance_eval(&block) if block_given?

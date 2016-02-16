@@ -108,12 +108,12 @@ module Moonrope
       end
 
       #
-      # Define a shared block which can be used by any action
+      # Define a shared action which can be used by any action
       #
-      # @param name[Symbol] the name of the share
+      # @param name[Symbol] the name of the shared action
       #
-      def share(name, &block)
-        @controller.shares[name] = block
+      def shared_action(name, &block)
+        @controller.shared_actions[name] = block
       end
     end
   end

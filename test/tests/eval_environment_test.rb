@@ -91,7 +91,7 @@ class EvalEnvironmentTest < Test::Unit::TestCase
   def test_copy_attributes_from_share
     base = Moonrope::Base.new
     controller = Moonrope::Controller.new(base, :users) do
-      share :crud do
+      shared_action :crud do
         param :username
         param :id
       end

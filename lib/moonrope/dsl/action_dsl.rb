@@ -74,7 +74,7 @@ module Moonrope
         end
 
         options[:apply] = block if block_given?
-        options[:from_share] = @within_share if @within_share
+        options[:from_shared_action] = @within_shared_action if @within_shared_action
         @action.params[name] = options
       end
 
@@ -185,15 +185,15 @@ module Moonrope
       #
       # Include any block from the controller shares
       #
-      def use(share_name)
-        if block = @action.controller.shares[share_name]
-          @within_share = share_name
+      def use(name)
+        if block = @action.controller.shared_actions[name]
+          @within_shared_action = name
           self.instance_eval(&block)
         else
-          raise Moonrope::Errors::InvalidControllerShare, "Invalid share name #{share_name}"
+          raise Moonrope::Errors::InvalidSharedAction, "Invalid share name #{name}"
         end
       ensure
-        @within_share = nil
+        @within_shared_action = nil
       end
 
     end

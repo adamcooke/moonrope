@@ -33,7 +33,7 @@ controller :users do
     end
   end
 
-  share :properties do
+  shared_action :properties do
     param :username, "The user's username", :type => String
     param :first_name, "The user's first name", :type => String
     param :last_name, "The user's last name", :type => String

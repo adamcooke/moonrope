@@ -27,7 +27,7 @@ class ActionsTest < Test::Unit::TestCase
 
   def test_using_shares
     controller = Moonrope::Controller.new(@base, :users) do
-      share :user_properties do
+      shared_action :user_properties do
         error 'InvalidUsername', "Some description"
         param :username, "Blah"
         param :first_name

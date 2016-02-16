@@ -7,7 +7,7 @@ module Moonrope
     class HelperAlreadyDefined < Error; end
     class MissingAuthenticator < Error; end
     class MissingAccessRule < Error; end
-    class InvalidControllerShare < Error; end
+    class InvalidSharedAction < Error; end
 
     class RequestError < Error
       attr_reader :options

@@ -227,7 +227,7 @@ module Moonrope
       if params_to_copy.first.is_a?(Hash)
         options = params_to_copy.shift
         if options[:from]
-          all_params = action.params.select { |_,p| p[:from_share] == options[:from] }
+          all_params = action.params.select { |_,p| p[:from_shared_action] == options[:from] }
           params_to_copy = params_to_copy + all_params.keys
         end
       end
