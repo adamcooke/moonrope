@@ -231,7 +231,6 @@ module Moonrope
           params_to_copy = params_to_copy + all_params.keys
         end
       end
-
       params_to_copy.each do |param_name|
         if param_definition = action.params[param_name]
           if params.has?(param_name)

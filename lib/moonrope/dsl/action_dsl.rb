@@ -187,13 +187,13 @@ module Moonrope
       #
       def use(name)
         if block = (@action.controller.shared_actions[name] || @action.controller.base.shared_actions[name])
-          @within_shared_action = [@within_shared_action, name].flatten
+          @within_shared_action = [@within_shared_action, name].compact.flatten
           self.instance_eval(&block)
         else
           raise Moonrope::Errors::InvalidSharedAction, "Invalid share name #{name}"
         end
       ensure
-        @within_shared_action = nil
+        @within_shared_action.delete(name) if @within_shared_action
       end
 
     end
