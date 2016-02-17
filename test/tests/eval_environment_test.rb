@@ -108,5 +108,29 @@ class EvalEnvironmentTest < Test::Unit::TestCase
     assert_equal user.username, "adam"
   end
 
+  def test_copy_attribute_from_shared_action_within_shared_action
+    base = Moonrope::Base.new
+    controller = Moonrope::Controller.new(base, :users) do
+      shared_action :private_code do
+        param :private_code
+      end
+      shared_action :crud do
+        param :username
+        param :id
+        use :private_code
+      end
+      action :save do
+        use :crud
+      end
+    end
+
+    request = FakeRequest.new(:params => {'id' => 123, 'username' => 'adam', 'private_code' => 'llama'})
+    env = Moonrope::EvalEnvironment.new(base, request, controller/:save)
+    user = User.new
+    env.copy_params_to user, :from => :crud
+    assert_equal user.username, "adam"
+    assert_equal user.private_code, "llama"
+  end
+
 end
 
