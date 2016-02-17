@@ -259,7 +259,7 @@ module Moonrope
     # calling this action?
     #
     def can_change_full?
-      if opts = returns[:structure_opts]
+      if returns && opts = returns[:structure_opts]
         opts[:paramable] == true ||
         (opts[:paramable].is_a?(Hash) && opts[:paramable].has_key?(:full))
       else
@@ -271,7 +271,7 @@ module Moonrope
     # Does this action include full attributes by default?
     #
     def includes_full_attributes?
-      if opts = returns[:structure_opts]
+      if returns && opts = returns[:structure_opts]
         (opts[:paramable].is_a?(Hash) && opts[:paramable][:full] == true) ||
         opts[:full] == true
       else
@@ -284,7 +284,7 @@ module Moonrope
     # this action?
     #
     def can_change_expansions?
-      if opts = returns[:structure_opts]
+      if returns && opts = returns[:structure_opts]
         opts[:paramable] == true ||
         (opts[:paramable].is_a?(Hash) && opts[:paramable].has_key?(:expansions))
       else
@@ -296,7 +296,7 @@ module Moonrope
     # Does this action include full attributes by default?
     #
     def includes_expansion?(expansion)
-      if opts = returns[:structure_opts]
+      if returns && opts = returns[:structure_opts]
         (opts[:paramable].is_a?(Hash) && opts[:paramable][:expansions] == true) ||
         opts[:expansions] == true ||
         (opts[:paramable].is_a?(Hash) && opts[:paramable][:expansions].is_a?(Array) && opts[:paramable][:expansions].include?(expansion)) ||
