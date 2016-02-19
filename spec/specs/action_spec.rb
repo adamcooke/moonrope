@@ -425,4 +425,22 @@ describe Moonrope::Action do
       expect(action.available_expansions).to eq([])
     end
   end
+
+  context "dsl#searchable" do
+    before do
+      action.dsl.filterable do
+        attribute :name
+        attribute :user_id do |value, scope|
+          scope.where(:user => User.find_by_id(value) || error('InvalidUser'))
+        end
+      end
+    end
+
+    it "should have an hash of fields" do
+      expect(action.filters).to be_a(Hash)
+      expect(action.filters[:name]).to be_a(Hash)
+      expect(action.filters[:user_id]).to be_a(Hash)
+      expect(action.filters[:user_id][:block]).to be_a(Proc)
+    end
+  end
 end

@@ -1,4 +1,5 @@
 require 'moonrope/errors'
+require 'moonrope/dsl/filterable_dsl'
 
 module Moonrope
   module DSL
@@ -180,6 +181,15 @@ module Moonrope
           param :sort_by, "The field to sort by", :type => String, :required => true, :default => fields[0].to_s, :options => fields.map(&:to_s)
           param :order, "The direction to order units by", :type => String, :required => true, :default => "asc", :options => ["asc", "desc"]
         end
+      end
+
+      #
+      # Specify that this action will return data which can be filtered by specifying
+      # certain parameters on a filter parameter
+      #
+      def filterable(&block)
+        dsl = FilterableDSL.new(@action)
+        dsl.instance_eval(&block)
       end
 
       #

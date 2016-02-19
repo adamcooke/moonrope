@@ -40,8 +40,11 @@ module Moonrope
     # @return [Bool] whether or not the action should be documented
     attr_accessor :doc
 
-    # @return [Bool] additional traits that have been applied to this action
+    # @return [Array] additional traits that have been applied to this action
     attr_reader :traits
+
+    # @return [Hash] a hash of filters that are applied
+    attr_reader :filters
 
     #
     # Initialize a new action
@@ -57,6 +60,7 @@ module Moonrope
       @errors = {}
       @traits = []
       @actions = []
+      @filters = {}
       @dsl = Moonrope::DSL::ActionDSL.new(self)
       @dsl.instance_eval(&block) if block_given?
     end
