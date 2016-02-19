@@ -188,8 +188,13 @@ module Moonrope
       # certain parameters on a filter parameter
       #
       def filterable(&block)
-        error 'FilterError', "An error has occurred while processing filters for this action", :attributes => {:issue_code => "A more specific issue code", :issue_message => "A more specific message about the issue"}
-        param :filters, "A hash of filters to apply to results", :type => Hash, :default => {}
+        if @action.errors['FilterError']
+          error 'FilterError', "An error has occurred while processing filters for this action", :attributes => {:issue_code => "A more specific issue code", :issue_message => "A more specific message about the issue"}
+        end
+
+        if @action.params[:filters].nil?
+          param :filters, "A hash of filters to apply to results", :type => Hash, :default => {}
+        end
         dsl = FilterableDSL.new(@action)
         dsl.instance_eval(&block)
       end
