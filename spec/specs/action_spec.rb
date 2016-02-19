@@ -426,11 +426,11 @@ describe Moonrope::Action do
     end
   end
 
-  context "dsl#searchable" do
+  context "dsl#filterable" do
     before do
       action.dsl.filterable do
         attribute :name
-        attribute :user_id do |value, scope|
+        attribute :user_id, :operators => [:eq, :not_eq, :in, :not_in] do |operator, value, scope|
           scope.where(:user => User.find_by_id(value) || error('InvalidUser'))
         end
       end
@@ -442,5 +442,14 @@ describe Moonrope::Action do
       expect(action.filters[:user_id]).to be_a(Hash)
       expect(action.filters[:user_id][:block]).to be_a(Proc)
     end
+
+    it "should add a 'filters' param" do
+      expect(action.params[:filters]).to be_a Hash
+    end
+
+    it "should add an error for filter errors" do
+      expect(action.errors['FilterError']).to be_a Hash
+    end
+
   end
 end

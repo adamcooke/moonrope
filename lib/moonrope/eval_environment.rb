@@ -1,9 +1,11 @@
 require 'moonrope/eval_helpers'
+require 'moonrope/eval_helpers/filter_helper'
 
 module Moonrope
   class EvalEnvironment
 
     include Moonrope::EvalHelpers
+    include Moonrope::EvalHelpers::FilterHelper
 
     # @return [Moonrope::Base] the base object
     attr_reader :base
