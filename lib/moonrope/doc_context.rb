@@ -57,10 +57,16 @@ module Moonrope
     def path(file)
       depth = ((@options[:output_file] || '').split('/').size - 1).times.map { "../" }.join
       if file == :root
-        depth + "welcome"
+        file = depth + (@options[:welcome_file] || "welcome")
       else
-        depth + file
+        file = depth + file
       end
+
+      if @options[:html_extensions] && !(file =~ /\.[a-z]+\z/)
+        file = "#{file}.html"
+      end
+
+      file
     end
 
     def render(template_file)
@@ -68,7 +74,7 @@ module Moonrope
     end
 
     def partial(name, attributes = {})
-      erb = self.class.new(@generator, :output_file => @options[:output_file], :vars => attributes)
+      erb = self.class.new(@generator, @options.merge(:vars => attributes))
       erb.render(File.join(@generator.template_root_path, "_#{name}.erb"))
     end
 
