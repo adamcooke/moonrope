@@ -188,7 +188,7 @@ module Moonrope
       # certain parameters on a filter parameter
       #
       def filterable(&block)
-        if @action.errors['FilterError']
+        if @action.errors['FilterError'].nil?
           error 'FilterError', "An error has occurred while processing filters for this action", :attributes => {:issue_code => "A more specific issue code", :issue_message => "A more specific message about the issue"}
         end
 
