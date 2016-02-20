@@ -39,6 +39,8 @@ $(document).ready(function() {
       if(value.length) {
         if(type == 'Integer') {
           parameters[name] = parseInt(value);
+        } else if (type == "Hash" || type == "Array") {
+          parameters[name] = JSON.parse(value);
         } else {
           parameters[name] = value;
         }
