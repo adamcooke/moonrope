@@ -1,8 +1,11 @@
-# Moonrope
+# Moonrope - the self-documenting API
 
 Moonrope is an API server & client tool for Ruby/Rack applications. It
 provides everything you need to create an API within your application and
-have a Ruby API client provided without any development.
+have easy to use client libraries provided without any development.
+
+Not only does it provide a formal structure for your API, it will also generate
+lovely looking documentation files for develpers to work with.
 
 This repository is the server-side library which allows you to easily define
 your API actions & data structures and serve them out using Rack middleware.
@@ -10,7 +13,7 @@ your API actions & data structures and serve them out using Rack middleware.
 * [Documentation](http://rdoc.info/github/viaduct/moonrope/master/frames)
 * [Travis CI](https://travis-ci.org/viaduct/moonrope)
 
-[![Build Status](https://travis-ci.org/adamcooke/moonrope.svg?branch=master)](https://travis-ci.org/adamcooke/moonrope)
+![Screenshot](https://s.adamcooke.io/16/VJpLoJku.png)
 
 ## Documentation
 
