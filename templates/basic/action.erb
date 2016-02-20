@@ -73,9 +73,9 @@
 <h2>Response Data</h2>
 <% if action.returns[:structure] %>
   <% if action.returns[:type] == :array %>
-    <p class='text'>This action will return an array of <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= humanize(action.returns[:structure]) %> structures</a>.</p>
+    <p class='text'>This action will return an array of <a class='link' href='<%= path("structures/#{action.returns[:structure]}") %>'><%= humanize(action.returns[:structure]) %> structures</a>.</p>
   <% else %>
-    <p class='text'>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'><%= humanize(action.returns[:structure]) %> structure</a>.</p>
+    <p class='text'>This action will return a <a class='link' href='<%= path("structures/#{action.returns[:structure]}") %>'><%= humanize(action.returns[:structure]) %> structure</a>.</p>
   <% end %>
 
   <% if opts = action.returns[:structure_opts] %>
@@ -85,7 +85,7 @@
         any expansions. You can choose to receive extended attributes by providing the <code>_full</code> parameter. You can
         also choose to receive any expansions by providing an array in the <code>_expansions</code>
         parameter. A full list of expansions can be found on the
-        <a class='link' href='<%= path("structures/#{action.returns[:structure]}.html") %>'>structure page</a>.
+        <a class='link' href='<%= path("structures/#{action.returns[:structure]}") %>'>structure page</a>.
       </p>
     <% elsif opts[:paramable].is_a?(Hash) %>
       <p class='text'>

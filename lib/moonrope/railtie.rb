@@ -1,3 +1,5 @@
+require 'moonrope/doc_server'
+
 module Moonrope
   class Railtie < Rails::Railtie
 
@@ -46,6 +48,13 @@ module Moonrope
           result.data = {:code => "ValidationError", :message => "Object could not be saved due to a validation error", :errors => errors}
         end
       end
+
+      # Insert the documentation middleware
+      app.middleware.use(
+        Moonrope::DocServer,
+        Moonrope::Base.instance,
+        :reload_on_each_request => !app.config.cache_classes
+      )
 
       # Insert the Moonrope middleware into the application's middleware
       # stack (at the bottom).

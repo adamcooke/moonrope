@@ -13,20 +13,20 @@
       <nav>
         <ul>
           <li>
-            <a href='<%= path('index.html') %>' class="<%= active_nav == 'home' ? 'active' : '' %>">
+            <a href='<%= path(:root) %>' class="<%= active_nav == 'home' ? 'active' : '' %>">
               Home
             </a>
           </li>
           <% if base.authenticators[:default] %>
           <li>
-            <a href='<%= path('authenticators/default.html') %>' class="<%= active_nav == 'authenticator-default' ? 'active' : '' %>">
+            <a href='<%= path('authenticators/default') %>' class="<%= active_nav == 'authenticator-default' ? 'active' : '' %>">
               Authentication
             </a>
           </li>
           <% end %>
           <% for controller in base.controllers.select { |c| c.doc != false }.sort_by { |c| c.name.to_s } %>
           <li>
-            <a href='<%= path("controllers/#{controller.name}.html") %>' class="<%= active_nav == "controller-#{controller.name}" ? 'active' : '' %>">
+            <a href='<%= path("controllers/#{controller.name}") %>' class="<%= active_nav == "controller-#{controller.name}" ? 'active' : '' %>">
               <%= controller.friendly_name || controller.name %>
             </a>
           </li>

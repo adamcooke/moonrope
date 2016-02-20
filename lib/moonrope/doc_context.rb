@@ -1,12 +1,12 @@
 module Moonrope
-  class Erbable
+  class DocContext
 
     attr_reader :vars
 
-    def initialize(generator, output_file, vars = {})
+    def initialize(generator, options = {})
       @generator = generator
-      @output_file = output_file
-      @vars = vars
+      @vars = options.delete(:vars) || {}
+      @options = options
     end
 
     def set_page_title(title)
@@ -22,15 +22,15 @@ module Moonrope
     end
 
     def host
-      ENV["MR_HOST"]
+      @generator.host
     end
 
     def prefix
-      ENV["MR_PREFIX"] || "api"
+      @generator.prefix
     end
 
     def version
-      ENV["MR_VERSION"] || "v1"
+      @generator.version
     end
 
     def method_missing(name)
@@ -55,8 +55,12 @@ module Moonrope
     end
 
     def path(file)
-      depth = (@output_file.split('/').size - 1).times.map { "../" }.join
-      depth + file
+      depth = ((@options[:output_file] || '').split('/').size - 1).times.map { "../" }.join
+      if file == :root
+        depth + "welcome"
+      else
+        depth + file
+      end
     end
 
     def render(template_file)
@@ -64,7 +68,7 @@ module Moonrope
     end
 
     def partial(name, attributes = {})
-      erb = self.class.new(@generator, @output_file, attributes)
+      erb = self.class.new(@generator, :output_file => @options[:output_file], :vars => attributes)
       erb.render(File.join(@generator.template_root_path, "_#{name}.erb"))
     end
 
