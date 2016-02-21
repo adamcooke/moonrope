@@ -75,7 +75,7 @@ module Moonrope
         end
 
         options[:apply] = block if block_given?
-        options[:from_shared_action] = @within_shared_action if @within_shared_action
+        options[:from_shared_action] = @within_shared_action.dup if @within_shared_action
         @action.params[name] = options
       end
 
@@ -204,7 +204,8 @@ module Moonrope
       #
       def use(name)
         if block = (@action.controller.shared_actions[name] || @action.controller.base.shared_actions[name])
-          @within_shared_action = [@within_shared_action, name].compact.flatten
+          @within_shared_action ||= []
+          @within_shared_action << name
           self.instance_eval(&block)
         else
           raise Moonrope::Errors::InvalidSharedAction, "Invalid share name #{name}"
