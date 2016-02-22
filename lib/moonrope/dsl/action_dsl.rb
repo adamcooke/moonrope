@@ -177,10 +177,15 @@ module Moonrope
         if fields.empty?
           raise Moonrope::Errors::Error, "You must specify at least one field when calling 'sortable'"
         else
-          options = fields[0].is_a?(Hash) ? fields.shift : {}
+          if fields.first.is_a?(Hash)
+            default_order = fields.first.first[1].to_s
+            fields[0] = fields.first.first[0]
+          else
+            default_order = 'asc'
+          end
           @action.traits << :sortable
           param :sort_by, "The field to sort by", :type => String, :required => true, :default => fields[0].to_s, :options => fields.map(&:to_s)
-          param :order, "The direction to order units by", :type => String, :required => true, :default => options[:order] || 'asc', :options => ["asc", "desc"]
+          param :order, "The direction to order units by", :type => String, :required => true, :default => default_order, :options => ["asc", "desc"]
         end
       end
 
