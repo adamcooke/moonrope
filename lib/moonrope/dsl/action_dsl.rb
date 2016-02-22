@@ -202,11 +202,11 @@ module Moonrope
       #
       # Include any block from the controller shares
       #
-      def use(name)
+      def use(name, options = {})
         if block = (@action.controller.shared_actions[name] || @action.controller.base.shared_actions[name])
           @within_shared_action ||= []
           @within_shared_action << name
-          self.instance_eval(&block)
+          self.instance_exec(options, &block)
         else
           raise Moonrope::Errors::InvalidSharedAction, "Invalid share name #{name}"
         end
