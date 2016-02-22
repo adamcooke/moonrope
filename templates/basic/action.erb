@@ -50,10 +50,10 @@
       </td>
       <td><%= friendly_type(param[:type]) %></td>
       <td>
-        <% if param[:default] %>
-          <%= param[:default] %>
-        <% else %>
+        <% if param[:default].nil? %>
           <span class='paramTable__nil'>null</span>
+        <% else %>
+          <%= param[:default] %>
         <% end %>
       </td>
     </tr>
