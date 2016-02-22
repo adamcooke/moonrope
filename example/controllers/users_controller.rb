@@ -11,6 +11,13 @@ controller :users do
     description "This action will return a list of all users which the authenticated user has access to."
     param :page, "The page number", :default => 1, :type => Integer
     param :per_page, "The number of items to return per page", :default => 30, :type => Integer
+    sortable :username, :id, :created_at, :updated_at
+    paginated
+    filterable do
+      attribute :username, :type => String
+      attribute :age, :type => Integer
+      attribute :admin, :type => :boolean
+    end
     returns :array, :structure => :user
     action do
       paginate(User.all) do |user|

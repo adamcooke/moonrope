@@ -61,6 +61,29 @@
   </table>
 <% end %>
 
+<% unless action.filters.empty? %>
+<h2>Filtering</h2>
+<p class='text'>
+  This action supports filtering. You can filter the results which you receive by
+  providing filters in the <code>filters</code> parameter. The following attributes
+  are supported for filtering.
+</p>
+<table class='table paramTable'>
+  <thead>
+    <tr>
+      <th width="40%">Attribute</th>
+      <th width="60%">Supported Operators</th>
+    </tr>
+  </thead>
+  <% for name, filter in action.filters %>
+  <tr>
+    <td><span class='paramTable__name'><%= name %></span></td>
+    <td><%= filter[:operators].map(&:to_s).join(', ') %></td>
+  </tr>
+  <% end %>
+</table>
+<% end %>
+
 <h2>Errors</h2>
 
 <% if action.errors.empty? %>
