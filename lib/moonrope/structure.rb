@@ -204,7 +204,12 @@ module Moonrope
     # Return a value for a structured field.
     #
     def value_for_attribute(object, environment,  attribute)
-      value = object.send(attribute.source_attribute)
+      if attribute.source_attribute.is_a?(Proc)
+        value = environment.instance_eval(&attribute.source_attribute)
+      else
+        value = object.send(attribute.source_attribute)
+      end
+
       if value && attribute.structure
         # If a structure is required, lookup the desired structure and set the
         # hash value as appropriate.
