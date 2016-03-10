@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.bindir = "bin"
   s.executables << 'moonrope'
   s.add_dependency "json", "~> 1.7"
-  s.add_dependency "rack", "~> 1.4"
+  s.add_dependency "rack", ">= 1.4"
   s.add_dependency "deep_merge", "~> 1.0"
   s.add_development_dependency "rake", '~> 10.3'
 end
