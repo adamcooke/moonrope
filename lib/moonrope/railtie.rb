@@ -24,7 +24,7 @@ module Moonrope
         Moonrope::Request.path_regex = app.config.moonrope_request_path_regex
       end
 
-      if defined?(ActiveRecord)
+      ActiveSupport.on_load(:active_record) do
 
         # Catch ActiveRecord::RecordNotFound exception as a standard not-found error
         Moonrope::Base.instance.register_external_error ActiveRecord::RecordNotFound do |exception, result|
@@ -47,6 +47,7 @@ module Moonrope
           errors = exception.record.errors.respond_to?(:to_api_hash) ? exception.record.errors.to_api_hash : exception.record.errors
           result.data = {:code => "ValidationError", :message => "Object could not be saved due to a validation error", :errors => errors}
         end
+
       end
 
       # Insert the documentation middleware
