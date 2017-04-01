@@ -362,4 +362,29 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal false, hash.has_key?(:name)
   end
 
+
+  def test_setting_options_for_embedded_expansions
+    user = User.new(:id => 1, :username => 'dave')
+    animal1 = Animal.new(:id => 1, :name => 'Fido', :color => 'Ginger', :user => user)
+    animal2 = Animal.new(:id => 2, :name => 'Jess', :color => 'Black & White', :user => user)
+    user.animals << animal1
+    user.animals << animal2
+
+    base = Moonrope::Base.new do
+      structure :user do
+        basic { {:id => o.id, :username => o.username } }
+        expansion :animals, :structure => :animal
+      end
+
+      structure :animal do
+        basic :id
+        basic :name
+        full :color
+      end
+    end
+
+    hash = base.structure(:user).hash(user, :expansions => [{:animals => {:full => true}}])
+    assert_equal 'Ginger', hash[:animals][0][:color]
+  end
+
 end

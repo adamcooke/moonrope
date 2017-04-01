@@ -92,10 +92,22 @@ module Moonrope
       # Add expansions
       if options[:expansions]
 
+        if options[:expansions].is_a?(Array)
+          expansions_to_include = options[:expansions].each_with_object({}) do |expan, hash|
+            if expan.is_a?(Symbol) || expan.is_a?(String)
+              hash[expan.to_sym] = {}
+            elsif expan.is_a?(Hash)
+              hash[expan.first.first.to_sym] = expan.first.last
+            end
+          end
+        else
+          expansions_to_include = true
+        end
+
         # Add structured expansions
         @attributes[:expansion].each do |attribute|
-          next if options[:expansions].is_a?(Array) && !options[:expansions].include?(attribute.name.to_sym)
-          DeepMerge.deep_merge! hash_for_attributes([attribute], object, environment), hash
+          next if expansions_to_include.is_a?(Hash) && !expansions_to_include.keys.include?(attribute.name.to_sym)
+          DeepMerge.deep_merge! hash_for_attributes([attribute], object, environment, :structure_opts => expansions_to_include.is_a?(Hash) && expansions_to_include[attribute.name.to_sym]), hash
         end
 
         # Add the expansions
@@ -166,7 +178,7 @@ module Moonrope
     #
     # Return a returnable hash for a given set of structured fields.
     #
-    def hash_for_attributes(attributes, object, environment)
+    def hash_for_attributes(attributes, object, environment, value_options = {})
       return {} unless attributes.is_a?(Array)
       Hash.new.tap do |hash|
         attributes.each do |attribute|
@@ -184,7 +196,7 @@ module Moonrope
           elsif attribute.value
             value = attribute.value
           else
-            value = value_for_attribute(object, environment, attribute)
+            value = value_for_attribute(object, environment, attribute, value_options)
           end
 
           value = attribute.mutate(value)
@@ -209,7 +221,7 @@ module Moonrope
     #
     # Return a value for a structured field.
     #
-    def value_for_attribute(object, environment, attribute)
+    def value_for_attribute(object, environment, attribute, options = {})
       if attribute.source_attribute.is_a?(Proc)
         value = environment.instance_eval(&attribute.source_attribute)
       else
@@ -220,7 +232,7 @@ module Moonrope
         # If a structure is required, lookup the desired structure and set the
         # hash value as appropriate.
         if structure = self.base.structure(attribute.structure)
-          structure_opts = attribute.structure_opts || {}
+          structure_opts = options[:structure_opts] || attribute.structure_opts || {}
           if value.respond_to?(:map)
             value.map do |v|
               structure.hash(v, structure_opts.merge(:request => environment.request))
