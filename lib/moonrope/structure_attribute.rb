@@ -12,6 +12,7 @@ module Moonrope
     attr_accessor :value
     attr_accessor :example
     attr_accessor :doc
+    attr_accessor :mutation
 
     def initialize(type, name)
       @type = type
@@ -28,10 +29,21 @@ module Moonrope
       ([groups] + [name]).flatten.compact.join('.')
     end
 
+    def mutate(value)
+      if mutation
+        value ? value.public_send(mutation) : nil
+      else
+        # No mutation needed
+        value
+      end
+    end
+
     def example
       @example ||= begin
         if value_type == :timestamp
           "2016-12-25 09:42:00 +0000"
+        elsif value_type == :unix_timestamp
+          "1491070507"
         elsif value_type == :boolean
           "false"
         end

@@ -183,6 +183,8 @@ module Moonrope
             value = value_for_attribute(object, environment, attribute)
           end
 
+          value = attribute.mutate(value)
+
           if attribute.groups.empty?
             hash[attribute.name] = value
           else

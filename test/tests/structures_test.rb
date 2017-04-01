@@ -332,4 +332,13 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal "Bananas!", base.structure(:animal).attributes[:basic].select { |a| a.name == :example2 }.first.description
   end
 
+  def test_mutating_values
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :name, :mutation => :downcase
+      end
+    end
+    assert_equal 'fido', base.structure(:animal).hash(Animal.new(:name => 'FIDO'))[:name]
+  end
+
 end
