@@ -56,6 +56,8 @@ module Moonrope
           "1491070507"
         elsif value_type == :boolean
           "false"
+        elsif value_type == :uuid
+          "017dabc1-3f4f-47ab-ab7d-86e2ed0de679"
         end
       end
     end
