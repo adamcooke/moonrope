@@ -341,4 +341,14 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal 'fido', base.structure(:animal).hash(Animal.new(:name => 'FIDO'))[:name]
   end
 
+  def test_auto_mutating_values
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :name, :type => :unix_timestamp
+      end
+    end
+    assert_equal 1234567890, base.structure(:animal).hash(Animal.new(:name => Time.at(1234567890)))[:name]
+  end
+
+
 end

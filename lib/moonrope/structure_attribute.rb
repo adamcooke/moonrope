@@ -33,7 +33,17 @@ module Moonrope
       if mutation
         value ? value.public_send(mutation) : nil
       else
-        # No mutation needed
+        auto_mutate(value)
+      end
+    end
+
+    def auto_mutate(value)
+      case value_type
+      when :timestamp
+        value.is_a?(Time) ? value.to_s : value
+      when :unix_timestamp
+        value.is_a?(Time) ? value.to_i : value
+      else
         value
       end
     end
