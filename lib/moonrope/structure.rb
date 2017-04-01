@@ -85,6 +85,10 @@ module Moonrope
         end
       end
 
+      if options[:attributes]
+        hash.reject! { |k,v| !options[:attributes].include?(k.to_sym) }
+      end
+
       # Add expansions
       if options[:expansions]
 
@@ -205,7 +209,7 @@ module Moonrope
     #
     # Return a value for a structured field.
     #
-    def value_for_attribute(object, environment,  attribute)
+    def value_for_attribute(object, environment, attribute)
       if attribute.source_attribute.is_a?(Proc)
         value = environment.instance_eval(&attribute.source_attribute)
       else

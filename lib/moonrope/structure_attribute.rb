@@ -42,7 +42,7 @@ module Moonrope
       when :timestamp
         value.is_a?(Time) ? value.to_s : value
       when :unix_timestamp
-        value.is_a?(Time) ? value.to_i : value
+        value.to_i
       else
         value
       end

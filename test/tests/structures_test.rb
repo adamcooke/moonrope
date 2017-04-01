@@ -350,5 +350,16 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal 1234567890, base.structure(:animal).hash(Animal.new(:name => Time.at(1234567890)))[:name]
   end
 
+  def test_manually_selecting_attributes
+    base = Moonrope::Base.new do
+      structure :animal do
+        basic :id
+        basic :name
+      end
+    end
+    hash = base.structure(:animal).hash(Animal.new(:id => 12345, :name => "Fido"), :attributes => [:id])
+    assert_equal 12345, hash[:id]
+    assert_equal false, hash.has_key?(:name)
+  end
 
 end
