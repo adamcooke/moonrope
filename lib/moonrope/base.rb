@@ -73,27 +73,23 @@ module Moonrope
       @default_access = nil
     end
 
-    LOAD_MUTEX = Mutex.new
-
     #
     # Reload this whole base API from the path
     #
     def load(*directories)
-      LOAD_MUTEX.synchronize do
-        directories = self.load_directories if directories.empty?
-        if directories.size > 0
-          unload
-          new_directories = []
-          directories.each do |directory|
-            if load_directory(directory)
-              new_directories << directory
-            end
+      directories = self.load_directories if directories.empty?
+      if directories.size > 0
+        unload
+        new_directories = []
+        directories.each do |directory|
+          if load_directory(directory)
+            new_directories << directory
           end
-          self.load_directories = new_directories
-          self
-        else
-          raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
         end
+        self.load_directories = new_directories
+        self
+      else
+        raise Moonrope::Errors::Error, "Can't reload Moonrope::Base as it wasn't required from a directory"
       end
     end
 

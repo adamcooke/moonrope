@@ -27,20 +27,23 @@ module Moonrope
       if env['PATH_INFO'] =~ Moonrope::Request.path_regex
 
         if @options[:reload_on_each_request]
-          @base.load
+          base = @base.dup
+          base = base.load
+        else
+          base = @base
         end
 
         #
         # Call the on request block if one has been defined for the base.
         #
-        if @base.on_request.is_a?(Proc)
-          @base.on_request.call(@base, env)
+        if base.on_request.is_a?(Proc)
+          base.on_request.call(base, env)
         end
 
         #
         # Create a new request object
         #
-        request = @base.request(env, $1)
+        request = base.request(env, $1)
 
         #
         # Set some global headers which are always returned
@@ -94,12 +97,12 @@ module Moonrope
           response = {:status => 'internal-server-error'}
 
           # Call any request errors which have been registered on the base
-          @base.request_error_callbacks.each do |callback|
+          base.request_error_callbacks.each do |callback|
             callback.call(request, e)
           end
 
           # If in development, return more details about the exception which was raised.
-          if @base.environment == 'development'
+          if base.environment == 'development'
             response[:error] = e.class.to_s
             response[:message] = e.message
             response[:backtrace] = e.backtrace[0,6]
