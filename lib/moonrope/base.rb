@@ -62,6 +62,23 @@ module Moonrope
     end
 
     #
+    # Make a new base based on configuration
+    #
+    def copy_from(other)
+      @environment = other.environment
+      @load_directories = other.load_directories
+      @on_request = other.on_request
+      other.request_error_callbacks.each { |block| self.register_request_error_callback(&block) }
+      other.external_errors.each { |error, block| self.register_external_error(error, &block) }
+    end
+
+    def copy
+      new_base = self.class.new
+      new_base.copy_from(self)
+      new_base
+    end
+
+    #
     # Reset the whole base to contain no data.
     #
     def unload

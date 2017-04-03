@@ -97,11 +97,17 @@ $(document).ready(function() {
         outputBox.text(JSON.stringify(data, null, 4))
         outputBox.show()
       },
-      error: function() {
+      error: function(xhr) {
         // Errors which occurr aren't very well reported at the moment.
         // They should be.
+        if(xhr.getResponseHeader('content-type') == 'application/json') {
+          var text = JSON.stringify(JSON.parse(xhr.responseText), null, 4)
+        } else {
+          var text = "Failed to make request."
+        }
+
         outputBox.show()
-        outputBox.text("Failed to make request.")
+        outputBox.text(text)
         outputBox.addClass('tryForm__output--error').removeClass('tryForm__output--success')
       }
     })

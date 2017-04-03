@@ -25,26 +25,6 @@ module Moonrope
     #
     def call(env)
       if env['PATH_INFO'] =~ Moonrope::Request.path_regex
-
-        if @options[:reload_on_each_request]
-          base = @base.dup
-          base = base.load
-        else
-          base = @base
-        end
-
-        #
-        # Call the on request block if one has been defined for the base.
-        #
-        if base.on_request.is_a?(Proc)
-          base.on_request.call(base, env)
-        end
-
-        #
-        # Create a new request object
-        #
-        request = base.request(env, $1)
-
         #
         # Set some global headers which are always returned
         #
@@ -69,6 +49,32 @@ module Moonrope
         global_headers['Content-Type'] = 'application/json'
 
         #
+        # Reload if needed
+        #
+        if @options[:reload_on_each_request]
+          base = @base.copy
+          begin
+            base.load
+          rescue => e
+            return generate_error_triplet(@base, e, global_headers)
+          end
+        else
+          base = @base
+        end
+
+        #
+        # Call the on request block if one has been defined for the base.
+        #
+        if base.on_request.is_a?(Proc)
+          base.on_request.call(base, env)
+        end
+
+        #
+        # Create a new request object
+        #
+        request = base.request(env, $1)
+
+        #
         # Check the request is valid
         #
         unless request.valid?
@@ -79,7 +85,6 @@ module Moonrope
         # Execute the request
         #
         begin
-
           Moonrope.logger.info "\e[32mStarted request\e[0m for #{request.controller.name}##{request.action.name} for #{request.ip} at #{Time.now.to_s}"
           Moonrope.logger.info "  Params: #{request.params._as_hash.to_s}"
           result = request.execute
@@ -90,25 +95,7 @@ module Moonrope
         rescue JSON::ParserError => e
           [400, global_headers, [{:status => 'invalid-json', :details => e.message}.to_json]]
         rescue => e
-          Moonrope.logger.info e.class
-          Moonrope.logger.info e.message
-          Moonrope.logger.info e.backtrace.join("\n")
-
-          response = {:status => 'internal-server-error'}
-
-          # Call any request errors which have been registered on the base
-          base.request_error_callbacks.each do |callback|
-            callback.call(request, e)
-          end
-
-          # If in development, return more details about the exception which was raised.
-          if base.environment == 'development'
-            response[:error] = e.class.to_s
-            response[:message] = e.message
-            response[:backtrace] = e.backtrace[0,6]
-          end
-
-          [500, global_headers, [response.to_json]]
+          generate_error_triplet(base, e, global_headers)
         end
 
       else
@@ -118,6 +105,28 @@ module Moonrope
           [404, {}, ["Non-API request"]]
         end
       end
+    end
+
+    def generate_error_triplet(base, exception, headers = {})
+      Moonrope.logger.info exception.class
+      Moonrope.logger.info exception.message
+      Moonrope.logger.info exception.backtrace.join("\n")
+
+      response = {:status => 'internal-server-error'}
+
+      # Call any request errors which have been registered on the base
+      base.request_error_callbacks.each do |callback|
+        callback.call(request, exception)
+      end
+
+      # If in development, return more details about the exception which was raised.
+      if base.environment == 'development'
+        response[:error] = exception.class.to_s
+        response[:message] = exception.message
+        response[:backtrace] = exception.backtrace[0,6]
+      end
+
+      [500, headers, [response.to_json]]
     end
 
   end
