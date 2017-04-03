@@ -107,19 +107,21 @@ module Moonrope
     # Execute a block of code and catch approprite Moonrope errors and return
     # a result.
     #
-    def convert_errors_to_action_result(&block)
+    def convert_errors_to_action_result(start_time = nil, &block)
       begin
         yield block
       rescue => exception
         case exception
         when Moonrope::Errors::RequestError
           result = ActionResult.new(self)
+          result.time = start_time ? (Time.now - start_time).round(2) : nil
           result.status = exception.status
           result.data = exception.data
           result
         else
           if error_block = @controller.base.external_errors[exception.class]
             result = ActionResult.new(self)
+            result.time = start_time ? (Time.now - start_time).round(2) : nil
             error_block.call(exception, result)
             result
           else
@@ -149,13 +151,13 @@ module Moonrope
       #
       eval_environment.default_params = self.default_params
 
-      convert_errors_to_action_result do
+      start_time = Time.now
+
+      convert_errors_to_action_result(start_time) do
         #
         # Validate the parameters
         #
         self.validate_parameters(eval_environment.params)
-
-        start_time = Time.now
 
         # Run before filters
         controller.before_actions_for(name).each do |action|
