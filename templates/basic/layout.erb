@@ -17,10 +17,10 @@
               Home
             </a>
           </li>
-          <% if base.authenticators[:default] %>
+          <% base.authenticators.select { |k,v| v.friendly_name }.each do |id, authenticator| %>
           <li>
-            <a href='<%= path('authenticators/default') %>' class="<%= active_nav == 'authenticator-default' ? 'active' : '' %>">
-              Authentication
+            <a href='<%= path('authenticators/' + id.to_s) %>' class="<%= active_nav == "authenticator-" + id.to_s ? 'active' : '' %>">
+              <%= authenticator.friendly_name %>
             </a>
           </li>
           <% end %>

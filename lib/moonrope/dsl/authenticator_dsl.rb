@@ -6,6 +6,10 @@ module Moonrope
         @authenticator = authenticator
       end
 
+      def friendly_name(value)
+        @authenticator.friendly_name = value
+      end
+
       def description(value)
         @authenticator.description = value
       end

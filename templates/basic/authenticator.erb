@@ -6,6 +6,7 @@
 <% else %>
 <% set_page_title "#{humanize(authenticator.name.to_s.capitalize)} Authenticator" %>
 <h1><%= humanize(authenticator.name.to_s.capitalize) %> Authenticator</h1>
+<% set_active_nav "authenticator-#{authenticator.name.to_s}" %>
 <% end %>
 
 <p class='text'>

@@ -17,6 +17,9 @@ module Moonrope
     # @return [Symbol] the name of the authenticator
     attr_reader :name
 
+    # @return [String] the friendly name for the authenticator
+    attr_accessor :friendly_name
+
     # @return [String] the description for the authenticator
     attr_accessor :description
 
