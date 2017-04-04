@@ -85,11 +85,9 @@ module Moonrope
         # Execute the request
         #
         begin
-          Moonrope.logger.info "\e[32mStarted request\e[0m for #{request.controller.name}##{request.action.name} for #{request.ip} at #{Time.now.to_s}"
-          Moonrope.logger.info "  Params: #{request.params._as_hash.to_s}"
           result = request.execute
-          Moonrope.logger.info "\e[31mCompleted request\e[0m in #{result.time}s"
           json = result.to_json
+          Moonrope.logger.info "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")}] controller=#{request.controller.name} action=#{request.action.name} status=#{result.status} time=#{result.time} ip=#{request.ip} size=#{json.bytesize}"
           global_headers['Content-Length'] = json.bytesize.to_s
           [200, global_headers.merge(result.headers), [json]]
         rescue JSON::ParserError => e
