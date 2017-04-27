@@ -120,7 +120,7 @@ module Moonrope
     #
     def params
       @params ||= begin
-        if @env['CONTENT_TYPE'] == 'application/json'
+        if @env['CONTENT_TYPE'] && @env['CONTENT_TYPE'] =~ /\Aapplication\/json(;|\z)/i
           Moonrope::ParamSet.new(rack_request.body.read)
         else
           Moonrope::ParamSet.new(rack_request.params['params'])

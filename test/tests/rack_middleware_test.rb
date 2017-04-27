@@ -68,6 +68,14 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert_equal 'Adam', response_json['data']
   end
 
+  def test_params_in_body_with_charset
+    post "/api/v1/users/echo", '{"name":"Adam"}', {'CONTENT_TYPE' => 'application/json; charset=utf8'}
+    assert_equal 200, last_response.status
+    assert response_json = JSON.parse(last_response.body)
+    assert_equal 'success', response_json['status']
+    assert_equal 'Adam', response_json['data']
+  end
+
   def test_passing_invalid_json_renders_a_bad_request
     get "/api/v1/users/list", {:params => "{invalidjson}"}
     assert_equal 400, last_response.status
