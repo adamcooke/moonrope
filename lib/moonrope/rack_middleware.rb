@@ -49,6 +49,11 @@ module Moonrope
         global_headers['Content-Type'] = 'application/json'
 
         #
+        # Create a new request object
+        #
+        request = base.request(env, $1)
+
+        #
         # Reload if needed
         #
         if @options[:reload_on_each_request]
@@ -56,7 +61,7 @@ module Moonrope
           begin
             base.load
           rescue => e
-            return generate_error_triplet(@base, e, global_headers)
+            return generate_error_triplet(@base, request, e, global_headers)
           end
         else
           base = @base
@@ -68,11 +73,6 @@ module Moonrope
         if base.on_request.is_a?(Proc)
           base.on_request.call(base, env)
         end
-
-        #
-        # Create a new request object
-        #
-        request = base.request(env, $1)
 
         #
         # Check the request is valid
@@ -93,7 +93,7 @@ module Moonrope
         rescue JSON::ParserError => e
           [400, global_headers, [{:status => 'invalid-json', :details => e.message}.to_json]]
         rescue => e
-          generate_error_triplet(base, e, global_headers)
+          generate_error_triplet(base, request, e, global_headers)
         end
 
       else
@@ -105,7 +105,7 @@ module Moonrope
       end
     end
 
-    def generate_error_triplet(base, exception, headers = {})
+    def generate_error_triplet(base, request, exception, headers = {})
       Moonrope.logger.info exception.class
       Moonrope.logger.info exception.message
       Moonrope.logger.info exception.backtrace.join("\n")
