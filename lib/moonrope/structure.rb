@@ -95,7 +95,7 @@ module Moonrope
         if options[:expansions].is_a?(Array)
           expansions_to_include = options[:expansions].each_with_object({}) do |expan, hash|
             if expan.is_a?(Symbol) || expan.is_a?(String)
-              hash[expan.to_sym] = {}
+              hash[expan.to_sym] = nil
             elsif expan.is_a?(Hash)
               hash[expan.first.first.to_sym] = expan.first.last
             end

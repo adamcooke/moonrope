@@ -160,6 +160,14 @@ class StructuresTest < Test::Unit::TestCase
     assert_equal 'Fido', hash[:animals][0][:name]
     assert_equal 'Boris', hash[:animals][1][:name]
     assert_equal 'Black', hash[:animals][1][:hair_color]
+
+    # a full user hash with named extensions
+    hash = base.structure(:user).hash(user, :full => true, :expansions => [:animals])
+    # arrays
+    assert_equal Array, hash[:animals].class
+    assert_equal 'Fido', hash[:animals][0][:name]
+    assert_equal 'Boris', hash[:animals][1][:name]
+    assert_equal 'Black', hash[:animals][1][:hair_color]
   end
 
   def test_ifs
