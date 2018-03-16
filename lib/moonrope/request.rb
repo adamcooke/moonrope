@@ -164,6 +164,14 @@ module Moonrope
       rack_request.ip
     end
 
+    #
+    # Is this request on SSL?
+    #
+    # @return [Boolean]
+    def ssl?
+      rack_request.ssl?
+    end
+
     private
 
     #

@@ -107,6 +107,20 @@ class RackMiddlewareTest < Test::Unit::TestCase
     assert_equal 2, request_count
   end
 
+  def test_force_ssl
+    begin
+      app.base.force_ssl = true
+      get "/api/v1/users/list"
+      assert_equal 400, last_response.status
+      assert response_json = JSON.parse(last_response.body)
+      assert_equal 'http-not-supported', response_json['status']
+
+      get "/api/v1/users/list", {}, {'HTTPS' => 'on'}
+      assert_equal 200, last_response.status
+    ensure
+      app.base.force_ssl = false
+    end
+  end
 
   private
 

@@ -48,6 +48,9 @@ module Moonrope
     # @return [Proc] a proc to execute before every request
     attr_accessor :on_request
 
+    # @return [Boolean] is SSL forced?
+    attr_accessor :force_ssl
+
     #
     # Initialize a new instance of the Moonrope::Base
     #
@@ -229,6 +232,13 @@ module Moonrope
     #
     def request_error_callbacks
       @request_error_callbacks ||= []
+    end
+
+    #
+    # Should SSL be forced?
+    #
+    def force_ssl?
+      @force_ssl || false
     end
 
   end
