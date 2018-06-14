@@ -49,14 +49,6 @@ module Moonrope
         global_headers['Content-Type'] = 'application/json'
 
         #
-        # If force SSL is enabled, don't allow requests to proceed if they're
-        # not SSL
-        #
-        if base.force_ssl? && !request.ssl?
-          return [400, global_headers, [{:status => 'http-not-supported', :message => "Non-secure HTTP connections are not supported. Requests should be made using https:// rather than http://."}.to_json]]
-        end
-
-        #
         # Reload if needed
         #
         if @options[:reload_on_each_request]
@@ -72,6 +64,14 @@ module Moonrope
         # Create a new request object
         #
         request = base.request(env, $1)
+
+        #
+        # If force SSL is enabled, don't allow requests to proceed if they're
+        # not SSL
+        #
+        if base.force_ssl? && !request.ssl?
+          return [400, global_headers, [{:status => 'http-not-supported', :message => "Non-secure HTTP connections are not supported. Requests should be made using https:// rather than http://."}.to_json]]
+        end
 
         #
         # Call the on request block if one has been defined for the base.
