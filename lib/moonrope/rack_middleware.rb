@@ -49,11 +49,6 @@ module Moonrope
         global_headers['Content-Type'] = 'application/json'
 
         #
-        # Create a new request object
-        #
-        request = base.request(env, $1)
-
-        #
         # If force SSL is enabled, don't allow requests to proceed if they're
         # not SSL
         #
@@ -65,15 +60,18 @@ module Moonrope
         # Reload if needed
         #
         if @options[:reload_on_each_request]
-          base = @base.copy
+          @base = @base.copy
           begin
-            base.load
+            @base.load
           rescue => e
-            return generate_error_triplet(@base, request, e, global_headers)
+            return generate_error_triplet(@base, nil, e, global_headers)
           end
-        else
-          base = @base
         end
+
+        #
+        # Create a new request object
+        #
+        request = base.request(env, $1)
 
         #
         # Call the on request block if one has been defined for the base.
