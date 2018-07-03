@@ -71,6 +71,7 @@ module Moonrope
       @environment = other.environment
       @load_directories = other.load_directories
       @on_request = other.on_request
+      other.request_callbacks.each { |block| self.register_request_callback(&block) }
       other.request_error_callbacks.each { |block| self.register_request_error_callback(&block) }
       other.external_errors.each { |error, block| self.register_external_error(error, &block) }
     end
@@ -232,6 +233,21 @@ module Moonrope
     #
     def request_error_callbacks
       @request_error_callbacks ||= []
+    end
+
+    #
+    # Set a block which will be executed whenever a request is received by moonrope.
+    #
+    #
+    def register_request_callback(&block)
+      request_callbacks << block
+    end
+
+    #
+    # Return an array of request callbacks
+    #
+    def request_callbacks
+      @request_callbacks ||= []
     end
 
     #

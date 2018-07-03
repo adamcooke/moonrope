@@ -93,9 +93,18 @@ module Moonrope
         begin
           result = request.execute
           json = result.to_json
-          Moonrope.logger.info "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")}] controller=#{request.controller.name} action=#{request.action.name} status=#{result.status} time=#{result.time} ip=#{request.ip} size=#{json.bytesize}"
+
           global_headers['Content-Length'] = json.bytesize.to_s
-          [200, global_headers.merge(result.headers), [json]]
+          headers = global_headers.merge(result.headers)
+          Moonrope.logger.info "[#{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")}] controller=#{request.controller.name} action=#{request.action.name} status=#{result.status} time=#{result.time} ip=#{request.ip} size=#{json.bytesize}"
+
+          base.request_callbacks.each do |callback|
+            # Call each request callback and provide the request, the result
+            # and the raw that's being returned to the user.
+            callback.call(request, result, json, headers)
+          end
+
+          [200, headers, [json]]
         rescue JSON::ParserError => e
           [400, global_headers, [{:status => 'invalid-json', :details => e.message}.to_json]]
         rescue => e
