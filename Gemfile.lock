@@ -3,15 +3,15 @@ PATH
   specs:
     moonrope (2.0.2)
       deep_merge (~> 1.0)
-      json (~> 1.7)
+      json
       rack (>= 1.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    deep_merge (1.1.1)
+    deep_merge (1.2.1)
     diff-lcs (1.2.5)
-    json (1.8.6)
+    json (2.3.1)
     rack (1.5.2)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -35,7 +35,7 @@ PLATFORMS
 DEPENDENCIES
   moonrope!
   rack-test (~> 0)
-  rake (~> 10.3)
+  rake
   rspec
   rspec-core
   rspec-expectations
@@ -44,4 +44,4 @@ DEPENDENCIES
   yard (~> 0.8)
 
 BUNDLED WITH
-   1.14.6
+   1.17.2
