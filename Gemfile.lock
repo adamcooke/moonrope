@@ -15,7 +15,7 @@ GEM
     rack (1.5.2)
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (10.3.1)
+    rake (13.0.1)
     rspec (0.9.4)
     rspec-core (3.3.2)
       rspec-support (~> 3.3.0)
