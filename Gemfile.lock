@@ -27,7 +27,7 @@ GEM
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
     test-unit (2.5.5)
-    yard (0.8.7.2)
+    yard (0.9.25)
 
 PLATFORMS
   ruby
@@ -41,7 +41,7 @@ DEPENDENCIES
   rspec-expectations
   rspec-mocks
   test-unit (~> 2.5)
-  yard (~> 0.8)
+  yard (~> 0.9)
 
 BUNDLED WITH
    1.17.2
