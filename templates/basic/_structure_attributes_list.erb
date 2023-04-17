@@ -28,7 +28,7 @@
     <td><%= friendly_type(attribute.value_type) %></td>
     <td>
       <% if substructure = attribute.structure %>
-        <a class='link' href="<%= path("structures/#{substructure}.html")%>"><%= humanize(substructure.to_s.capitalize) %> structure</a>
+        <a class='link' href="<%= path("structures/#{substructure}")%>"><%= humanize(substructure.to_s.capitalize) %> structure</a>
       <% else %>
         <%= attribute.example %>
       <% end %>
